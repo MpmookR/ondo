@@ -1,0 +1,117 @@
+# Architecture
+
+Front end only. Mock data lives in typed files; the recommendation logic is a pure function that
+can be read and tested on its own; every visual value comes from one tokens file.
+
+## System overview
+
+```text
+tokens.css (raw → theme → category → @theme)   ← every visual value
+        ↓
+components (src/components) + stories (Storybook)
+        ↓
+Mock data (catalogue, customer)  →  recommend(customer, box, catalogue)   ← pure, one file
+        ↓
+React state (box, goal, plan)  →  "Build your box" page
+```
+
+## Tech stack
+
+| Part | Choice | Why |
+| --- | --- | --- |
+| Framework | Next.js (App Router) + TypeScript (strict) | Common production stack; static export friendly. |
+| Styling | Tailwind CSS v4, tokens as `@theme` in `src/styles/tokens.css` | One token source; utilities can't drift from the system. |
+| Docs | Storybook (`@storybook/nextjs-vite`) | Standard way to document and test components in isolation. |
+| State | `useReducer` in a `BoxProvider` | Small, no library needed. |
+| Tests | Node's built-in test runner via `tsx` | Rules and totals checked without a test framework. |
+| Fonts | Cabinet Grotesk + Erode from the Fontshare CSS API | Free (ITF Free Font License); files not redistributed. |
+| Hosting | Vercel (app), Chromatic or Vercel (Storybook) | Shareable links for a portfolio. |
+
+## Project structure
+
+```text
+/src
+  /app
+    layout.tsx            # Fonts, metadata, BoxProvider
+    page.tsx              # "/" Build your box
+    globals.css           # Tailwind + tokens + base styles
+  /components
+    Button/  Chip/  CategoryBadge/  CaffeineMeter/  BrewGuide/
+    ProductCard/  Stepper/  GoalPicker/  PlanCard/
+    SuggestionRail/  BoxTotal/
+    (each folder: Component.tsx, Component.stories.tsx, index.ts)
+  /lib
+    recommend.ts          # Filter + score rules (see prd.md)
+    recommend.test.ts
+    box.ts                # Reducer: add, remove, setGoal, setPlan, totals
+    format.ts             # £ formatting
+  /data
+    catalogue.ts          # Coffee, tea, matcha, gear
+    customer.ts           # Default goal, caffeine limit, avoids
+  /styles
+    tokens.css
+  /types
+    index.ts
+/.storybook               # main.ts, preview.ts (theme + category toolbar)
+/doc                      # These docs
+CLAUDE.md                 # Entry point for AI coding tools
+```
+
+## Data model
+
+```ts
+type Category = 'coffee' | 'tea' | 'matcha' | 'gear';
+type Goal = 'strong-start' | 'calm-focus' | 'no-crash' | 'cutting-down';
+type BrewMethod = 'espresso' | 'filter' | 'moka' | 'cold-brew' | 'steep' | 'whisk';
+
+interface Item {
+  id: string;
+  name: string;
+  category: Category;
+  description: string;
+  notes: string[];                 // tasting notes, e.g. ['cocoa', 'cherry']
+  caffeineLevel: 0 | 1 | 2 | 3 | 4 | 5;   // 0 for gear
+  price: number;
+  size: string;                    // '250g', '50 bags', '30g tin'
+  isSample?: boolean;
+  brew?: BrewGuide;                // drinks only
+  brewMethods: BrewMethod[];       // drinks: how it can be brewed; gear: what it brews
+  contains: string[];              // e.g. ['dairy'] for a latte blend
+  goalTags: Goal[];
+  pairsWith?: string[];            // item ids
+  inStock: boolean;
+}
+
+interface BrewGuide {
+  ratio: string;                   // '1:16'
+  tempC: number;
+  time: string;                    // '3–4 min'
+  steeps?: number;                 // tea
+  whisk?: string;                  // matcha, e.g. 'M-shape, 20 s'
+}
+
+interface Customer { goal: Goal; maxCaffeine: 1 | 2 | 3 | 4 | 5; avoids: string[]; }
+interface BoxLine { itemId: string; qty: number; }
+```
+
+## Recommendation logic (`lib/recommend.ts`)
+
+```ts
+recommend(customer, box, catalogue, limit = 6): Suggestion[]
+// Suggestion = { item, score, reason }
+```
+
+1. **Filter:** over caffeine limit, contains an avoid, out of stock, already in the box.
+2. **Score:** +3 goal match; +2 pairs with a drink in the box; +2 fills a brew gap (a drink in the
+   box has a brew method that no gear in the box covers, and this gear covers it); +1 if price ≤ £6
+   or a sample. Zero scores dropped.
+3. **Sort:** score descending, then price ascending. Take `limit`.
+4. **Reason:** pairing ("Goes with your Kyoto Ceremonial"), else brew gap ("A way to brew your
+   Moka Blend"), else goal ("Fits calm focus"), else "Easy to try".
+5. **Stability:** context is the drinks in the box, not the gear.
+
+## Production notes
+
+- Goal tags and pairings would come from a CMS owned by the tea and coffee buyers.
+- Analytics: `rail_impression`, `rail_item_added` (item, position, reason), `goal_changed`.
+- Later: tune rules with co-purchase data.
