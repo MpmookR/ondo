@@ -114,7 +114,7 @@ redistributing the font files.
 | `rounded-pill` | 999px | Buttons, badges, stepper |
 | `shadow-raised` | `0 1px 2px` + `0 8px 24px` roast at low alpha | Cards on hover, sticky bar |
 | `shadow-none` | — | Cards at rest (border only) |
-| `duration-fast` / `duration-base` | 120ms / 200ms | Hover, press, expand |
+| `duration-120` / `duration-200` | 120ms / 200ms | Hover, press, expand |
 | `ease-brew` | `cubic-bezier(.2,.7,.2,1)` | All transitions |
 
 Motion turns off under `prefers-reduced-motion`.

@@ -74,15 +74,22 @@ tea/coffee specialist would own them; the code only reads them.
 | Signal | Points | Example |
 | --- | --- | --- |
 | Matches the goal | +3 | Ceremonial matcha → calm focus |
-| Pairs with something in the box | +2 | Whisk set next to matcha |
-| Fills a brew gap | +2 | Beans in the box but no way to brew them |
+| Pairs with something in the box | +2 | Infuser mug next to sencha (an explicit pairing) |
+| Brews something in the box | +1 | Cold-brew bottle for a tea that can be cold-brewed (gear only, when there's no explicit pairing) |
 | Easy to try | +1 | Price ≤ £6 or a sample size |
 
 Tie-break: lower price first. Show the top 6; zero scores are never shown. The reason line is the
 pairing if there is one (most specific), otherwise the highest-scoring signal.
 
-**Stable rail:** context is the drinks in the box, not the gear added from the rail, so adding
-from the rail never reshuffles it.
+**Stable rail:** the rail is worked out from the box as it was when the goal was picked. Adding an
+item from the rail turns its button into a stepper in place instead of reshuffling the cards.
+Changing the goal rebuilds the rail from the current box.
+
+**Worked example** (covered by tests). Goal: calm focus. Caffeine limit 4. Avoids dairy.
+Box: Yirgacheffe Filter, Shizuoka Sencha. Top 6: Matcha Taster Tin (4), Tieguanyin Oolong (3),
+Everyday Latte Matcha (3), Kyoto Ceremonial Matcha (3), Bamboo Whisk & Bowl Set (3), Glass Infuser
+Mug (2, "Goes with your Shizuoka Sencha"). The espresso blends are over the caffeine limit, the chai
+contains dairy and the grinder is out of stock, so none of them can appear.
 
 ## Wording rules
 

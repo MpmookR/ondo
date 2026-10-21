@@ -1,0 +1,187 @@
+/*
+ * Ondo design tokens: the only place visual values live.
+ * Layers: 1 raw palette → 2 theme → 3 category accent → 4 @theme (semantic) → 5 utilities.
+ * Docs: doc/design_system.md
+ */
+
+/* ---------- 1. Raw palette ---------- */
+:root {
+  --raw-cream-50: #fbf8f2;
+  --raw-cream-100: #f4efe6;
+  --raw-oat-200: #e8dfd0;
+  --raw-oat-400: #c9bba4;
+  --raw-stone-600: #6b6157;
+  --raw-roast-900: #1e1a16;
+
+  --raw-fog-900: #131a19;
+  --raw-fog-800: #1d2624;
+  --raw-fog-600: #3a4643;
+  --raw-fog-300: #a3aea9;
+
+  --raw-espresso-100: #efe1d6;
+  --raw-espresso-300: #d9a47f;
+  --raw-espresso-600: #7a4528;
+
+  --raw-amber-100: #f6e6cc;
+  --raw-amber-300: #e3a64f;
+  --raw-amber-600: #8c5310;
+
+  --raw-matcha-100: #e4edd2;
+  --raw-matcha-300: #a9c46f;
+  --raw-matcha-700: #4c6823;
+
+  /* Responsive type and layout scales (mobile values) */
+  --type-display-size: 56px;
+  --type-display-leading: 56px;
+  --type-heading-size: 28px;
+  --type-heading-leading: 32px;
+  --type-title-size: 20px;
+  --type-title-leading: 24px;
+  --type-body-lg-size: 18px;
+  --type-body-lg-leading: 28px;
+  --layout-margin: 16px;
+  --layout-gutter: 16px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --type-display-size: 96px;
+    --type-display-leading: 92px;
+    --type-heading-size: 40px;
+    --type-heading-leading: 44px;
+    --type-title-size: 22px;
+    --type-title-leading: 28px;
+    --type-body-lg-size: 20px;
+    --type-body-lg-leading: 30px;
+    --layout-margin: 64px;
+    --layout-gutter: 24px;
+  }
+}
+
+/* ---------- 2. Themes ---------- */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --theme-bg-page: var(--raw-cream-100);
+  --theme-bg-surface: var(--raw-cream-50);
+  --theme-bg-subtle: var(--raw-oat-200);
+  --theme-text-primary: var(--raw-roast-900);
+  --theme-text-muted: var(--raw-stone-600);
+  --theme-text-inverse: var(--raw-cream-50);
+  --theme-border: var(--raw-oat-200);
+  --theme-border-strong: var(--raw-oat-400);
+  --theme-action: var(--raw-roast-900);
+  --theme-action-text: var(--raw-cream-50);
+  --theme-shadow-tint: 30 26 22;
+  --accent: var(--raw-roast-900);
+  --accent-subtle: var(--raw-oat-200);
+  --on-accent: var(--raw-cream-50);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --theme-bg-page: var(--raw-fog-900);
+  --theme-bg-surface: var(--raw-fog-800);
+  --theme-bg-subtle: var(--raw-fog-600);
+  --theme-text-primary: var(--raw-cream-100);
+  --theme-text-muted: var(--raw-fog-300);
+  --theme-text-inverse: var(--raw-fog-900);
+  --theme-border: var(--raw-fog-600);
+  --theme-border-strong: var(--raw-fog-300);
+  --theme-action: var(--raw-cream-100);
+  --theme-action-text: var(--raw-fog-900);
+  --theme-shadow-tint: 0 0 0;
+  --accent: var(--raw-cream-100);
+  --accent-subtle: var(--raw-fog-600);
+  --on-accent: var(--raw-fog-900);
+}
+
+/* ---------- 3. Category accents ---------- */
+[data-category='coffee'] { --accent: var(--raw-espresso-600); --accent-subtle: var(--raw-espresso-100); --on-accent: var(--raw-cream-50); }
+[data-category='tea']    { --accent: var(--raw-amber-600);    --accent-subtle: var(--raw-amber-100);    --on-accent: var(--raw-cream-50); }
+[data-category='matcha'] { --accent: var(--raw-matcha-700);   --accent-subtle: var(--raw-matcha-100);   --on-accent: var(--raw-cream-50); }
+
+[data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-espresso-300); --accent-subtle: var(--raw-fog-600); --on-accent: var(--raw-fog-900); }
+[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-amber-300);    --accent-subtle: var(--raw-fog-600); --on-accent: var(--raw-fog-900); }
+[data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-matcha-300);   --accent-subtle: var(--raw-fog-600); --on-accent: var(--raw-fog-900); }
+
+/* ---------- 4. Semantic tokens → Tailwind utilities ---------- */
+/* inline: utilities read the variables where they're used, so data-theme / data-category work on any element */
+@theme inline {
+  --color-*: initial;
+  --color-bg-page: var(--theme-bg-page);
+  --color-bg-surface: var(--theme-bg-surface);
+  --color-bg-subtle: var(--theme-bg-subtle);
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-muted: var(--theme-text-muted);
+  --color-text-inverse: var(--theme-text-inverse);
+  --color-border: var(--theme-border);
+  --color-border-strong: var(--theme-border-strong);
+  --color-action: var(--theme-action);
+  --color-action-text: var(--theme-action-text);
+  --color-accent: var(--accent);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-on-accent: var(--on-accent);
+  --color-transparent: transparent;
+
+  --text-*: initial;
+  --text-display: var(--type-display-size);
+  --text-display--line-height: var(--type-display-leading);
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 800;
+  --text-heading: var(--type-heading-size);
+  --text-heading--line-height: var(--type-heading-leading);
+  --text-heading--letter-spacing: -0.02em;
+  --text-heading--font-weight: 700;
+  --text-title: var(--type-title-size);
+  --text-title--line-height: var(--type-title-leading);
+  --text-title--letter-spacing: -0.01em;
+  --text-title--font-weight: 700;
+  --text-body-lg: var(--type-body-lg-size);
+  --text-body-lg--line-height: var(--type-body-lg-leading);
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-label: 14px;
+  --text-label--line-height: 20px;
+  --text-label--letter-spacing: 0.01em;
+  --text-label--font-weight: 600;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 500;
+  --text-eyebrow: 12px;
+  --text-eyebrow--line-height: 16px;
+  --text-eyebrow--letter-spacing: 0.12em;
+  --text-eyebrow--font-weight: 500;
+
+  --spacing-margin: var(--layout-margin);
+  --spacing-gutter: var(--layout-gutter);
+}
+
+@theme {
+  --font-*: initial;
+  --font-display: 'Cabinet Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Erode', ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-heavy: 800;
+
+  --spacing: 1px;
+
+  --radius-*: initial;
+  --radius-sm: 6px;
+  --radius-card: 16px;
+  --radius-panel: 28px;
+  --radius-pill: 999px;
+
+  --shadow-*: initial;
+  --shadow-raised: 0 1px 2px rgb(var(--theme-shadow-tint) / 0.08), 0 8px 24px rgb(var(--theme-shadow-tint) / 0.12);
+
+  --container-frame: 402px;
+  --container-content: 1200px;
+
+  --ease-brew: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

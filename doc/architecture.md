@@ -102,13 +102,13 @@ recommend(customer, box, catalogue, limit = 6): Suggestion[]
 ```
 
 1. **Filter:** over caffeine limit, contains an avoid, out of stock, already in the box.
-2. **Score:** +3 goal match; +2 pairs with a drink in the box; +2 fills a brew gap (a drink in the
-   box has a brew method that no gear in the box covers, and this gear covers it); +1 if price ≤ £6
-   or a sample. Zero scores dropped.
+2. **Score:** +3 goal match; +2 explicit pairing with a drink in the box; +1 gear that can brew a
+   drink in the box (only without a pairing); +1 if price ≤ £6 or a sample. Zero scores dropped.
 3. **Sort:** score descending, then price ascending. Take `limit`.
-4. **Reason:** pairing ("Goes with your Kyoto Ceremonial"), else brew gap ("A way to brew your
-   Moka Blend"), else goal ("Fits calm focus"), else "Easy to try".
-5. **Stability:** context is the drinks in the box, not the gear.
+4. **Reason:** pairing ("Goes with your Shizuoka Sencha"), else brewing ("Brews your Shizuoka
+   Sencha"), else goal ("Fits calm focus"), else "A small size to try" / "Easy to try".
+5. **Stability:** the page passes the box as it was when the goal was picked (`railBox`), so items
+   added from the rail stay where they are and show a stepper.
 
 ## Production notes
 
