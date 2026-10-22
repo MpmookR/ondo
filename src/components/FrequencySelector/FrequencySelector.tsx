@@ -45,7 +45,7 @@ export function FrequencySelector({ value, onChange }: FrequencySelectorProps) {
                 key={plan.id}
                 {...getOptionProps(plan.id, i)}
                 className={`flex min-h-48 min-w-0 flex-1 flex-col items-center justify-center rounded-pill border-2 px-4 py-4 transition-colors duration-120 ease-brew ${
-                  selected ? 'border-action bg-bg-surface' : 'border-transparent hover:bg-bg-page'
+                  selected ? 'border-primary bg-bg-surface' : 'border-transparent hover:bg-bg-page'
                 }`}
               >
                 <span className={`whitespace-nowrap font-sans text-label ${selected ? 'font-bold' : 'font-medium'}`}>

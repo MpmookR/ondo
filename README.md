@@ -4,7 +4,7 @@
 This repo is its design system and a demo shop built only from it, made **with Claude and code**
 by [Mook (Puangpaka Rattana)](https://mooksportfolio.netlify.app/).
 
-- **Tokens** in one file, themed by two attributes: `data-theme` (cream / fog) and
+- **Tokens** in one file, themed by two attributes: `data-theme` (light / dark) and
   `data-category` (coffee / tea / matcha). One component, every look.
 - **Components** documented in Storybook, every state in both themes, accessibility checks on.
 - **Three mobile-first screens** built only from the system: *Your box* (order summary with a
@@ -34,7 +34,7 @@ npm run lint             # type-check
 
 ## Credits
 
-- Type: [Kalnia](https://github.com/fridamedrano/Kalnia-Typeface) by Frida Medrano and
-  [Mona Sans](https://github.com/github/mona-sans) by GitHub, both under the SIL Open Font License
-  (licences in `public/fonts`).
+- Type: [Fira Sans](https://github.com/mozilla/Fira) (headlines) and
+  [Source Sans 3](https://github.com/adobe-fonts/source-sans) (body), both under the SIL Open Font
+  License (licences in `public/fonts`).
 - Products, prices and caffeine levels are illustrative.

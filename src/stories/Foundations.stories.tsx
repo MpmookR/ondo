@@ -13,6 +13,8 @@ const semantic = [
   ['bg-border', 'border'],
   ['bg-border-strong', 'border-strong'],
   ['bg-action', 'action'],
+  ['bg-primary', 'primary'],
+  ['bg-primary-subtle', 'primary-subtle'],
 ] as const;
 
 function Swatch({ cls, name }: { cls: string; name: string }) {
@@ -27,15 +29,15 @@ function Swatch({ cls, name }: { cls: string; name: string }) {
 function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
   return (
     <section data-theme={theme} className="flex-1 bg-bg-page p-32 text-text-primary">
-      <p className="font-mono text-eyebrow uppercase text-text-muted">{theme === 'light' ? 'Light · cream' : 'Dark · fog'}</p>
+      <p className="font-mono text-eyebrow uppercase text-text-muted">{theme === 'light' ? 'Light' : 'Dark'}</p>
       <div className="mt-16 grid grid-cols-2 gap-12">
         {semantic.map(([cls, name]) => (
           <Swatch key={name} cls={cls} name={name} />
         ))}
       </div>
       <p className="mt-32 font-mono text-eyebrow uppercase text-text-muted">Category accents</p>
-      <div className="mt-16 grid grid-cols-3 gap-12">
-        {(['coffee', 'tea', 'matcha'] as const).map((c) => (
+      <div className="mt-16 grid grid-cols-2 gap-12">
+        {(['coffee', 'tea', 'matcha', 'gear'] as const).map((c) => (
           <div key={c} data-category={c} className="rounded-card border border-border bg-bg-surface p-16">
             <div className="flex gap-8">
               <span className="size-32 rounded-pill bg-accent" />

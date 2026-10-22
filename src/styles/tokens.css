@@ -2,19 +2,19 @@
  * Ondo design tokens: the only place visual values live.
  * Layers: 1 raw palette → 2 theme → 3 category accent → 4 @theme (semantic) → 5 utilities.
  * Docs: doc/design_system.md
+ *
+ * Brand palette (from the brand sheet): background #FFFFFF, text #131A00, primary #7C8B3A,
+ * accent #3B4600, surface #FFFFFF, border #E2E8F0. Every other value here is derived from
+ * those and contrast-checked (see the table in design_system.md).
  */
 
 /* ---------- Fonts (SIL Open Font License, self-hosted from /public/fonts) ---------- */
+@font-face { font-family: 'Fira Sans'; src: url('/fonts/FiraSans-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Fira Sans'; src: url('/fonts/FiraSans-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Fira Sans'; src: url('/fonts/FiraSans-800.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: swap; }
 @font-face {
-  font-family: 'Kalnia';
-  src: url('/fonts/Kalnia-Variable.woff2') format('woff2-variations');
-  font-weight: 100 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Mona Sans';
-  src: url('/fonts/MonaSans-Variable.woff2') format('woff2-variations');
+  font-family: 'Source Sans 3';
+  src: url('/fonts/SourceSans3-Variable.woff2') format('woff2-variations');
   font-weight: 200 900;
   font-style: normal;
   font-display: swap;
@@ -22,29 +22,38 @@
 
 /* ---------- 1. Raw palette ---------- */
 :root {
-  --raw-cream-50: #fbf8f2;
-  --raw-cream-100: #f4efe6;
-  --raw-oat-200: #e8dfd0;
-  --raw-oat-400: #c9bba4;
-  --raw-stone-600: #6b6157;
-  --raw-roast-900: #1e1a16;
+  /* Brand */
+  --raw-white: #ffffff;
+  --raw-ink: #131a00;           /* Text */
+  --raw-olive-500: #7c8b3a;     /* Primary */
+  --raw-olive-700: #3b4600;     /* Accent */
+  --raw-slate-200: #e2e8f0;     /* Border */
 
-  --raw-fog-900: #131a19;
-  --raw-fog-800: #1d2624;
-  --raw-fog-600: #3a4643;
-  --raw-fog-300: #a3aea9;
+  /* Derived from the brand greens */
+  --raw-olive-50: #f4f6ee;      /* quiet fill (tracks, pills) */
+  --raw-olive-100: #eef2e2;     /* primary tint */
+  --raw-olive-200: #c9d88a;     /* dark-theme accent */
+  --raw-olive-300: #a9b96a;     /* dark-theme primary */
+  --raw-moss-600: #5c6440;      /* muted text, 6.3:1 on white */
+  --raw-moss-400: #8a917a;      /* strong border, 3.3:1 on white */
+  --raw-slate-100: #f1f5f9;     /* gear tint (border family) */
 
-  --raw-espresso-100: #efe1d6;
+  /* Dark theme: built on the brand's text colour */
+  --raw-night-900: #131a00;
+  --raw-night-800: #1c2408;
+  --raw-night-700: #2c3614;
+  --raw-night-600: #3a4520;
+  --raw-night-400: #6b7748;
+  --raw-sage-200: #b5bd9c;
+  --raw-sage-50: #f7f9f0;
+
+  /* Category accents (coffee, tea; matcha uses the brand olive) */
+  --raw-espresso-100: #f3e9e1;
   --raw-espresso-300: #d9a47f;
   --raw-espresso-600: #7a4528;
-
-  --raw-amber-100: #f6e6cc;
+  --raw-amber-100: #f7ecd9;
   --raw-amber-300: #e3a64f;
   --raw-amber-600: #8c5310;
-
-  --raw-matcha-100: #e4edd2;
-  --raw-matcha-300: #a9c46f;
-  --raw-matcha-700: #4c6823;
 
   /* Responsive type and layout scales (mobile values) */
   --type-display-size: 56px;
@@ -78,50 +87,57 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --theme-bg-page: var(--raw-cream-100);
-  --theme-bg-surface: var(--raw-cream-50);
-  --theme-bg-subtle: var(--raw-oat-200);
-  --theme-text-primary: var(--raw-roast-900);
-  --theme-text-muted: var(--raw-stone-600);
-  --theme-text-inverse: var(--raw-cream-50);
-  --theme-border: var(--raw-oat-200);
-  --theme-border-strong: var(--raw-oat-400);
-  --theme-action: var(--raw-roast-900);
-  --theme-action-text: var(--raw-cream-50);
-  --theme-shadow-tint: 30 26 22;
-  --accent: var(--raw-roast-900);
-  --accent-subtle: var(--raw-oat-200);
-  --on-accent: var(--raw-cream-50);
+  --theme-bg-page: var(--raw-white);
+  --theme-bg-surface: var(--raw-white);
+  --theme-bg-subtle: var(--raw-olive-50);
+  --theme-text-primary: var(--raw-ink);
+  --theme-text-muted: var(--raw-moss-600);
+  --theme-text-inverse: var(--raw-white);
+  --theme-border: var(--raw-slate-200);
+  --theme-border-strong: var(--raw-moss-400);
+  --theme-action: var(--raw-olive-700);
+  --theme-action-text: var(--raw-white);
+  --theme-primary: var(--raw-olive-500);
+  --theme-primary-subtle: var(--raw-olive-100);
+  --theme-on-primary: var(--raw-ink);
+  --theme-shadow-tint: 19 26 0;
+  --accent: var(--raw-olive-700);
+  --accent-subtle: var(--raw-olive-100);
+  --on-accent: var(--raw-white);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --theme-bg-page: var(--raw-fog-900);
-  --theme-bg-surface: var(--raw-fog-800);
-  --theme-bg-subtle: var(--raw-fog-600);
-  --theme-text-primary: var(--raw-cream-100);
-  --theme-text-muted: var(--raw-fog-300);
-  --theme-text-inverse: var(--raw-fog-900);
-  --theme-border: var(--raw-fog-600);
-  --theme-border-strong: var(--raw-fog-300);
-  --theme-action: var(--raw-cream-100);
-  --theme-action-text: var(--raw-fog-900);
+  --theme-bg-page: var(--raw-night-900);
+  --theme-bg-surface: var(--raw-night-800);
+  --theme-bg-subtle: var(--raw-night-700);
+  --theme-text-primary: var(--raw-sage-50);
+  --theme-text-muted: var(--raw-sage-200);
+  --theme-text-inverse: var(--raw-night-900);
+  --theme-border: var(--raw-night-600);
+  --theme-border-strong: var(--raw-night-400);
+  --theme-action: var(--raw-olive-300);
+  --theme-action-text: var(--raw-night-900);
+  --theme-primary: var(--raw-olive-300);
+  --theme-primary-subtle: var(--raw-night-700);
+  --theme-on-primary: var(--raw-night-900);
   --theme-shadow-tint: 0 0 0;
-  --accent: var(--raw-cream-100);
-  --accent-subtle: var(--raw-fog-600);
-  --on-accent: var(--raw-fog-900);
+  --accent: var(--raw-olive-200);
+  --accent-subtle: var(--raw-night-700);
+  --on-accent: var(--raw-night-900);
 }
 
 /* ---------- 3. Category accents ---------- */
-/* Gear is neutral: it follows the theme's action colour. */
-[data-category='gear']   { --accent: var(--theme-action); --accent-subtle: var(--theme-bg-subtle); --on-accent: var(--theme-action-text); }
-[data-category='coffee'] { --accent: var(--raw-espresso-600); --accent-subtle: var(--raw-espresso-100); --on-accent: var(--raw-cream-50); }
-[data-category='tea']    { --accent: var(--raw-amber-600);    --accent-subtle: var(--raw-amber-100);    --on-accent: var(--raw-cream-50); }
-[data-category='matcha'] { --accent: var(--raw-matcha-700);   --accent-subtle: var(--raw-matcha-100);   --on-accent: var(--raw-cream-50); }
+/* Gear is neutral: the theme's text colour on a slate tint. Matcha is the brand olive. */
+[data-category='gear']   { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-slate-100); --on-accent: var(--theme-text-inverse); }
+[data-category='coffee'] { --accent: var(--raw-espresso-600); --accent-subtle: var(--raw-espresso-100); --on-accent: var(--raw-white); }
+[data-category='tea']    { --accent: var(--raw-amber-600);    --accent-subtle: var(--raw-amber-100);    --on-accent: var(--raw-white); }
+[data-category='matcha'] { --accent: var(--raw-olive-700);    --accent-subtle: var(--raw-olive-100);    --on-accent: var(--raw-white); }
 
-[data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-espresso-300); --accent-subtle: var(--raw-fog-600); --on-accent: var(--raw-fog-900); }
-[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-amber-300);    --accent-subtle: var(--raw-fog-600); --on-accent: var(--raw-fog-900); }
-[data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-matcha-300);   --accent-subtle: var(--raw-fog-600); --on-accent: var(--raw-fog-900); }
+[data-theme='dark'] [data-category='gear'],   [data-theme='dark'][data-category='gear']   { --accent-subtle: var(--raw-night-700); }
+[data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-espresso-300); --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
+[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-amber-300);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
+[data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-olive-200);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
 
 /* ---------- 4. Semantic tokens → Tailwind utilities ---------- */
 /* inline: utilities read the variables where they're used, so data-theme / data-category work on any element */
@@ -137,6 +153,9 @@
   --color-border-strong: var(--theme-border-strong);
   --color-action: var(--theme-action);
   --color-action-text: var(--theme-action-text);
+  --color-primary: var(--theme-primary);
+  --color-primary-subtle: var(--theme-primary-subtle);
+  --color-on-primary: var(--theme-on-primary);
   --color-accent: var(--accent);
   --color-accent-subtle: var(--accent-subtle);
   --color-on-accent: var(--on-accent);
@@ -181,9 +200,9 @@
 
 @theme {
   --font-*: initial;
-  /* Kalnia for headings only; Mona Sans for UI, body and prices. */
-  --font-heading: 'Kalnia', ui-serif, Georgia, serif;
-  --font-sans: 'Mona Sans', ui-sans-serif, system-ui, sans-serif;
+  /* Fira Sans for headlines; Source Sans 3 (Source Sans Pro) for UI, body and prices. */
+  --font-heading: 'Fira Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Source Sans 3', 'Source Sans Pro', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --font-weight-regular: 400;

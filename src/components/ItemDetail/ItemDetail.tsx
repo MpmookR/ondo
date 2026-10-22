@@ -72,7 +72,7 @@ export function BrewHighlights({ item, customer }: BrewHighlightsProps) {
         ))}
       </dl>
 
-      <div data-category="matcha" className="flex flex-col rounded-sm border border-border-strong bg-accent-subtle px-16 py-8 font-sans text-label">
+      <div className="flex flex-col rounded-sm border border-primary bg-primary-subtle px-16 py-8 font-sans text-label">
         <h3 className="font-bold">Contains</h3>
         <p className="font-medium">
           {item.contains.length > 0 ? item.contains.map(avoidLabel).join(', ') : isDrink ? 'Just the leaf or bean. No dairy, nuts or gluten.' : 'Not a food item.'}

@@ -44,9 +44,11 @@
   }
 }
 
-/* Marker-style highlight behind a word ("You'll save 10%"). */
+/* Tinted pill behind a word ("You'll save 10%"). */
 @utility highlight {
-  background-image: linear-gradient(transparent 55%, var(--color-accent-subtle) 55%);
+  background-color: var(--color-primary-subtle);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
 }
 
 /* Bottom padding that clears the iPhone home indicator. */

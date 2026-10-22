@@ -24,7 +24,7 @@ React state (box, goal, plan)  →  "Build your box" page
 | Docs | Storybook (`@storybook/nextjs-vite`) | Standard way to document and test components in isolation. |
 | State | `useReducer` in a `BoxProvider` | Small, no library needed. |
 | Tests | Node's built-in test runner via `tsx` | Rules and totals checked without a test framework. |
-| Fonts | Kalnia + Mona Sans, self-hosted variable woff2 | SIL Open Font License; no third-party requests, works offline. |
+| Fonts | Fira Sans + Source Sans 3, self-hosted woff2 | SIL Open Font License; no third-party requests, works offline. |
 | Hosting | Vercel (app), Chromatic or Vercel (Storybook) | Shareable links for a portfolio. |
 
 ## Pages
@@ -63,7 +63,7 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
   /stories                # Foundations pages, intro, shared fixtures
   /types
 /.storybook               # Theme + accent toolbar, font preloads
-/public/fonts             # Kalnia + Mona Sans (OFL) with their licences
+/public/fonts             # Fira Sans + Source Sans 3 (OFL) with their licences
 /doc                      # These docs
 CLAUDE.md                 # Entry point for AI coding tools
 ```

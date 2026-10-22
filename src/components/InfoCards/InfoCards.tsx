@@ -13,7 +13,7 @@ export const cardClass = 'rounded-card border border-border bg-bg-surface shadow
 
 function Badge({ icon }: { icon: IconName }) {
   return (
-    <span data-category="matcha" className="grid size-32 shrink-0 place-items-center rounded-pill bg-accent-subtle text-text-primary">
+    <span className="grid size-32 shrink-0 place-items-center rounded-pill bg-primary-subtle text-text-primary">
       <Icon name={icon} size={20} />
     </span>
   );
@@ -86,7 +86,7 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
                   key={g.id}
                   {...goalGroup.getOptionProps(g.id, i)}
                   className={`flex min-h-44 flex-col justify-center rounded-sm border px-12 py-8 transition-colors duration-120 ease-brew ${
-                    checked ? 'border-action bg-bg-page' : 'border-border hover:border-border-strong'
+                    checked ? 'border-primary bg-primary-subtle' : 'border-border hover:border-border-strong'
                   }`}
                 >
                   <span className="font-mono text-footnote uppercase text-text-muted">{g.eyebrow}</span>
@@ -108,7 +108,7 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
                   {...levelGroup.getOptionProps(level, i)}
                   aria-label={`Up to ${level}, ${caffeineLabel[level as CaffeineLevel].toLowerCase()}`}
                   className={`flex min-h-36 flex-1 items-center justify-center rounded-pill border-2 font-sans text-label tabular-nums transition-colors duration-120 ease-brew ${
-                    checked ? 'border-action bg-bg-surface font-bold' : 'border-transparent text-text-muted'
+                    checked ? 'border-primary bg-bg-surface font-bold' : 'border-transparent text-text-muted'
                   }`}
                 >
                   {level}

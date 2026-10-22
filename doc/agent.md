@@ -26,8 +26,10 @@ look polished and read clearly. It is not production code.
 - **Never branch on category or theme inside a component** (no `category === 'tea' ? … : …` for
   colour). Set `data-category` / `data-theme` on a wrapper and use `accent` utilities.
 - Spacing unit is 1px: `p-16` = 16px. Use the documented steps.
-- Type: headings (20px and up) in `font-heading` (Kalnia); UI, body and prices in `font-sans`
-  (Mona Sans); brew data in `font-mono`. Never Kalnia for labels or product names.
+- Type: headlines in `font-heading` (Fira Sans); UI, body and prices in `font-sans`
+  (Source Sans 3); brew data in `font-mono`.
+- Colour: Primary (`#7C8B3A`) is never small text. Use it for selected states, fills and borders
+  with Text on top; use Accent / `action` for buttons and links.
 - Mobile first: phone layout, then `md:` / `lg:`. Check 402px, 820px, 1440px; no sideways scroll.
   Bars fixed to the bottom use `pb-safe`; whole-card links use `stretched-link`.
 - Every interactive element: visible focus state, 44px tap target, accessible name.

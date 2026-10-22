@@ -22,7 +22,7 @@ export function Wordmark() {
   return (
     <span className="inline-flex items-center gap-6 font-heading text-title font-bold">
       <span aria-hidden="true" className="grid size-24 place-items-center rounded-pill border-3 border-text-primary">
-        <span className="size-6 rounded-pill bg-accent" data-category="matcha" />
+        <span className="size-6 rounded-pill bg-primary" />
       </span>
       ondo
     </span>
@@ -46,7 +46,7 @@ export function PageHeader({ title, backHref, onBack, theme, onThemeChange, chil
   );
 
   return (
-    <header className={`bg-bg-surface ${sticky ? 'sticky top-0 z-20' : ''}`}>
+    <header className={`border-b border-border bg-bg-surface ${sticky ? 'sticky top-0 z-20' : ''}`}>
       <div className="mx-auto flex max-w-content items-center gap-8 px-16 py-16 lg:px-24 lg:py-20">
         {back}
         <div className="flex min-w-0 flex-1 justify-center">
@@ -83,7 +83,7 @@ export function SavingsLine({ saving }: { saving: string }) {
     <p className="flex flex-wrap items-center justify-center gap-4 px-16 pb-16 font-sans text-label">
       <Icon name="tag" size={20} />
       <span>
-        You&apos;ll save <span className="highlight px-2" data-category="matcha">{saving}</span> with a subscription
+        You&apos;ll save <span className="highlight px-4 py-2">{saving}</span> with a subscription
       </span>
       <a href="#delivery" className="font-medium text-text-muted underline underline-offset-4">
         How it works
