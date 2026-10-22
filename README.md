@@ -34,7 +34,7 @@ npm run lint             # type-check
 
 ## Credits
 
-- Type: [Cabinet Grotesk](https://www.fontshare.com/fonts/cabinet-grotesk) and
-  [Erode](https://www.fontshare.com/fonts/erode) by Indian Type Foundry, free under the ITF Free Font
-  License and loaded from Fontshare (font files are not included in this repo).
+- Type: [Kalnia](https://github.com/fridamedrano/Kalnia-Typeface) by Frida Medrano and
+  [Mona Sans](https://github.com/github/mona-sans) by GitHub, both under the SIL Open Font License
+  (licences in `public/fonts`).
 - Products, prices and caffeine levels are illustrative.

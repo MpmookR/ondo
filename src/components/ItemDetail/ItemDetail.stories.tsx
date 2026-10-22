@@ -25,7 +25,7 @@ export const Accordions: Story = {
         <BrewGuide brew={args.item.brew!} />
       </DetailAccordion>
       <DetailAccordion title="Caffeine: medium">
-        <p className="font-serif text-body">Moderate. Steady energy that builds slowly.</p>
+        <p className="font-sans text-body">Moderate. Steady energy that builds slowly.</p>
       </DetailAccordion>
     </div>
   ),

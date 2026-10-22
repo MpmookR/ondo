@@ -20,7 +20,7 @@ export function CollapsibleSection({ title, children, defaultOpen = false }: Col
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
-        className="flex min-h-48 w-full items-center justify-between rounded-card border border-border bg-bg-surface px-16 py-12 text-left font-display text-label font-bold"
+        className="flex min-h-48 w-full items-center justify-between rounded-card border border-border bg-bg-surface px-16 py-12 text-left font-sans text-label font-bold"
       >
         {title}
         <Icon name={open ? 'chevron-up' : 'chevron-down'} size={20} />

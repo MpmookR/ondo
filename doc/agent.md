@@ -26,8 +26,8 @@ look polished and read clearly. It is not production code.
 - **Never branch on category or theme inside a component** (no `category === 'tea' ? … : …` for
   colour). Set `data-category` / `data-theme` on a wrapper and use `accent` utilities.
 - Spacing unit is 1px: `p-16` = 16px. Use the documented steps.
-- Type: headings and UI in `font-display` (Cabinet Grotesk), body copy in `font-serif` (Erode),
-  brew data in `font-mono`.
+- Type: headings (20px and up) in `font-heading` (Kalnia); UI, body and prices in `font-sans`
+  (Mona Sans); brew data in `font-mono`. Never Kalnia for labels or product names.
 - Mobile first: phone layout, then `md:` / `lg:`. Check 402px, 820px, 1440px; no sideways scroll.
   Bars fixed to the bottom use `pb-safe`; whole-card links use `stretched-link`.
 - Every interactive element: visible focus state, 44px tap target, accessible name.
@@ -42,7 +42,7 @@ look polished and read clearly. It is not production code.
 - Keep `recommend.ts` pure: short functions, named constants for points.
 - Don't add libraries (UI kits, state managers, icon packs) without asking. Tailwind is the only
   styling tool.
-- Don't commit font files (licence). Fonts load from Fontshare in `layout.tsx` and `.storybook/preview-head.html`.
+- Fonts are self-hosted in `public/fonts` (OFL). Keep each licence file next to its font.
 
 ## Commands
 

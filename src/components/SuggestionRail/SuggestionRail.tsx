@@ -23,7 +23,7 @@ export function SuggestionRail({ title, suggestions, lines, onQtyChange, classNa
       aria-labelledby="suggestions-title"
       className={`flex scroll-mt-16 flex-col gap-8 rounded-card border border-border bg-bg-surface p-8 shadow-card ${className}`}
     >
-      <h3 id="suggestions-title" className="px-4 pt-4 font-display text-label font-bold">
+      <h3 id="suggestions-title" className="px-4 pt-4 font-heading text-title">
         {title}
       </h3>
       <div className="relative -mx-8 flex snap-x snap-mandatory gap-8 overflow-x-auto scroll-px-8 px-8 pb-4 scrollbar-none">

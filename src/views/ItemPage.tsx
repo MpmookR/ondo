@@ -69,7 +69,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
 
         <div className="flex flex-col gap-8 lg:overflow-hidden lg:rounded-card lg:border lg:border-border lg:bg-bg-surface lg:pb-8">
           <div className="flex flex-col gap-12 px-16 pt-16">
-            <p className="font-serif text-body">{item.description}</p>
+            <p className="font-sans text-body">{item.description}</p>
             <div className="flex flex-wrap items-center gap-8">
               <CategoryBadge category={item.category} />
               {item.notes.map((note) => (
@@ -89,8 +89,8 @@ export function ItemPage({ itemId }: { itemId: string }) {
             )}
             {isDrink ? (
               <DetailAccordion title={`Caffeine: ${caffeineLabel[item.caffeineLevel].toLowerCase()}`}>
-                <p className="font-serif text-body">{caffeineCopy[item.caffeineLevel]}</p>
-                <p className="mt-8 font-serif text-body-sm text-text-muted">
+                <p className="font-sans text-body">{caffeineCopy[item.caffeineLevel]}</p>
+                <p className="mt-8 font-sans text-body-sm text-text-muted">
                   Levels are relative, for comparing Ondo products. Caffeine varies with how you brew.
                 </p>
               </DetailAccordion>
@@ -106,7 +106,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
               </DetailAccordion>
             )}
             <DetailAccordion title="Delivery & storage">
-              <p className="font-serif text-body">
+              <p className="font-sans text-body">
                 Free delivery, letterbox friendly. Keep sealed, away from light and heat, and use within a month of opening.
               </p>
             </DetailAccordion>

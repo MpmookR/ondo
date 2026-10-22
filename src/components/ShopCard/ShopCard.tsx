@@ -37,7 +37,7 @@ export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCa
       </div>
 
       <div className="flex flex-1 flex-col items-center gap-6 px-10 pb-12 pt-10">
-        <h3 className="line-clamp-2 min-h-40 w-full text-center font-display text-label font-bold leading-tight">
+        <h3 className="line-clamp-2 min-h-40 w-full text-center font-sans text-label font-bold leading-tight">
           <Link href={itemHref(item.id)} className="stretched-link">
             {item.name}
           </Link>
@@ -51,18 +51,18 @@ export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCa
           </div>
         )}
 
-        <p className="w-full text-center font-display text-caption text-text-muted">
+        <p className="w-full text-center font-sans text-caption text-text-muted">
           {isDrink ? caffeineText(item.caffeineLevel) : item.size}
         </p>
 
-        {reason && <p className="w-full text-center font-display text-caption font-bold text-accent">{reason}</p>}
+        {reason && <p className="w-full text-center font-sans text-caption font-bold text-accent">{reason}</p>}
 
-        <p className={`w-full text-center font-serif text-body-sm ${reason ? 'line-clamp-2' : 'line-clamp-3'}`}>
+        <p className={`w-full text-center font-sans text-body-sm ${reason ? 'line-clamp-2' : 'line-clamp-3'}`}>
           {item.description}
         </p>
 
         {blocked ? (
-          <p className="mt-auto flex items-center gap-4 pt-4 font-display text-caption font-bold">
+          <p className="mt-auto flex items-center gap-4 pt-4 font-sans text-caption font-bold">
             <Icon name="info" size={16} />
             {unavailable}
           </p>

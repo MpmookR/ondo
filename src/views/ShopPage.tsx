@@ -36,23 +36,23 @@ export function ShopPage() {
     const avoiding = customer.avoids.length ? `, avoiding ${customer.avoids.map((a) => avoidLabel(a).toLowerCase()).join(', ')}` : '';
     return (
       <>
-        <p className="font-serif text-body-sm text-text-muted">
+        <p className="font-sans text-body-sm text-text-muted">
           Picked from your answers: {goal.label.toLowerCase()}, caffeine up to {customer.maxCaffeine} of 5{avoiding}.
         </p>
         {drinks.length > 0 && (
           <section aria-labelledby="fy-drinks" className="flex flex-col gap-12">
-            <h2 id="fy-drinks" className="font-display text-label font-bold">Drinks for {goal.railLabel}</h2>
+            <h2 id="fy-drinks" className="font-heading text-title">Drinks for {goal.railLabel}</h2>
             <div className={GRID}>{drinks.map((s) => card(s.item, { reason: s.reason }))}</div>
           </section>
         )}
         {gear.length > 0 && (
           <section aria-labelledby="fy-gear" className="flex flex-col gap-12">
-            <h2 id="fy-gear" className="font-display text-label font-bold">Brew it well</h2>
+            <h2 id="fy-gear" className="font-heading text-title">Brew it well</h2>
             <div className={GRID}>{gear.map((s) => card(s.item, { reason: s.reason }))}</div>
           </section>
         )}
         {picks.length === 0 && (
-          <p className="rounded-card border border-border bg-bg-surface p-16 font-serif text-body">
+          <p className="rounded-card border border-border bg-bg-surface p-16 font-sans text-body">
             Nothing new fits your answers right now. Browse the other tabs.
           </p>
         )}

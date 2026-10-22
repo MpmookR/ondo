@@ -8,13 +8,10 @@
   body {
     background-color: var(--color-bg-page);
     color: var(--color-text-primary);
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: 16px;
     line-height: 24px;
     -webkit-font-smoothing: antialiased;
-  }
-  h1, h2, h3, h4, button, input, select, label {
-    font-family: var(--font-display);
   }
   button:not(:disabled),
   [role='radio'],

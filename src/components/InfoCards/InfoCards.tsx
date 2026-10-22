@@ -22,13 +22,13 @@ function Badge({ icon }: { icon: IconName }) {
 export function DeliveryCard({ date }: { date: string }) {
   return (
     <div className={`flex items-center justify-between gap-8 p-8 ${cardClass}`}>
-      <span className="flex items-center gap-8 font-display text-label">
+      <span className="flex items-center gap-8 font-sans text-label">
         <Badge icon="truck" />
         Your first delivery
       </span>
       <button
         type="button"
-        className="flex min-h-36 items-center gap-12 rounded-sm border border-border-strong px-8 font-display text-label"
+        className="flex min-h-36 items-center gap-12 rounded-sm border border-border-strong px-8 font-sans text-label"
         aria-label={`First delivery ${date}, change date`}
       >
         {date}
@@ -65,11 +65,11 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
         onClick={() => setOpen((o) => !o)}
         className="flex min-h-36 w-full items-center justify-between gap-8 text-left"
       >
-        <span className="flex items-center gap-8 font-display text-label">
+        <span className="flex items-center gap-8 font-sans text-label">
           <Badge icon="sliders" />
           Your preferences
         </span>
-        <span className="flex items-center gap-4 font-display text-caption text-text-muted">
+        <span className="flex items-center gap-4 font-sans text-caption text-text-muted">
           {!open && <span className="max-w-128 truncate">{goal?.label}</span>}
           <Icon name={open ? 'chevron-up' : 'chevron-down'} size={20} className="text-text-primary" />
         </span>
@@ -77,7 +77,7 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
 
       <div id={panelId} hidden={!open} className="flex flex-col gap-16 px-4 pb-8">
         <fieldset className="flex flex-col gap-8">
-          <legend className="mb-8 font-display text-caption uppercase tracking-wide text-text-muted">Goal</legend>
+          <legend className="mb-8 font-sans text-caption uppercase tracking-wide text-text-muted">Goal</legend>
           <div role="radiogroup" aria-label="Goal" className="grid grid-cols-2 gap-8">
             {goals.map((g, i) => {
               const checked = g.id === customer.goal;
@@ -90,7 +90,7 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
                   }`}
                 >
                   <span className="font-mono text-footnote uppercase text-text-muted">{g.eyebrow}</span>
-                  <span className={`font-display text-label ${checked ? 'font-bold' : 'font-medium'}`}>{g.label}</span>
+                  <span className={`font-sans text-label ${checked ? 'font-bold' : 'font-medium'}`}>{g.label}</span>
                 </div>
               );
             })}
@@ -98,7 +98,7 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
         </fieldset>
 
         <fieldset>
-          <legend className="mb-8 font-display text-caption uppercase tracking-wide text-text-muted">Caffeine limit</legend>
+          <legend className="mb-8 font-sans text-caption uppercase tracking-wide text-text-muted">Caffeine limit</legend>
           <div role="radiogroup" aria-label="Caffeine limit" className="flex gap-4 rounded-pill bg-bg-subtle p-4">
             {levels.map((level, i) => {
               const checked = level === customer.maxCaffeine;
@@ -107,7 +107,7 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
                   key={level}
                   {...levelGroup.getOptionProps(level, i)}
                   aria-label={`Up to ${level}, ${caffeineLabel[level as CaffeineLevel].toLowerCase()}`}
-                  className={`flex min-h-36 flex-1 items-center justify-center rounded-pill border-2 font-display text-label tabular-nums transition-colors duration-120 ease-brew ${
+                  className={`flex min-h-36 flex-1 items-center justify-center rounded-pill border-2 font-sans text-label tabular-nums transition-colors duration-120 ease-brew ${
                     checked ? 'border-action bg-bg-surface font-bold' : 'border-transparent text-text-muted'
                   }`}
                 >
@@ -116,13 +116,13 @@ export function PreferencesCard({ customer, onGoalChange, onMaxCaffeineChange, o
               );
             })}
           </div>
-          <p className="mt-4 px-4 font-serif text-footnote text-text-muted">
+          <p className="mt-4 px-4 font-sans text-footnote text-text-muted">
             We won&apos;t suggest anything above {customer.maxCaffeine} of 5 ({caffeineLabel[customer.maxCaffeine].toLowerCase()}).
           </p>
         </fieldset>
 
         <fieldset>
-          <legend className="font-display text-caption uppercase tracking-wide text-text-muted">Avoid</legend>
+          <legend className="font-sans text-caption uppercase tracking-wide text-text-muted">Avoid</legend>
           <div className="flex flex-wrap gap-x-8">
             {avoidOptions.map((a) => (
               <ToggleChip key={a.id} pressed={customer.avoids.includes(a.id)} onPressedChange={() => onToggleAvoid(a.id)}>

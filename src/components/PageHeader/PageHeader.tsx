@@ -20,7 +20,7 @@ export interface PageHeaderProps {
 
 export function Wordmark() {
   return (
-    <span className="inline-flex items-center gap-6 font-display text-title font-heavy tracking-tight">
+    <span className="inline-flex items-center gap-6 font-heading text-title font-bold">
       <span aria-hidden="true" className="grid size-24 place-items-center rounded-pill border-3 border-text-primary">
         <span className="size-6 rounded-pill bg-accent" data-category="matcha" />
       </span>
@@ -51,7 +51,7 @@ export function PageHeader({ title, backHref, onBack, theme, onThemeChange, chil
         {back}
         <div className="flex min-w-0 flex-1 justify-center">
           {title ? (
-            <h1 className="line-clamp-2 text-center font-display text-label uppercase tracking-wide">{title}</h1>
+            <h1 className="line-clamp-2 text-center font-heading text-title">{title}</h1>
           ) : (
             <h1>
               <Wordmark />
@@ -80,7 +80,7 @@ export function PageHeader({ title, backHref, onBack, theme, onThemeChange, chil
 /** "You'll save 10% · Learn more" line under the header on Your box. */
 export function SavingsLine({ saving }: { saving: string }) {
   return (
-    <p className="flex flex-wrap items-center justify-center gap-4 px-16 pb-16 font-display text-label">
+    <p className="flex flex-wrap items-center justify-center gap-4 px-16 pb-16 font-sans text-label">
       <Icon name="tag" size={20} />
       <span>
         You&apos;ll save <span className="highlight px-2" data-category="matcha">{saving}</span> with a subscription

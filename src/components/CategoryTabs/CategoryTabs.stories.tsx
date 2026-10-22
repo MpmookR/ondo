@@ -18,7 +18,7 @@ export const Interactive: Story = {
     return (
       <>
         <CategoryTabs {...args} active={active} onChange={setActive} />
-        <div id="panel" role="tabpanel" aria-labelledby={`tab-${active}`} className="p-24 font-serif text-body">
+        <div id="panel" role="tabpanel" aria-labelledby={`tab-${active}`} className="p-24 font-sans text-body">
           Showing: {active}
         </div>
       </>

@@ -36,7 +36,7 @@ export function OrderGroup({ title, summary, children, collapsedPreview, default
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
-        className="flex min-h-44 w-full items-center justify-between gap-8 text-left font-display text-label"
+        className="flex min-h-44 w-full items-center justify-between gap-8 text-left font-sans text-label"
       >
         <span className="font-bold">{title}</span>
         <span className="flex items-center gap-4 tabular-nums">
@@ -60,7 +60,7 @@ export function ItemThumbnail({ item, qty }: { item: Item; qty: number }) {
     <li className="w-40 shrink-0">
       <Link href={itemHref(item.id)} className="flex flex-col items-center gap-2 rounded-sm">
         <ProductImage category={item.category} className="size-40 rounded-sm" />
-        <span aria-hidden="true" className="font-display text-caption text-text-muted">
+        <span aria-hidden="true" className="font-sans text-caption text-text-muted">
           x{qty}
         </span>
         <span className="sr-only">
@@ -92,12 +92,12 @@ export function ItemCard({ item, qty, onQtyChange, warning }: ItemCardProps) {
       <div className="flex items-start gap-8">
         <ProductImage category={item.category} label={item.size} className="h-88 w-88 shrink-0 rounded-sm" />
         <div className="flex min-w-0 flex-1 flex-col gap-4 pr-4">
-          <h4 className="truncate font-display text-label">
+          <h4 className="truncate font-sans text-label">
             <Link href={itemHref(item.id)} className="stretched-link">
               {item.name}
             </Link>
           </h4>
-          <p className="line-clamp-2 font-serif text-footnote text-text-muted">{item.description}</p>
+          <p className="line-clamp-2 font-sans text-footnote text-text-muted">{item.description}</p>
           <div className="flex flex-wrap items-center gap-4">
             <Pill label="Size" value={item.size} />
             {isDrink && <CaffeineMeter level={item.caffeineLevel} display="compact" />}
@@ -107,7 +107,7 @@ export function ItemCard({ item, qty, onQtyChange, warning }: ItemCardProps) {
       </div>
 
       {warning && (
-        <p className="flex items-start gap-4 px-8 font-serif text-body-sm">
+        <p className="flex items-start gap-4 px-8 font-sans text-body-sm">
           <Icon name="info" size={16} className="mt-2" />
           <span>{warning}. It&apos;s still in your box.</span>
         </p>
@@ -168,7 +168,7 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
 
   return (
     <section aria-labelledby="order-summary-title" className="flex flex-col gap-4 rounded-card border border-border bg-bg-surface p-8 shadow-card">
-      <h2 id="order-summary-title" className="px-4 pt-4 font-display text-label font-bold uppercase tracking-wide">
+      <h2 id="order-summary-title" className="px-4 pt-4 font-heading text-title">
         Your box
       </h2>
 
@@ -179,13 +179,13 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
           collapsedPreview={preview(drinks, 'Drinks in your box')}
         >
           {drinkGroups.length === 0 ? (
-            <p className="border-t border-border pt-8 font-serif text-body-sm text-text-muted">
+            <p className="border-t border-border pt-8 font-sans text-body-sm text-text-muted">
               No drinks yet. Pick a few from the suggestions or the shop.
             </p>
           ) : (
             drinkGroups.map(({ category, entries: list }) => (
               <div key={category} className="flex flex-col gap-8 border-t border-border">
-                <div className="flex items-center justify-between pt-8 font-display text-caption uppercase tracking-wide text-text-muted">
+                <div className="flex items-center justify-between pt-8 font-sans text-caption uppercase tracking-wide text-text-muted">
                   <h3>{categoryLabel[category]}</h3>
                   <span>{pluralise(list.reduce((n, e) => n + e.line.qty, 0), 'item')}</span>
                 </div>
@@ -205,7 +205,7 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
           collapsedPreview={preview(gear, 'Gear in your box')}
         >
           {gear.length === 0 ? (
-            <p className="border-t border-border pt-8 font-serif text-body-sm text-text-muted">
+            <p className="border-t border-border pt-8 font-sans text-body-sm text-text-muted">
               Nothing to brew with yet. We&apos;ve picked a few things that go with your drinks.
             </p>
           ) : (
@@ -216,7 +216,7 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
 
       <Link
         href={shopHref('for-you')}
-        className="mt-8 flex min-h-44 w-full items-center justify-center gap-8 rounded-pill border border-action font-display text-label font-bold transition-colors duration-120 ease-brew hover:bg-bg-subtle"
+        className="mt-8 flex min-h-44 w-full items-center justify-center gap-8 rounded-pill border border-action font-sans text-label font-bold transition-colors duration-120 ease-brew hover:bg-bg-subtle"
       >
         <Icon name="bag" size={20} />
         Add or change items

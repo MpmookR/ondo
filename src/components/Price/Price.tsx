@@ -15,16 +15,16 @@ export function Price({ value, was, size = 'body', each = false }: PriceProps) {
   return (
     <span className="inline-flex items-baseline gap-4 whitespace-nowrap">
       {discounted && (
-        <s className="font-display text-footnote text-text-muted">
+        <s className="font-sans text-footnote text-text-muted">
           <span className="sr-only">was </span>
           {formatPrice(was)}
         </s>
       )}
-      <span className={`font-display tabular-nums ${size === 'body' ? 'text-label' : 'text-caption font-bold'}`}>
+      <span className={`font-sans tabular-nums ${size === 'body' ? 'text-label' : 'text-caption font-bold'}`}>
         {discounted && <span className="sr-only">now </span>}
         {formatPrice(value)}
       </span>
-      {each && <span className="font-serif text-footnote text-text-muted">each</span>}
+      {each && <span className="font-sans text-footnote text-text-muted">each</span>}
     </span>
   );
 }

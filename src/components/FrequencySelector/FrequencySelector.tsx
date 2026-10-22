@@ -26,11 +26,11 @@ export function FrequencySelector({ value, onChange }: FrequencySelectorProps) {
     <section id="delivery" className="@container scroll-mt-16 rounded-card border border-border bg-bg-surface p-16 shadow-card">
       <div className="flex flex-col gap-8 @xl:flex-row @xl:items-center @xl:justify-between @xl:gap-24">
         <div className="flex flex-col gap-4 @xl:min-w-0 @xl:flex-1">
-          <h2 id="frequency-label" className="flex items-center gap-8 font-display text-label">
+          <h2 id="frequency-label" className="flex items-center gap-8 font-sans text-label">
             <Icon name="truck" size={20} />
             Delivery
           </h2>
-          <p className="hidden font-serif text-body-sm text-text-muted @xl:block">{descriptions[value]}</p>
+          <p className="hidden font-sans text-body-sm text-text-muted @xl:block">{descriptions[value]}</p>
         </div>
 
         <div
@@ -48,16 +48,16 @@ export function FrequencySelector({ value, onChange }: FrequencySelectorProps) {
                   selected ? 'border-action bg-bg-surface' : 'border-transparent hover:bg-bg-page'
                 }`}
               >
-                <span className={`whitespace-nowrap font-display text-label ${selected ? 'font-bold' : 'font-medium'}`}>
+                <span className={`whitespace-nowrap font-sans text-label ${selected ? 'font-bold' : 'font-medium'}`}>
                   {plan.label}
                 </span>
-                <span className="whitespace-nowrap font-display text-footnote text-text-muted">{subLabel(plan.discount)}</span>
+                <span className="whitespace-nowrap font-sans text-footnote text-text-muted">{subLabel(plan.discount)}</span>
               </div>
             );
           })}
         </div>
 
-        <p className="px-4 font-serif text-body-sm text-text-muted @xl:hidden">{descriptions[value]}</p>
+        <p className="px-4 font-sans text-body-sm text-text-muted @xl:hidden">{descriptions[value]}</p>
       </div>
     </section>
   );

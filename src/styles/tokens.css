@@ -4,6 +4,22 @@
  * Docs: doc/design_system.md
  */
 
+/* ---------- Fonts (SIL Open Font License, self-hosted from /public/fonts) ---------- */
+@font-face {
+  font-family: 'Kalnia';
+  src: url('/fonts/Kalnia-Variable.woff2') format('woff2-variations');
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mona Sans';
+  src: url('/fonts/MonaSans-Variable.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ---------- 1. Raw palette ---------- */
 :root {
   --raw-cream-50: #fbf8f2;
@@ -130,7 +146,7 @@
   --text-display: var(--type-display-size);
   --text-display--line-height: var(--type-display-leading);
   --text-display--letter-spacing: -0.03em;
-  --text-display--font-weight: 800;
+  --text-display--font-weight: 700;
   --text-heading: var(--type-heading-size);
   --text-heading--line-height: var(--type-heading-leading);
   --text-heading--letter-spacing: -0.02em;
@@ -165,8 +181,9 @@
 
 @theme {
   --font-*: initial;
-  --font-display: 'Cabinet Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Erode', ui-serif, Georgia, serif;
+  /* Kalnia for headings only; Mona Sans for UI, body and prices. */
+  --font-heading: 'Kalnia', ui-serif, Georgia, serif;
+  --font-sans: 'Mona Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --font-weight-regular: 400;

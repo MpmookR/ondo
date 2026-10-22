@@ -72,27 +72,30 @@ backgrounds only, never text.
 
 ## Typography
 
-Both families are free from **Fontshare** (Indian Type Foundry, ITF Free Font License) and are
-loaded from Fontshare's CSS API, **not committed to the repo**, because the licence doesn't allow
-redistributing the font files.
+Both families are free under the **SIL Open Font License**, which allows shipping the files, so
+they're **self-hosted** from `public/fonts` (variable woff2, Latin subset, licences alongside).
+`@font-face` lives at the top of `tokens.css`; the layout preloads both files.
 
 | Family | Utility | Use |
 | --- | --- | --- |
-| Cabinet Grotesk (400–800) | `font-display` | Headings, UI labels, buttons, prices |
-| Erode (400–600, italic) | `font-serif` | Body copy, descriptions, tasting notes |
+| Kalnia (variable, 100–700) | `font-heading` | Wordmark, page titles, section titles, `text-display` / `text-heading` / `text-title` headings |
+| Mona Sans (variable, 200–900) | `font-sans` | Everything else: UI labels, buttons, body copy, descriptions, prices |
 | System monospace | `font-mono` | Brew data (ratio, temperature, time), small eyebrows |
 
-| Utility | Mobile | Desktop (≥1024px) | Font |
+Rule: **Kalnia is for headings at 20px and up.** It's a high-contrast display face, so product
+names, labels and prices stay in Mona Sans even when they're bold.
+
+| Utility | Mobile | Desktop (≥1024px) | Usually |
 | --- | --- | --- | --- |
-| `text-display` | 56 / 56 | 96 / 92 | display 800, -0.03em |
-| `text-heading` | 28 / 32 | 40 / 44 | display 700, -0.02em |
-| `text-title` | 20 / 24 | 22 / 28 | display 700 |
-| `text-body-lg` | 18 / 28 | 20 / 30 | serif 400 |
-| `text-body` | 16 / 24 | 16 / 24 | serif 400 |
-| `text-body-sm` | 14 / 20 | 14 / 20 | serif 400 (dense mobile copy) |
-| `text-footnote` | 12 / 16 | 12 / 16 | any (card descriptions, sub-labels) |
-| `text-label` | 14 / 20 | 14 / 20 | display 600, 0.01em |
-| `text-caption` | 12 / 16 | 12 / 16 | display 500 |
+| `text-display` | 56 / 56 | 96 / 92 | heading 700, -0.03em |
+| `text-heading` | 28 / 32 | 40 / 44 | heading 700, -0.02em |
+| `text-title` | 20 / 24 | 22 / 28 | heading 700 (section titles) or sans (big prices) |
+| `text-body-lg` | 18 / 28 | 20 / 30 | sans 400 |
+| `text-body` | 16 / 24 | 16 / 24 | sans 400 |
+| `text-body-sm` | 14 / 20 | 14 / 20 | sans 400 (dense mobile copy) |
+| `text-footnote` | 12 / 16 | 12 / 16 | sans (card descriptions, sub-labels) |
+| `text-label` | 14 / 20 | 14 / 20 | sans 600, 0.01em |
+| `text-caption` | 12 / 16 | 12 / 16 | sans 500 |
 | `text-eyebrow` | 12 / 16 | 12 / 16 | mono 500, 0.12em, uppercase |
 
 ## Spacing and layout

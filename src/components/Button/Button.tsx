@@ -13,7 +13,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const base =
-  'inline-flex items-center justify-center gap-8 rounded-pill font-display text-label whitespace-nowrap ' +
+  'inline-flex items-center justify-center gap-8 rounded-pill font-sans text-label whitespace-nowrap ' +
   'transition-[background-color,color,opacity,transform] duration-120 ease-brew ' +
   'active:scale-98 disabled:pointer-events-none disabled:opacity-40';
 

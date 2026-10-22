@@ -33,7 +33,7 @@ export function CaffeineMeter({ level, display = 'full', className = '' }: Caffe
       </span>
       <span className="sr-only">{caffeineText(level)}</span>
       {display === 'full' && (
-        <span aria-hidden="true" className="font-display text-caption text-text-muted">
+        <span aria-hidden="true" className="font-sans text-caption text-text-muted">
           {caffeineLabel[level]}
         </span>
       )}

@@ -21,7 +21,7 @@ export function DetailAccordion({ title, children, defaultOpen = false }: { titl
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((o) => !o)}
-          className="flex min-h-52 w-full items-center justify-between py-12 text-left font-display text-label font-bold"
+          className="flex min-h-52 w-full items-center justify-between py-12 text-left font-sans text-label font-bold"
         >
           {title}
           <Icon name={open ? 'chevron-up' : 'chevron-down'} size={20} />
@@ -60,19 +60,19 @@ export function BrewHighlights({ item, customer }: BrewHighlightsProps) {
 
   return (
     <section aria-labelledby="highlights-title" className="flex flex-col gap-16 px-16 py-8">
-      <h2 id="highlights-title" className="font-display text-label font-bold">
+      <h2 id="highlights-title" className="font-sans text-label font-bold">
         {isDrink ? 'Brew highlights' : 'At a glance'}
       </h2>
       <dl className="flex">
         {stats.map((stat) => (
           <div key={stat.label} className="flex min-w-0 flex-1 flex-col-reverse items-center gap-2 border-r border-border px-2 py-4 last:border-r-0">
             <dd className="whitespace-nowrap font-mono text-caption font-bold">{stat.value}</dd>
-            <dt className="font-display text-footnote text-text-muted">{stat.label}</dt>
+            <dt className="font-sans text-footnote text-text-muted">{stat.label}</dt>
           </div>
         ))}
       </dl>
 
-      <div data-category="matcha" className="flex flex-col rounded-sm border border-border-strong bg-accent-subtle px-16 py-8 font-display text-label">
+      <div data-category="matcha" className="flex flex-col rounded-sm border border-border-strong bg-accent-subtle px-16 py-8 font-sans text-label">
         <h3 className="font-bold">Contains</h3>
         <p className="font-medium">
           {item.contains.length > 0 ? item.contains.map(avoidLabel).join(', ') : isDrink ? 'Just the leaf or bean. No dairy, nuts or gluten.' : 'Not a food item.'}
@@ -103,14 +103,14 @@ export function OrderBar({ item, qty, onQtyChange, blockedReason }: OrderBarProp
       <div aria-live="polite" className="mx-auto flex min-h-52 max-w-frame items-center justify-between gap-16">
         {qty === 0 ? (
           blockedReason ? (
-            <p className="flex min-h-52 w-full items-center justify-center rounded-pill bg-bg-subtle font-display text-label font-bold uppercase tracking-wide text-text-muted">
+            <p className="flex min-h-52 w-full items-center justify-center rounded-pill bg-bg-subtle font-sans text-label font-bold uppercase tracking-wide text-text-muted">
               {blockedReason}
             </p>
           ) : (
             <button
               type="button"
               onClick={() => onQtyChange(1)}
-              className="flex min-h-52 w-full items-center justify-center rounded-pill bg-action font-display text-label font-bold uppercase tracking-wide text-action-text transition-opacity duration-120 ease-brew hover:opacity-90"
+              className="flex min-h-52 w-full items-center justify-center rounded-pill bg-action font-sans text-label font-bold uppercase tracking-wide text-action-text transition-opacity duration-120 ease-brew hover:opacity-90"
             >
               Add to box · {formatPrice(item.price)}
             </button>
@@ -118,8 +118,8 @@ export function OrderBar({ item, qty, onQtyChange, blockedReason }: OrderBarProp
         ) : (
           <>
             <p className="flex min-w-0 flex-col gap-2">
-              <span className="font-display text-label font-bold">{qty} in your box</span>
-              <span className="font-display text-caption tabular-nums text-text-muted">{formatPrice(item.price * qty)}</span>
+              <span className="font-sans text-label font-bold">{qty} in your box</span>
+              <span className="font-sans text-caption tabular-nums text-text-muted">{formatPrice(item.price * qty)}</span>
             </p>
             <Stepper value={qty} onChange={onQtyChange} itemName={item.name} size="bar" />
           </>

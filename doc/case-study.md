@@ -36,6 +36,13 @@ product page and the sticky price bars. Rebuilding that layout with completely d
 the brand was hard-coded somewhere. **[Mook]** What carried over, and what you changed because a
 caffeine shop isn't a meal box (the caffeine limit as a hard filter, gear as its own group).
 
+## Swapping the typeface
+
+Changing the type is a test of the token roles. Components never name a font, only a role
+(`font-heading`, `font-sans`, `font-mono`), so swapping families meant editing `tokens.css`, the
+font files and the few headings that use Kalnia. One decision came out of it: Kalnia is a
+high-contrast display face, so it's for headings 20px and up only.
+
 ## Accessibility as a token rule, not a review step
 
 Every colour pair was checked before it became a token (script output in
@@ -47,8 +54,8 @@ The caffeine meter always has a text label, and Storybook runs axe on every stor
 
 | Step | Claude did | I decided or changed |
 | --- | --- | --- |
-| Concept | Suggested domains and names | **[Mook]** Picked caffeine (not coffee only), named the repo `ondo`, chose Cabinet Grotesk + Erode |
-| Licensing | Checked the fonts were free and flagged that committing them to a public repo is redistribution | Load from Fontshare instead |
+| Concept | Suggested domains and names | **[Mook]** Picked caffeine (not coffee only), named the repo `ondo`, chose the type (first Cabinet Grotesk + Erode, then Kalnia + Mona Sans) |
+| Licensing | Checked each font's licence: Fontshare's doesn't allow redistribution, so those loaded from Fontshare; Kalnia and Mona Sans are OFL, so they're self-hosted | Swapped to Kalnia + Mona Sans |
 | Docs | Drafted prd, design system, architecture and agent docs from my previous take-home's structure | **[Mook]** |
 | Rules | Wrote `recommend.ts` and tests | See below |
 | Visual review | **[Mook]** | **[Mook]** |

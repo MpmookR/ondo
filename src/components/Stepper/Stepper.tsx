@@ -21,7 +21,7 @@ export function Stepper({ value, onChange, itemName, size = 'default' }: Stepper
         type="button"
         onClick={() => onChange(1)}
         aria-label={`Add ${itemName} to your box`}
-        className="relative h-32 rounded-pill border border-action px-16 font-display text-label uppercase text-text-primary transition-colors duration-120 ease-brew before:absolute before:-inset-x-0 before:-inset-y-6 hover:bg-bg-subtle"
+        className="relative h-32 rounded-pill border border-action px-16 font-sans text-label uppercase text-text-primary transition-colors duration-120 ease-brew before:absolute before:-inset-x-0 before:-inset-y-6 hover:bg-bg-subtle"
       >
         Add to box
       </button>
@@ -48,7 +48,7 @@ export function Stepper({ value, onChange, itemName, size = 'default' }: Stepper
       </button>
       <output
         aria-live="polite"
-        className={`text-center font-display tabular-nums ${size === 'bar' ? 'w-20 text-title' : 'w-16 text-label'}`}
+        className={`text-center font-sans tabular-nums ${size === 'bar' ? 'w-20 text-title' : 'w-16 text-label'}`}
       >
         {value}
       </output>

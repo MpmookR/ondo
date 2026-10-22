@@ -41,8 +41,8 @@ function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
               <span className="size-32 rounded-pill bg-accent" />
               <span className="size-32 rounded-pill bg-accent-subtle" />
             </div>
-            <p className="mt-12 font-display text-title text-accent capitalize">{c}</p>
-            <p className="mt-8 inline-flex rounded-pill bg-accent px-12 py-4 font-display text-caption text-on-accent">on-accent</p>
+            <p className="mt-12 font-sans text-title text-accent capitalize">{c}</p>
+            <p className="mt-8 inline-flex rounded-pill bg-accent px-12 py-4 font-sans text-caption text-on-accent">on-accent</p>
           </div>
         ))}
       </div>
@@ -60,13 +60,14 @@ export const Colour: Story = {
 };
 
 const typeScale = [
-  ['text-display', 'font-display', 'Ondo'],
-  ['text-heading', 'font-display', 'How do you want your day to feel?'],
-  ['text-title', 'font-display', 'Kyoto Ceremonial Matcha'],
-  ['text-body-lg', 'font-serif', 'Coffee, tea and matcha, paced to your day.'],
-  ['text-body', 'font-serif', 'First-harvest Uji matcha for drinking straight.'],
-  ['text-label', 'font-display', 'Start subscription'],
-  ['text-caption', 'font-display', 'Goes with your Shizuoka Sencha'],
+  ['text-display', 'font-heading', 'Ondo'],
+  ['text-heading', 'font-heading', 'How do you want your day to feel?'],
+  ['text-title', 'font-heading', 'For calm focus'],
+  ['text-title', 'font-sans', '£20.70'],
+  ['text-body-lg', 'font-sans', 'Coffee, tea and matcha, paced to your day.'],
+  ['text-body', 'font-sans', 'First-harvest Uji matcha for drinking straight.'],
+  ['text-label', 'font-sans', 'Start subscription'],
+  ['text-caption', 'font-sans', 'Goes with your Shizuoka Sencha'],
   ['text-eyebrow', 'font-mono uppercase', 'Ratio 1:16 · 94°C'],
 ] as const;
 

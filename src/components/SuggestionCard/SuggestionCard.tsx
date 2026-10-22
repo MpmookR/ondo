@@ -29,12 +29,12 @@ export function SuggestionCard({ suggestion, qty, onQtyChange }: SuggestionCardP
       </div>
 
       <div className="flex flex-1 flex-col gap-4">
-        <h4 className="line-clamp-2 min-h-40 text-center font-display text-label leading-tight">
+        <h4 className="line-clamp-2 min-h-40 text-center font-sans text-label leading-tight">
           <Link href={itemHref(item.id)} className="stretched-link">
             {item.name}
           </Link>
         </h4>
-        <p className="line-clamp-2 min-h-32 text-center font-serif text-footnote text-accent">{reason}</p>
+        <p className="line-clamp-2 min-h-32 text-center font-sans text-footnote text-accent">{reason}</p>
 
         <div className="mt-auto flex min-h-24 items-center justify-between gap-4">
           <Price value={item.price} size="small" />

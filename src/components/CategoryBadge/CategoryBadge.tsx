@@ -12,7 +12,7 @@ export function CategoryBadge({ category, className = '' }: CategoryBadgeProps) 
   return (
     <span
       data-category={category}
-      className={`inline-flex h-24 items-center gap-4 rounded-pill bg-accent pl-8 pr-10 font-display text-caption text-on-accent ${className}`}
+      className={`inline-flex h-24 items-center gap-4 rounded-pill bg-accent pl-8 pr-10 font-sans text-caption text-on-accent ${className}`}
     >
       <Icon name={categoryIcon[category]} size={16} />
       {categoryLabel[category]}

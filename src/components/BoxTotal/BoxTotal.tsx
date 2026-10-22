@@ -27,31 +27,31 @@ export function BoxTotal({ totals, cadence, discountRate, onCheckout }: BoxTotal
       <div className="mx-auto flex max-w-frame flex-col items-center gap-4 lg:max-w-none">
         <div aria-live="polite" aria-atomic="true" className="flex w-full items-end justify-between px-8 lg:px-0">
           <div className="flex flex-col gap-4">
-            <p className="font-display text-label font-bold">Box total</p>
-            <p className="font-display text-caption text-text-muted">
+            <p className="font-sans text-label font-bold">Box total</p>
+            <p className="font-sans text-caption text-text-muted">
               {pluralise(drinkCount, 'drink')} · {gearText}
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
             {subtotal > total && (
-              <s className="font-display text-caption text-text-muted">
+              <s className="font-sans text-caption text-text-muted">
                 <span className="sr-only">was </span>
                 {formatPrice(subtotal)}
               </s>
             )}
-            <p className="font-display text-title tabular-nums">
+            <p className="font-sans text-title tabular-nums">
               <span className="sr-only">total </span>
               {formatPrice(total)}
               <span className="font-medium text-caption text-text-muted"> {cadence === 'once' ? '' : cadence}</span>
             </p>
           </div>
         </div>
-        <p className="text-center font-serif text-footnote text-text-muted">{note}</p>
+        <p className="text-center font-sans text-footnote text-text-muted">{note}</p>
         <button
           type="button"
           onClick={onCheckout}
           disabled={totals.count === 0}
-          className="mt-4 flex min-h-48 w-full items-center justify-center gap-8 rounded-pill bg-action px-16 font-display text-label font-bold text-action-text transition-opacity duration-120 ease-brew hover:opacity-90 disabled:opacity-40"
+          className="mt-4 flex min-h-48 w-full items-center justify-center gap-8 rounded-pill bg-action px-16 font-sans text-label font-bold text-action-text transition-opacity duration-120 ease-brew hover:opacity-90 disabled:opacity-40"
         >
           <Icon name="bag" size={20} />
           {totals.count === 0 ? 'Add something first' : 'Go to checkout'}

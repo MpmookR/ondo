@@ -36,7 +36,7 @@ export function CategoryTabs<T extends string>({ tabs, active, onChange, panelId
               aria-selected={selected}
               aria-controls={panelId}
               onClick={() => onChange(tab.id)}
-              className={`flex min-h-44 shrink-0 items-center whitespace-nowrap border-b-3 px-12 pb-10 pt-12 font-display text-label transition-colors duration-120 ease-brew ${
+              className={`flex min-h-44 shrink-0 items-center whitespace-nowrap border-b-3 px-12 pb-10 pt-12 font-sans text-label transition-colors duration-120 ease-brew ${
                 selected ? 'border-action font-bold' : 'border-transparent font-medium text-text-muted hover:text-text-primary'
               }`}
             >

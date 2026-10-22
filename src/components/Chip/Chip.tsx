@@ -17,7 +17,7 @@ const tones = {
 export function Chip({ children, tone = 'note', className = '' }: ChipProps) {
   return (
     <span
-      className={`inline-flex h-20 shrink-0 items-center whitespace-nowrap rounded-sm px-8 font-display text-footnote font-semibold ${tones[tone]} ${className}`}
+      className={`inline-flex h-20 shrink-0 items-center whitespace-nowrap rounded-sm px-8 font-sans text-footnote font-semibold ${tones[tone]} ${className}`}
     >
       {children}
     </span>
@@ -27,7 +27,7 @@ export function Chip({ children, tone = 'note', className = '' }: ChipProps) {
 /** Label + value pill, e.g. "Size 250g" (the role Frive's kcal pill played). */
 export function Pill({ label, value, className = '' }: { label: string; value: string; className?: string }) {
   return (
-    <span className={`inline-flex h-20 shrink-0 items-center gap-4 rounded-sm bg-bg-subtle px-8 font-display text-footnote ${className}`}>
+    <span className={`inline-flex h-20 shrink-0 items-center gap-4 rounded-sm bg-bg-subtle px-8 font-sans text-footnote ${className}`}>
       <span className="font-regular text-text-muted">{label}</span>
       <span className="font-bold">{value}</span>
     </span>
@@ -50,7 +50,7 @@ export function ToggleChip({ pressed, onPressedChange, children, className = '',
       {...rest}
     >
       <span
-        className={`inline-flex h-32 items-center gap-4 rounded-pill border px-16 font-display text-label transition-colors duration-120 ease-brew ${
+        className={`inline-flex h-32 items-center gap-4 rounded-pill border px-16 font-sans text-label transition-colors duration-120 ease-brew ${
           pressed ? 'border-action bg-action text-action-text' : 'border-border-strong text-text-primary group-hover:bg-bg-subtle'
         }`}
       >
