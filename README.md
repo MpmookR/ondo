@@ -7,8 +7,9 @@ by [Mook (Puangpaka Rattana)](https://mooksportfolio.netlify.app/).
 - **Tokens** in one file, themed by two attributes: `data-theme` (cream / fog) and
   `data-category` (coffee / tea / matcha). One component, every look.
 - **Components** documented in Storybook, every state in both themes, accessibility checks on.
-- **Demo page** "Build your box": pick how you want your day to feel, and a rules-based rail
-  suggests drinks and gear with a reason for each.
+- **Three mobile-first screens** built only from the system: *Your box* (order summary with a
+  goal-based suggestion rail), *Shop* (tabs, unavailable items tucked away with a reason) and an
+  *item page* with brew highlights. Light and dark themes switch from the header.
 - **AI guide**: `CLAUDE.md` + `doc/agent.md` keep AI-generated UI on-brand.
 
 ## Run it

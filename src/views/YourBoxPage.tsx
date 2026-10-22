@@ -1,0 +1,65 @@
+'use client';
+
+import { catalogue } from '@/data/catalogue';
+import { goalById } from '@/data/goals';
+import { FIRST_DELIVERY } from '@/data/labels';
+import { planById } from '@/data/plans';
+import { unavailableReason } from '@/lib/recommend';
+import {
+  BoxTotal,
+  DeliveryCard,
+  FrequencySelector,
+  OrderSummary,
+  PageHeader,
+  PreferencesCard,
+  SavingsLine,
+  SuggestionRail,
+  useBox,
+  useFreshRail,
+} from '@/components';
+
+/** Your box: the order summary. Mobile first; two columns from 1024px. */
+export function YourBoxPage() {
+  useFreshRail();
+  const { state, dispatch, totals, suggestions, setQty, theme, setTheme } = useBox();
+  const goal = goalById(state.customer.goal);
+  const plan = planById(state.plan);
+
+  return (
+    <>
+      <PageHeader theme={theme} onThemeChange={setTheme}>
+        <SavingsLine saving="10%" />
+      </PageHeader>
+
+      <main className="mx-auto w-full max-w-content px-16 pb-240 pt-16 lg:grid lg:grid-cols-12 lg:items-start lg:gap-24 lg:px-24 lg:pb-48 lg:pt-24">
+        <div className="mx-auto flex max-w-column flex-col gap-16 lg:col-span-7 lg:mx-0 lg:max-w-none">
+          <DeliveryCard date={FIRST_DELIVERY} />
+          <PreferencesCard
+            customer={state.customer}
+            onGoalChange={(g) => dispatch({ type: 'setGoal', goal: g })}
+            onMaxCaffeineChange={(level) => dispatch({ type: 'setMaxCaffeine', maxCaffeine: level })}
+            onToggleAvoid={(avoid) => dispatch({ type: 'toggleAvoid', avoid })}
+          />
+          <FrequencySelector value={state.plan} onChange={(p) => dispatch({ type: 'setPlan', plan: p })} />
+          <OrderSummary
+            lines={state.lines}
+            catalogue={catalogue}
+            totals={totals}
+            onQtyChange={setQty}
+            warningFor={(item) => unavailableReason(item, state.customer)}
+          />
+        </div>
+
+        <div className="mx-auto mt-16 flex max-w-column flex-col gap-16 lg:sticky lg:top-24 lg:col-span-5 lg:mx-0 lg:mt-0 lg:max-w-none">
+          <SuggestionRail
+            title={`For ${goal.railLabel}`}
+            suggestions={suggestions}
+            lines={state.lines}
+            onQtyChange={setQty}
+          />
+          <BoxTotal totals={totals} cadence={plan.cadence} discountRate={plan.discount} />
+        </div>
+      </main>
+    </>
+  );
+}

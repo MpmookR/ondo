@@ -4,7 +4,7 @@ Ondo is an invented caffeine subscription brand: coffee, tea, matcha and the gea
 This repo is a portfolio piece. It shows a design system built **with Claude and code**, and a
 working page built only from that system.
 
-The idea started from a meal-delivery take-home (goal-based cross-sell). Ondo is a new brand and
+The idea started from a meal-delivery take-home task (goal-based cross-sell). Ondo is a new brand and
 a new domain, built from scratch, so none of that company's brand, tokens or content is used.
 
 ## Product overview
@@ -46,13 +46,18 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
 ### In (v1)
 1. **Design system:** tokens (light and dark theme, three category accents), core components,
    all documented in Storybook.
-2. **Demo page "Build your box"** (`/`): goal picker, the customer's box, a "For your {goal}" rail
-   of up to 6 suggestions with a one-line reason each, and a sticky box total.
-3. **Hero section** in the dark theme, to show both themes on one page.
-4. **AI guide:** `CLAUDE.md` + `doc/agent.md` so Claude Code (or any AI coding tool) builds
+2. **Your box** (`/`): first delivery, editable preferences (goal, caffeine limit, avoids), delivery
+   frequency, the box grouped into drinks and gear, a "For {goal}" rail of up to 6 suggestions with
+   a one-line reason each, and the box total always in view.
+3. **Shop** (`/shop`): tabs For you · Coffee · Tea · Matcha · Gear. "For you" runs the same rules as
+   the rail. Items the customer can't have are tucked into collapsed sections with the reason.
+4. **Item page** (`/item/[id]`): pack, description, caffeine, brew highlights, a "Contains" box that
+   is never collapsed, brew guide, a "Goes well with this" rail and a pinned order bar.
+5. **Light and dark themes**, switchable from the header on every page.
+6. **AI guide:** `CLAUDE.md` + `doc/agent.md` so Claude Code (or any AI coding tool) builds
    on-brand by default.
-5. **Case study:** `doc/case-study.md`, how the system was built with Claude and where I overruled it.
-6. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
+7. **Case study:** `doc/case-study.md`, how the system was built with Claude and where I overruled it.
+8. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
 
 ### Out
 - Checkout, accounts, payments, a backend.
@@ -81,9 +86,9 @@ tea/coffee specialist would own them; the code only reads them.
 Tie-break: lower price first. Show the top 6; zero scores are never shown. The reason line is the
 pairing if there is one (most specific), otherwise the highest-scoring signal.
 
-**Stable rail:** the rail is worked out from the box as it was when the goal was picked. Adding an
+**Stable rail:** the rail is worked out from the box as it was when the page opened. Adding an
 item from the rail turns its button into a stepper in place instead of reshuffling the cards.
-Changing the goal rebuilds the rail from the current box.
+Changing a preference rebuilds the rail from the current box.
 
 **Worked example** (covered by tests). Goal: calm focus. Caffeine limit 4. Avoids dairy.
 Box: Yirgacheffe Filter, Shizuoka Sencha. Top 6: Matcha Taster Tin (4), Tieguanyin Oolong (3),

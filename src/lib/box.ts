@@ -1,19 +1,27 @@
-import type { BoxLine, Goal, Item, PlanId } from '../types';
+import type { BoxLine, Customer, Goal, Item, PlanId } from '../types';
+
+export type Theme = 'light' | 'dark';
 
 export interface BoxState {
   lines: BoxLine[];
-  goal: Goal;
   plan: PlanId;
+  customer: Customer;
+  /**
+   * The box the suggestion rail is worked out from. It's refreshed when a page opens or a
+   * preference changes, not on every add, so cards don't reshuffle under the customer's thumb.
+   */
+  railLines: BoxLine[];
 }
 
 export type BoxAction =
-  | { type: 'add'; itemId: string }
-  | { type: 'remove'; itemId: string }
   | { type: 'setQty'; itemId: string; qty: number }
+  | { type: 'setPlan'; plan: PlanId }
   | { type: 'setGoal'; goal: Goal }
-  | { type: 'setPlan'; plan: PlanId };
+  | { type: 'setMaxCaffeine'; maxCaffeine: Customer['maxCaffeine'] }
+  | { type: 'toggleAvoid'; avoid: string }
+  | { type: 'refreshRail' };
 
-const MAX_QTY = 9;
+export const MAX_QTY = 9;
 
 export function qtyOf(lines: BoxLine[], itemId: string): number {
   return lines.find((l) => l.itemId === itemId)?.qty ?? 0;
@@ -30,20 +38,27 @@ function withQty(lines: BoxLine[], itemId: string, qty: number): BoxLine[] {
 
 export function boxReducer(state: BoxState, action: BoxAction): BoxState {
   switch (action.type) {
-    case 'add':
-      return { ...state, lines: withQty(state.lines, action.itemId, qtyOf(state.lines, action.itemId) + 1) };
-    case 'remove':
-      return { ...state, lines: withQty(state.lines, action.itemId, qtyOf(state.lines, action.itemId) - 1) };
     case 'setQty':
       return { ...state, lines: withQty(state.lines, action.itemId, action.qty) };
-    case 'setGoal':
-      return { ...state, goal: action.goal };
     case 'setPlan':
       return { ...state, plan: action.plan };
+    case 'setGoal':
+      return { ...state, customer: { ...state.customer, goal: action.goal }, railLines: state.lines };
+    case 'setMaxCaffeine':
+      return { ...state, customer: { ...state.customer, maxCaffeine: action.maxCaffeine }, railLines: state.lines };
+    case 'toggleAvoid': {
+      const { avoids } = state.customer;
+      const next = avoids.includes(action.avoid) ? avoids.filter((a) => a !== action.avoid) : [...avoids, action.avoid];
+      return { ...state, customer: { ...state.customer, avoids: next }, railLines: state.lines };
+    }
+    case 'refreshRail':
+      return { ...state, railLines: state.lines };
   }
 }
 
 export interface Totals {
+  drinkCount: number;
+  gearCount: number;
   count: number;
   subtotal: number;
   discount: number;
@@ -53,15 +68,17 @@ export interface Totals {
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
 export function totals(lines: BoxLine[], catalogue: Item[], discountRate: number): Totals {
-  let count = 0;
+  let drinkCount = 0;
+  let gearCount = 0;
   let subtotal = 0;
   for (const line of lines) {
     const item = catalogue.find((i) => i.id === line.itemId);
     if (!item) continue;
-    count += line.qty;
+    if (item.category === 'gear') gearCount += line.qty;
+    else drinkCount += line.qty;
     subtotal += item.price * line.qty;
   }
   subtotal = round2(subtotal);
   const discount = round2(subtotal * discountRate);
-  return { count, subtotal, discount, total: round2(subtotal - discount) };
+  return { drinkCount, gearCount, count: drinkCount + gearCount, subtotal, discount, total: round2(subtotal - discount) };
 }

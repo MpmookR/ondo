@@ -18,15 +18,23 @@ I invented a brand so the work is mine to publish: **Ondo**, a caffeine subscrip
 Coffee, tea and matcha each need their own feel, but I didn't want three versions of every
 component. The answer is attributes, not props:
 
-- `data-theme` swaps surfaces (cream for the shop, fog for the hero, taken from my moodboard).
+- `data-theme` swaps surfaces: cream, or fog from my moodboard. One button flips the whole app.
 - `data-category` swaps the accent.
-- Components only use semantic utilities, so the same `ProductCard` works everywhere.
+- Components only use semantic utilities, so the same `ShopCard` works for every category.
 
 **A bug worth telling.** The first version declared the semantic colours in Tailwind's normal
 `@theme`. That resolves `var(--accent)` once, at the root, so a `data-category` further down the
 page changed nothing. Switching to `@theme inline` makes each utility read the variable where it's
 used. Small change, but it's the difference between theming that works and theming that only
 looks like it does in a single-theme screenshot.
+
+## Same UI, new system
+
+The screens reuse the structure of my meal-delivery prototype: order summary, a menu with tabs, a
+product page and the sticky price bars. Rebuilding that layout with completely different tokens
+(colour, type, radius, shadow) is a test of the system: if a screen only looks right in one brand,
+the brand was hard-coded somewhere. **[Mook]** What carried over, and what you changed because a
+caffeine shop isn't a meal box (the caffeine limit as a hard filter, gear as its own group).
 
 ## Accessibility as a token rule, not a review step
 
@@ -51,6 +59,11 @@ brew-gap rule looked at gear already in the box, so adding gear from the rail wo
 which breaks the stability rule in the PRD. Running the rules for all four goals made both obvious.
 The fix was a smaller, separate "brews something in your box" signal that only looks at drinks, and
 the worked example in the PRD is now a test.
+
+**Reviewing the screens.** Rendering each page at 402px and 1440px caught four problems:
+the desktop rail grid pushed the price out of view (the rail now scrolls at every width), gear
+picked up the matcha accent from the page (gear now has its own neutral accent), the delivery
+labels were cramped on a phone, and the brew stats wrapped.
 
 **[Mook]** Where you overruled Claude on visual or product decisions.
 

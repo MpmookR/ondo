@@ -14,7 +14,8 @@ look polished and read clearly. It is not production code.
 1. Read [Product requirements](prd.md), especially the recommendation and wording rules.
 2. Read [Design system](design_system.md).
 3. Read [Architecture](architecture.md).
-4. Look at `src/components` and its stories before creating anything new.
+4. Look at `src/components` and its stories before creating anything new. Screens live in
+   `src/views` and only compose components; new visual patterns belong in `src/components`.
 
 ## Design rules (non-negotiable)
 
@@ -27,7 +28,8 @@ look polished and read clearly. It is not production code.
 - Spacing unit is 1px: `p-16` = 16px. Use the documented steps.
 - Type: headings and UI in `font-display` (Cabinet Grotesk), body copy in `font-serif` (Erode),
   brew data in `font-mono`.
-- Mobile first: phone layout, then `lg:`. Check 402px, 820px, 1440px; no sideways scroll.
+- Mobile first: phone layout, then `md:` / `lg:`. Check 402px, 820px, 1440px; no sideways scroll.
+  Bars fixed to the bottom use `pb-safe`; whole-card links use `stretched-link`.
 - Every interactive element: visible focus state, 44px tap target, accessible name.
 - Caffeine level always has a text label. No health claims on cards.
 - Check new colour pairs against the contrast table; AA minimum.
@@ -36,7 +38,7 @@ look polished and read clearly. It is not production code.
 
 - TypeScript strict. One component per folder with a `.stories.tsx` covering every variant and
   state, shown in both themes.
-- Reuse `ProductCard`, `Stepper`, `Chip`, `Button`; no near-duplicates.
+- Reuse `ShopCard`, `SuggestionCard`, `ItemCard`, `Stepper`, `Chip`, `Button`; no near-duplicates.
 - Keep `recommend.ts` pure: short functions, named constants for points.
 - Don't add libraries (UI kits, state managers, icon packs) without asking. Tailwind is the only
   styling tool.

@@ -101,6 +101,16 @@ export function recommend(
     .map((s) => ({ item: s.item, score: s.score, reason: reasonFor(s, goalLabel) }));
 }
 
+/** Suggestions for one item's page: that drink is the context. Gear pages fall back to the box's rail. */
+export function recommendForItem(
+  item: Item,
+  customer: Customer,
+  catalogue: Item[],
+  options: { limit?: number; goalLabel?: string } = {},
+): Suggestion[] {
+  return recommend(customer, [{ itemId: item.id, qty: 1 }], catalogue, options);
+}
+
 /** Why an item can't be added on the shop grid (null if it can). */
 export function unavailableReason(item: Item, customer: Customer): string | null {
   if (!item.inStock) return 'Back soon';

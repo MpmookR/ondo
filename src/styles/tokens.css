@@ -97,6 +97,8 @@
 }
 
 /* ---------- 3. Category accents ---------- */
+/* Gear is neutral: it follows the theme's action colour. */
+[data-category='gear']   { --accent: var(--theme-action); --accent-subtle: var(--theme-bg-subtle); --on-accent: var(--theme-action-text); }
 [data-category='coffee'] { --accent: var(--raw-espresso-600); --accent-subtle: var(--raw-espresso-100); --on-accent: var(--raw-cream-50); }
 [data-category='tea']    { --accent: var(--raw-amber-600);    --accent-subtle: var(--raw-amber-100);    --on-accent: var(--raw-cream-50); }
 [data-category='matcha'] { --accent: var(--raw-matcha-700);   --accent-subtle: var(--raw-matcha-100);   --on-accent: var(--raw-cream-50); }
@@ -141,6 +143,10 @@
   --text-body-lg--line-height: var(--type-body-lg-leading);
   --text-body: 16px;
   --text-body--line-height: 24px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-footnote: 12px;
+  --text-footnote--line-height: 16px;
   --text-label: 14px;
   --text-label--line-height: 20px;
   --text-label--letter-spacing: 0.01em;
@@ -178,9 +184,12 @@
   --radius-pill: 999px;
 
   --shadow-*: initial;
+  --shadow-card: 0 1px 2px rgb(var(--theme-shadow-tint) / 0.04), 0 4px 12px rgb(var(--theme-shadow-tint) / 0.06);
   --shadow-raised: 0 1px 2px rgb(var(--theme-shadow-tint) / 0.08), 0 8px 24px rgb(var(--theme-shadow-tint) / 0.12);
+  --shadow-bar: 0 -4px 16px rgb(var(--theme-shadow-tint) / 0.1);
 
   --container-frame: 402px;
+  --container-column: 560px;
   --container-content: 1200px;
 
   --ease-brew: cubic-bezier(0.2, 0.7, 0.2, 1);

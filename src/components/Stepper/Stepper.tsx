@@ -1,38 +1,66 @@
-import { Button, IconButton } from '../Button';
+import { MAX_QTY } from '@/lib/box';
+import { Icon } from '../Icon';
 
 export interface StepperProps {
-  qty: number;
+  value: number;
+  onChange: (value: number) => void;
+  /** Item name, for the button labels screen readers hear. */
   itemName: string;
-  onAdd: () => void;
-  onRemove: () => void;
-  addLabel?: string;
-  max?: number;
-  className?: string;
+  /** `default` in cards, `compact` in suggestion cards, `bar` in the item page's order bar. */
+  size?: 'default' | 'compact' | 'bar';
 }
 
-/** 0 → "Add"; 1 → bin + plus; 2+ → minus + plus. All targets 44px. */
-export function Stepper({ qty, itemName, onAdd, onRemove, addLabel = 'Add', max = 9, className = '' }: StepperProps) {
-  if (qty === 0) {
+/**
+ * 0 → "Add to box"; 1 → bin + plus; 2+ → minus + plus.
+ * Icons are 20–24px but every button has a 44px hit area.
+ */
+export function Stepper({ value, onChange, itemName, size = 'default' }: StepperProps) {
+  if (value === 0) {
     return (
-      <Button variant="accent" icon="plus" onClick={onAdd} className={className} aria-label={`${addLabel} ${itemName} to your box`}>
-        {addLabel}
-      </Button>
+      <button
+        type="button"
+        onClick={() => onChange(1)}
+        aria-label={`Add ${itemName} to your box`}
+        className="relative h-32 rounded-pill border border-action px-16 font-display text-label uppercase text-text-primary transition-colors duration-120 ease-brew before:absolute before:-inset-x-0 before:-inset-y-6 hover:bg-bg-subtle"
+      >
+        Add to box
+      </button>
     );
   }
+
+  const wrap =
+    size === 'bar' ? 'gap-4 rounded-pill bg-bg-subtle px-4' : size === 'compact' ? 'gap-4' : 'gap-12 px-4';
+  const hit =
+    size === 'bar'
+      ? 'grid size-44 place-items-center rounded-pill disabled:opacity-30'
+      : 'relative grid size-24 place-items-center rounded-pill before:absolute before:-inset-10 disabled:opacity-30';
+  const iconSize = size === 'compact' ? 20 : 24;
+
   return (
-    <div
-      className={`inline-flex items-center rounded-pill border border-border ${className}`}
-      role="group"
-      aria-label={`${itemName}, quantity ${qty}`}
-    >
-      <IconButton
-        variant="ghost"
-        icon={qty === 1 ? 'trash' : 'minus'}
-        label={qty === 1 ? `Remove ${itemName}` : `Remove one ${itemName}`}
-        onClick={onRemove}
-      />
-      <span className="min-w-24 text-center font-display text-label tabular-nums">{qty}</span>
-      <IconButton variant="ghost" icon="plus" label={`Add one more ${itemName}`} onClick={onAdd} disabled={qty >= max} />
+    <div className={`flex items-center ${wrap}`} role="group" aria-label={`${itemName} quantity`}>
+      <button
+        type="button"
+        className={hit}
+        onClick={() => onChange(value - 1)}
+        aria-label={value === 1 ? `Remove ${itemName}` : `Remove one ${itemName}`}
+      >
+        <Icon name={value === 1 ? 'trash' : 'minus'} size={value === 1 ? 20 : iconSize} />
+      </button>
+      <output
+        aria-live="polite"
+        className={`text-center font-display tabular-nums ${size === 'bar' ? 'w-20 text-title' : 'w-16 text-label'}`}
+      >
+        {value}
+      </output>
+      <button
+        type="button"
+        className={hit}
+        onClick={() => onChange(value + 1)}
+        disabled={value >= MAX_QTY}
+        aria-label={`Add one more ${itemName}`}
+      >
+        <Icon name="plus" size={iconSize} />
+      </button>
     </div>
   );
 }

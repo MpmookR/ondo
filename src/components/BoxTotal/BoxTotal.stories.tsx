@@ -1,21 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { BoxTotal } from './BoxTotal';
+import { emptyTotals, sampleTotals } from '@/stories/fixtures';
 
 const meta = {
   title: 'Patterns/BoxTotal',
   component: BoxTotal,
-  args: {
-    layout: 'card',
-    cadence: 'every 2 weeks',
-    totals: { count: 3, subtotal: 34, discount: 3.4, total: 30.6 },
-  },
-  argTypes: { layout: { control: 'inline-radio', options: ['card', 'bar'] } },
-  decorators: [(Story) => <div className="max-w-frame"><Story /></div>],
+  args: { totals: sampleTotals, cadence: 'every 2 weeks', discountRate: 0.1 },
+  parameters: { docs: { description: { component: 'Fixed to the bottom below 1024px; a card in the sidebar above. Resize the canvas to see both.' } } },
+  decorators: [(Story) => <div className="min-h-320"><Story /></div>],
 } satisfies Meta<typeof BoxTotal>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Card: Story = {};
-export const Bar: Story = { args: { layout: 'bar' } };
-export const OneOff: Story = { args: { cadence: 'once', totals: { count: 1, subtotal: 24, discount: 0, total: 24 } } };
-export const Empty: Story = { args: { totals: { count: 0, subtotal: 0, discount: 0, total: 0 } } };
+export const Subscription: Story = {};
+export const OneOff: Story = { args: { cadence: 'once', discountRate: 0, totals: { ...sampleTotals, discount: 0, total: sampleTotals.subtotal } } };
+export const Empty: Story = { args: { totals: emptyTotals } };

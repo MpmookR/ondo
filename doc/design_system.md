@@ -16,7 +16,7 @@ Nobody translates a design name into a different code name, which is how design 
 
 `--color-*: initial` removes Tailwind's default palette, so only Ondo colours exist.
 
-**Theming is attributes, not components.** One `ProductCard` serves coffee, tea and matcha:
+**Theming is attributes, not components.** One `ShopCard` serves coffee, tea, matcha and gear:
 `data-category` on any ancestor swaps the accent, and `data-theme="dark"` swaps the whole surface
 set. Components only ever use semantic utilities, so they never need to know which theme they're in.
 
@@ -31,6 +31,7 @@ set. Components only ever use semantic utilities, so they never need to know whi
 | Stone | 600 `#6b6157` | Muted text on light |
 | Roast | 900 `#1e1a16` | Text and primary actions on light |
 | Fog | 900 `#131a19`, 800 `#1d2624`, 600 `#3a4643`, 300 `#a3aea9` | Dark theme (from the brand moodboard) |
+| Gear | follows the theme's action colour | Neutral accent for gear |
 | Espresso | 100 `#efe1d6`, 300 `#d9a47f`, 600 `#7a4528` | Coffee accent |
 | Amber | 100 `#f6e6cc`, 300 `#e3a64f`, 600 `#8c5310` | Tea accent |
 | Matcha | 100 `#e4edd2`, 300 `#a9c46f`, 700 `#4c6823` | Matcha accent |
@@ -52,7 +53,8 @@ set. Components only ever use semantic utilities, so they never need to know whi
 | `bg-accent-subtle` | category 100 | fog-600 |
 | `text-on-accent` | cream-50 | fog-900 |
 
-With no `data-category`, the accent falls back to roast (light) or cream (dark).
+With no `data-category` (or `gear`), the accent falls back to roast (light) or cream (dark).
+The moon/sun button in the header flips the whole app between the two themes.
 
 ### Contrast (checked, WCAG 2.2 AA)
 
@@ -87,6 +89,8 @@ redistributing the font files.
 | `text-title` | 20 / 24 | 22 / 28 | display 700 |
 | `text-body-lg` | 18 / 28 | 20 / 30 | serif 400 |
 | `text-body` | 16 / 24 | 16 / 24 | serif 400 |
+| `text-body-sm` | 14 / 20 | 14 / 20 | serif 400 (dense mobile copy) |
+| `text-footnote` | 12 / 16 | 12 / 16 | any (card descriptions, sub-labels) |
 | `text-label` | 14 / 20 | 14 / 20 | display 600, 0.01em |
 | `text-caption` | 12 / 16 | 12 / 16 | display 500 |
 | `text-eyebrow` | 12 / 16 | 12 / 16 | mono 500, 0.12em, uppercase |
@@ -102,6 +106,7 @@ redistributing the font files.
 | `--layout-margin` (`px-margin`) | 16px | 64px |
 | `--layout-gutter` (`gap-gutter`) | 16px | 24px |
 | `max-w-frame` | 402px | |
+| `max-w-column` | 560px (one column on tablets) | |
 | `max-w-content` | 1200px | |
 
 ## Radius, borders, elevation, motion
@@ -112,43 +117,68 @@ redistributing the font files.
 | `rounded-card` | 16px | Cards |
 | `rounded-panel` | 28px | Hero panels, sheets |
 | `rounded-pill` | 999px | Buttons, badges, stepper |
-| `shadow-raised` | `0 1px 2px` + `0 8px 24px` roast at low alpha | Cards on hover, sticky bar |
-| `shadow-none` | — | Cards at rest (border only) |
+| `shadow-card` | `0 1px 2px` + `0 4px 12px` at very low alpha | Cards (with a border) |
+| `shadow-raised` | `0 1px 2px` + `0 8px 24px` at low alpha | Hover, popovers |
+| `shadow-bar` | `0 -4px 16px` | Bars fixed to the bottom |
 | `duration-120` / `duration-200` | 120ms / 200ms | Hover, press, expand |
 | `ease-brew` | `cubic-bezier(.2,.7,.2,1)` | All transitions |
 
 Motion turns off under `prefers-reduced-motion`.
 
-**Texture:** the dark hero uses a CSS film-grain overlay (`.grain`, an inline SVG noise), echoing
+**Utilities:** `highlight` (marker behind a word), `pb-safe` (clears the iPhone home bar),
+`stretched-link` (whole card tappable), `scrollbar-none`. Together they mean components never need
+arbitrary values.
+
+**Texture:** the dark theme can use a CSS film-grain overlay (`.grain`, an inline SVG noise), echoing
 the moodboard. It's decoration only and sits under `aria-hidden` content.
 
 ## Components (`src/components`)
 
+The screens follow the structure of my earlier meal-delivery prototype (order summary, menu with
+tabs, product page, sticky bars), rebuilt with Ondo's tokens. Everything is mobile first: designed
+at 402px, then `md:` / `lg:` add columns.
+
+### Building blocks
+
 | Component | Notes |
 | --- | --- |
-| `Button` | `primary` (action), `accent`, `secondary` (outline), `ghost`. Sizes `md` 44px, `lg` 52px. |
-| `IconButton` | 44px hit area, needs `label`. |
-| `Chip` | Flavour notes and filters. `static` or toggle (`aria-pressed`). |
+| `Icon` | Line icons on a 24px grid, `currentColor`. Decorative unless labelled. |
+| `Button`, `IconButton` | `primary`, `accent`, `secondary`, `ghost`. 44px minimum. |
+| `Chip`, `Pill`, `ToggleChip` | Tasting notes (`note`), quiet labels (`outline`), label + value (`Pill`, e.g. "Size 250g"), on/off filters. |
 | `CategoryBadge` | Coffee / Tea / Matcha / Gear. Sets its own `data-category`. |
-| `CaffeineMeter` | 5 beans filled to the level + text ("Caffeine 4 of 5, high"). Never colour alone. |
-| `BrewGuide` | Ratio, temperature, time in `font-mono`. Fields come from the category (tea adds steeps, matcha adds whisk). |
-| `ProductCard` | Image, badge, name (2 lines), tasting notes, caffeine meter, price, add/stepper, optional reason line. |
-| `Stepper` | 0 → "Add"; 1 → remove + plus; 2+ → minus + plus. 44px targets. |
-| `GoalPicker` | Radiogroup of the four goals, each with an eyebrow, title and one line. |
-| `PlanCard` | Delivery frequency (every 2 / 4 weeks), saving, selected state. |
-| `SuggestionRail` | Title "For {goal}", horizontal snap scroll on mobile, grid on desktop. Hidden when empty. |
-| `BoxTotal` | Sticky bottom bar on mobile, sticky card on desktop, `aria-live`. |
+| `CaffeineMeter` | 5 beans filled to the level + text. `compact` keeps the words for screen readers only. |
+| `BrewGuide` | Ratio, water, time in mono; tea adds steeps, matcha adds the whisk. |
+| `Stepper` | 0 → outlined "Add to box"; 1 → bin + plus; 2+ → minus + plus. 24px icons, 44px hit areas. Sizes `default`, `compact`, `bar`. |
+| `Price` | Display face, tabular figures; optional was-price and "each". |
+| `ProductImage` | Illustrated pack shot (bag, box, tin, or the kettle for gear) in the category accent. Ondo has no photography. |
+
+### Patterns
+
+| Component | Used on | Notes |
+| --- | --- | --- |
+| `PageHeader`, `SavingsLine` | All pages | Back, wordmark or title, light/dark switch. |
+| `DeliveryCard`, `PreferencesCard` | Your box | Preferences are the quiz answers, editable: goal, caffeine limit (1–5), avoids. Collapsed by default; a change re-ranks the rail. |
+| `FrequencySelector` | Your box | Box-wide setting as a segmented pill radiogroup. A container query puts it beside the title once the card is wide. |
+| `OrderSummary` (`OrderGroup`, `ItemCard`, `ItemThumbnail`) | Your box | Drinks (sub-grouped by category) and Brewing gear, each collapsible; collapsed groups show thumbnails. A line that no longer fits the preferences shows why, and stays. |
+| `SuggestionRail`, `SuggestionCard` | Your box, item page | 148px cards with the reason line. Scrolls sideways at every width, so the desktop sidebar stays short enough to keep the total in view. Hidden when empty. |
+| `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. |
+| `CategoryTabs` | Shop | 44px tabs, active = bold + 3px underline, scroll sideways on mobile, centred on desktop. |
+| `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (accent ring), with reason, unavailable (faded, reason, no stepper). |
+| `CollapsibleSection` | Shop | "Above your caffeine limit (n)", "Contains things you avoid (n)", "Back soon (n)". |
+| `ViewBoxBar` | Shop | "View your box · n items · £total", always in view. |
+| `BrewHighlights`, `DetailAccordion`, `OrderBar` | Item page | Stats row + a "Contains" box that is never collapsed; accordions; a pinned order bar that becomes quantity + stepper once it's in the box. |
 
 ## States
 
 | State | Behaviour |
 | --- | --- |
 | Nothing to suggest | Rail hidden, no empty box. |
-| Over caffeine limit | Filtered out of the rail; on the shop grid the card is faded with "Above your caffeine limit". |
-| Out of stock | Faded, "Back soon", no add button. |
-| Added from rail | Card border turns accent; add becomes a stepper; rail order doesn't change. |
-| Missing photo | Accent-subtle placeholder with the category mark. |
-| Long name | 2 lines then ellipsis. |
+| Over caffeine limit / contains an avoid | Never suggested. In the shop: tucked into a collapsed section with the reason. In the box: kept, with a note. On the item page: the order bar shows the reason. |
+| Out of stock | "Back soon" section; order bar shows "Back soon". |
+| Added from rail | Card border turns accent; add becomes a stepper; rail order doesn't change until the page reopens or a preference changes. |
+| Empty group | "No drinks yet…" / "Nothing to brew with yet…" pointing to the suggestions. |
+| Long name | 1 line in the box, 2 lines on cards and the item header. |
+| Tap a card | Opens `/item/[id]` (the name is stretched over the card); steppers sit above it, so they never navigate. |
 
 ## Accessibility
 

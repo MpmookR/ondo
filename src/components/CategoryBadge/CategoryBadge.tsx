@@ -1,12 +1,6 @@
 import type { Category } from '@/types';
+import { categoryLabel } from '@/data/labels';
 import { Icon, categoryIcon } from '../Icon';
-
-export const categoryLabel: Record<Category, string> = {
-  coffee: 'Coffee',
-  tea: 'Tea',
-  matcha: 'Matcha',
-  gear: 'Gear',
-};
 
 export interface CategoryBadgeProps {
   category: Category;
@@ -17,7 +11,7 @@ export interface CategoryBadgeProps {
 export function CategoryBadge({ category, className = '' }: CategoryBadgeProps) {
   return (
     <span
-      data-category={category === 'gear' ? undefined : category}
+      data-category={category}
       className={`inline-flex h-24 items-center gap-4 rounded-pill bg-accent pl-8 pr-10 font-display text-caption text-on-accent ${className}`}
     >
       <Icon name={categoryIcon[category]} size={16} />

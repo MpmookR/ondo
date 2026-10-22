@@ -2,11 +2,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { catalogue } from '../data/catalogue';
 import { defaultBox, defaultCustomer } from '../data/customer';
-import { recommend, unavailableReason } from './recommend';
+import { recommend, recommendForItem, unavailableReason } from './recommend';
 import { boxReducer, totals, type BoxState } from './box';
 
 const ids = (goal = defaultCustomer.goal) =>
   recommend({ ...defaultCustomer, goal }, defaultBox, catalogue, { goalLabel: 'calm focus' }).map((s) => s.item.id);
+
+const byId = (id: string) => catalogue.find((i) => i.id === id)!;
 
 test('worked example from prd.md (calm focus)', () => {
   assert.deepEqual(ids(), ['m-taster', 't-oolong', 'm-everyday', 'm-ceremonial', 'g-whisk-set', 'g-infuser']);
@@ -42,23 +44,47 @@ test('empty when nothing scores', () => {
   assert.equal(recommend(strict, everythingInBox, catalogue).length, 0);
 });
 
+test('item page rail uses that drink as the context', () => {
+  const rail = recommendForItem(byId('m-ceremonial'), defaultCustomer, catalogue);
+  assert.equal(rail[0].item.id, 'g-whisk-set');
+  assert.equal(rail[0].reason, 'Goes with your Kyoto Ceremonial Matcha');
+  assert.ok(!rail.some((s) => s.item.id === 'm-ceremonial'));
+});
+
 test('unavailable reasons', () => {
-  const byId = (id: string) => catalogue.find((i) => i.id === id)!;
   assert.equal(unavailableReason(byId('c-moka'), defaultCustomer), 'Above your caffeine limit');
   assert.equal(unavailableReason(byId('t-chai'), defaultCustomer), 'Contains dairy');
   assert.equal(unavailableReason(byId('g-grinder'), defaultCustomer), 'Back soon');
   assert.equal(unavailableReason(byId('t-oolong'), defaultCustomer), null);
 });
 
-test('reducer and totals', () => {
-  let state: BoxState = { lines: defaultBox, goal: defaultCustomer.goal, plan: 'fortnightly' };
-  state = boxReducer(state, { type: 'add', itemId: 'g-infuser' });
-  state = boxReducer(state, { type: 'add', itemId: 't-sencha' });
-  state = boxReducer(state, { type: 'remove', itemId: 'c-yirgacheffe' });
+test('reducer: quantities, and the rail only refreshes on preference changes', () => {
+  let state: BoxState = { lines: defaultBox, plan: 'fortnightly', customer: defaultCustomer, railLines: defaultBox };
+  state = boxReducer(state, { type: 'setQty', itemId: 'g-infuser', qty: 1 });
+  state = boxReducer(state, { type: 'setQty', itemId: 't-sencha', qty: 2 });
+  state = boxReducer(state, { type: 'setQty', itemId: 'c-yirgacheffe', qty: 0 });
   assert.deepEqual(state.lines, [
     { itemId: 't-sencha', qty: 2 },
     { itemId: 'g-infuser', qty: 1 },
   ]);
-  const t = totals(state.lines, catalogue, 0.1);
-  assert.deepEqual(t, { count: 3, subtotal: 34, discount: 3.4, total: 30.6 });
+  assert.deepEqual(state.railLines, defaultBox, 'adding does not reshuffle the rail');
+
+  state = boxReducer(state, { type: 'toggleAvoid', avoid: 'dairy' });
+  assert.deepEqual(state.customer.avoids, []);
+  assert.deepEqual(state.railLines, state.lines, 'a preference change refreshes it');
+});
+
+test('totals split drinks and gear', () => {
+  const lines = [
+    { itemId: 't-sencha', qty: 2 },
+    { itemId: 'g-infuser', qty: 1 },
+  ];
+  assert.deepEqual(totals(lines, catalogue, 0.1), {
+    drinkCount: 2,
+    gearCount: 1,
+    count: 3,
+    subtotal: 34,
+    discount: 3.4,
+    total: 30.6,
+  });
 });

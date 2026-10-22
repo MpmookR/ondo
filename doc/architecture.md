@@ -27,32 +27,42 @@ React state (box, goal, plan)  →  "Build your box" page
 | Fonts | Cabinet Grotesk + Erode from the Fontshare CSS API | Free (ITF Free Font License); files not redistributed. |
 | Hosting | Vercel (app), Chromatic or Vercel (Storybook) | Shareable links for a portfolio. |
 
+## Pages
+
+| Route | Screen | Built from |
+| --- | --- | --- |
+| `/` | Your box (order summary) | `PageHeader`, `DeliveryCard`, `PreferencesCard`, `FrequencySelector`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
+| `/shop?tab=for-you\|coffee\|tea\|matcha\|gear` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `ViewBoxBar` |
+| `/item/[id]` | Product page (pre-rendered for every item) | `PageHeader`, `ProductImage`, `BrewHighlights`, `DetailAccordion`, `BrewGuide`, `SuggestionRail`, `OrderBar` |
+
+The box, preferences, delivery plan and theme live in `BoxProvider` (React context in the root
+layout), so moving between pages loses nothing. The theme is remembered per browser.
+
 ## Project structure
 
 ```text
 /src
-  /app
-    layout.tsx            # Fonts, metadata, BoxProvider
-    page.tsx              # "/" Build your box
-    globals.css           # Tailwind + tokens + base styles
-  /components
-    Button/  Chip/  CategoryBadge/  CaffeineMeter/  BrewGuide/
-    ProductCard/  Stepper/  GoalPicker/  PlanCard/
-    SuggestionRail/  BoxTotal/
-    (each folder: Component.tsx, Component.stories.tsx, index.ts)
+  /app                    # Routes only: layout, /, /shop, /item/[id], globals.css
+  /views                  # The three screens, composed from components (not part of the system)
+    YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx
+  /components             # The design system: one folder per component, each with stories
+    Icon/ Button/ Chip/ CategoryBadge/ CaffeineMeter/ BrewGuide/ Stepper/ Price/ ProductImage/
+    PageHeader/ InfoCards/ FrequencySelector/ OrderSummary/ SuggestionCard/ SuggestionRail/
+    BoxTotal/ CategoryTabs/ CollapsibleSection/ ShopCard/ ViewBoxBar/ ItemDetail/
+    BoxProvider/          # State shared by every page
+    shared/useRadioGroup.ts
   /lib
     recommend.ts          # Filter + score rules (see prd.md)
     recommend.test.ts
-    box.ts                # Reducer: add, remove, setGoal, setPlan, totals
-    format.ts             # £ formatting
+    box.ts                # Reducer, totals
+    format.ts  routes.ts
   /data
-    catalogue.ts          # Coffee, tea, matcha, gear
-    customer.ts           # Default goal, caffeine limit, avoids
+    catalogue.ts  customer.ts  goals.ts  plans.ts  labels.ts
   /styles
     tokens.css
+  /stories                # Foundations pages, intro, shared fixtures
   /types
-    index.ts
-/.storybook               # main.ts, preview.ts (theme + category toolbar)
+/.storybook               # Theme + accent toolbar, Fontshare fonts
 /doc                      # These docs
 CLAUDE.md                 # Entry point for AI coding tools
 ```
@@ -107,8 +117,9 @@ recommend(customer, box, catalogue, limit = 6): Suggestion[]
 3. **Sort:** score descending, then price ascending. Take `limit`.
 4. **Reason:** pairing ("Goes with your Shizuoka Sencha"), else brewing ("Brews your Shizuoka
    Sencha"), else goal ("Fits calm focus"), else "A small size to try" / "Easy to try".
-5. **Stability:** the page passes the box as it was when the goal was picked (`railBox`), so items
-   added from the rail stay where they are and show a stepper.
+5. **Stability:** the rail is worked out from `railLines`, a copy of the box taken when a page opens
+   or a preference changes, so items added from the rail stay where they are and show a stepper.
+6. **Item page:** `recommendForItem(item, …)` runs the same function with that drink as the context.
 
 ## Production notes
 

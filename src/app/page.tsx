@@ -1,5 +1,5 @@
-import { BuildYourBox } from './BuildYourBox';
+import { YourBoxPage } from '@/views/YourBoxPage';
 
-export default function Home() {
-  return <BuildYourBox />;
+export default function Page() {
+  return <YourBoxPage />;
 }

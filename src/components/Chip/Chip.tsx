@@ -1,18 +1,37 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-const base = 'inline-flex items-center rounded-sm font-display whitespace-nowrap';
-
 export interface ChipProps {
   children: ReactNode;
-  /** `note` is a tasting note; `outline` a quiet label. */
-  tone?: 'note' | 'outline';
+  /** `note` tasting note (accent tint), `outline` quiet label, `solid` accent fill (on photos). */
+  tone?: 'note' | 'outline' | 'solid';
   className?: string;
 }
 
-/** Static chip: tasting notes and labels. */
+const tones = {
+  note: 'bg-accent-subtle text-text-primary',
+  outline: 'border border-border-strong text-text-muted',
+  solid: 'bg-accent text-on-accent',
+} as const;
+
+/** Small label: tasting notes, sizes, flags. */
 export function Chip({ children, tone = 'note', className = '' }: ChipProps) {
-  const look = tone === 'note' ? 'bg-accent-subtle text-text-primary' : 'border border-border text-text-muted';
-  return <span className={`${base} h-28 px-12 text-caption ${look} ${className}`}>{children}</span>;
+  return (
+    <span
+      className={`inline-flex h-20 shrink-0 items-center whitespace-nowrap rounded-sm px-8 font-display text-footnote font-semibold ${tones[tone]} ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+/** Label + value pill, e.g. "Size 250g" (the role Frive's kcal pill played). */
+export function Pill({ label, value, className = '' }: { label: string; value: string; className?: string }) {
+  return (
+    <span className={`inline-flex h-20 shrink-0 items-center gap-4 rounded-sm bg-bg-subtle px-8 font-display text-footnote ${className}`}>
+      <span className="font-regular text-text-muted">{label}</span>
+      <span className="font-bold">{value}</span>
+    </span>
+  );
 }
 
 export interface ToggleChipProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
@@ -20,7 +39,7 @@ export interface ToggleChipProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   onPressedChange: (pressed: boolean) => void;
 }
 
-/** Filter chip: 32px visual inside a 44px hit area. */
+/** On/off chip: 32px visual inside a 44px hit area. */
 export function ToggleChip({ pressed, onPressedChange, children, className = '', ...rest }: ToggleChipProps) {
   return (
     <button
@@ -31,10 +50,8 @@ export function ToggleChip({ pressed, onPressedChange, children, className = '',
       {...rest}
     >
       <span
-        className={`${base} h-32 border px-16 text-label transition-colors duration-120 ease-brew ${
-          pressed
-            ? 'border-accent bg-accent text-on-accent'
-            : 'border-border-strong text-text-primary group-hover:bg-bg-subtle'
+        className={`inline-flex h-32 items-center gap-4 rounded-pill border px-16 font-display text-label transition-colors duration-120 ease-brew ${
+          pressed ? 'border-action bg-action text-action-text' : 'border-border-strong text-text-primary group-hover:bg-bg-subtle'
         }`}
       >
         {children}
