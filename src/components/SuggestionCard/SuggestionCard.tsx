@@ -20,7 +20,7 @@ export function SuggestionCard({ suggestion, qty, onQtyChange }: SuggestionCardP
     <article
       data-category={item.category}
       className={`relative flex w-148 shrink-0 snap-start flex-col gap-8 rounded-card border bg-bg-surface p-8 transition-colors duration-200 ease-brew ${
-        qty > 0 ? 'border-accent' : 'border-border'
+        qty > 0 ? 'border-spark' : 'border-border'
       }`}
     >
       <div className="relative">

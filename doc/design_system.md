@@ -22,27 +22,50 @@ set. Components only ever use semantic utilities, so they never need to know whi
 
 ## Colour
 
-The brand sheet defines six colours. Everything else is derived from them and contrast-checked.
+The brand sheet defines six colours; koi orange was added as the one warm colour, taken from the
+moodboard (moss garden, koi pond). Everything else is derived and contrast-checked.
 
 | Brand role | Hex | Token |
 | --- | --- | --- |
-| Background | `#FFFFFF` | `--raw-white` → `bg-bg-page` |
-| Surface | `#FFFFFF` | `--raw-white` → `bg-bg-surface` (cards are separated by border + shadow) |
+| Background / Surface | `#FFFFFF` | `--raw-white` → `bg-bg-page`, `bg-bg-surface` (cards separated by border + shadow) |
 | Text | `#131A00` | `--raw-ink` → `text-text-primary` |
 | Primary | `#7C8B3A` | `--raw-olive-500` → `bg-primary`, `border-primary` |
-| Accent | `#3B4600` | `--raw-olive-700` → `bg-action` (buttons), default `accent`, matcha accent |
+| Accent | `#3B4600` | `--raw-olive-700` → `brand` (secondary actions), matcha accent, default `accent` |
 | Border | `#E2E8F0` | `--raw-slate-200` → `border-border` |
+| **Koi (spark)** | `#F26B21` / `#B83A12` | `--raw-koi-500` / `-700` → `action` (main calls to action), `spark` (highlights) |
 
-### Derived
+### Roles, in order of how much of the screen they cover
 
-| Token | Hex | Why |
-| --- | --- | --- |
-| `--raw-moss-600` | `#5C6440` | Muted text (the sheet has none) |
-| `--raw-moss-400` | `#8A917A` | Strong border for controls (needs 3:1) |
-| `--raw-olive-100` / `-50` | `#EEF2E2` / `#F4F6EE` | Primary tint, quiet fills (tracks, pills) |
-| `--raw-slate-100` | `#F1F5F9` | Gear tint, from the border's slate family |
-| `--raw-night-900…400`, `--raw-sage-*`, `--raw-olive-200/300` | | Dark theme, built on the brand's text colour |
-| Espresso, Amber | `#7A4528`, `#8C5310` + tints | Coffee and tea accents (matcha uses the brand olive) |
+1. **White + Text + Border**: the structure. Most of every screen.
+2. **Olive** (Primary, Accent and the category shades): the brand. Selected states, secondary buttons,
+   tabs, categories, info badges.
+3. **Koi**: the spark, roughly 5–10% of a screen. Only the main call to action on each page
+   (Go to checkout, Add to box · price, View your box), the savings badge, the dot in the logo
+   and the "in your box" outline on cards. If it spreads, it stops working.
+4. **Danger red**: warnings only (contains something you avoid, above your caffeine limit). Koi
+   is never used for warnings, because red-orange already reads as "alert" or "sale".
+
+### Koi needs two tones
+
+| Tone | Hex | Use | Why |
+| --- | --- | --- | --- |
+| Bright koi | `#F26B21` | Borders, the logo dot, dark-theme buttons (with dark text) | 3.0:1 on white: fine for non-text, not for text |
+| Deep koi | `#B83A12` | Light-theme buttons (white text), text on the koi tint | 5.8:1 with white |
+
+Avoid the in-between red-orange (around `#D9481C`): it misses 4.5:1 with both white and dark text.
+
+### Categories are all olive
+
+Coffee, tea and matcha used to have brown, amber and green accents. Next to koi, the warm ones
+muddied the palette, so every category is now an olive shade and they're told apart by **icon and
+pack shape** (bean + bag, leaf + box, whisk + tin):
+
+| Category | Accent | Tint | Dark-theme accent |
+| --- | --- | --- | --- |
+| Coffee | `#2E3500` | `#E9ECDD` | `#DDE3C8` |
+| Tea | `#4F5A1A` | `#F1F4E6` | `#B5BD9C` |
+| Matcha | `#3B4600` (brand Accent) | `#E6EDCF` | `#C9D88A` |
+| Gear | Text colour (neutral) | `#F1F5F9` | Text colour |
 
 ### Semantic
 
@@ -52,19 +75,17 @@ The brand sheet defines six colours. Everything else is derived from them and co
 | `bg-bg-subtle` | olive-50 | night-700 |
 | `text-text-primary` / `text-text-muted` | ink / moss-600 | sage-50 / sage-200 |
 | `border-border` / `border-border-strong` | slate-200 / moss-400 | night-600 / night-400 |
-| `bg-action` + `text-action-text` | Accent + white | olive-300 + night-900 |
-| `bg-primary`, `border-primary`, `text-on-primary` | Primary + ink | olive-300 + night-900 |
+| `bg-action` + `text-action-text` | deep koi + white | bright koi + night-900 |
+| `bg-brand`, `border-brand` + `text-on-brand` | Accent + white | olive-300 + night-900 |
+| `border-spark`, `bg-spark` | bright koi | bright koi |
+| `bg-spark-subtle` + `text-on-spark-subtle` | koi-50 + deep koi | koi-950 + bright koi |
+| `text-danger`, `border-danger`, `bg-danger-subtle` | `#B42318` on `#FEF3F2` | `#F97066` on night-700 |
+| `bg-primary`, `border-primary` + `text-on-primary` | Primary + ink | olive-300 + night-900 |
 | `bg-primary-subtle` | olive-100 | night-700 |
-| `text-accent`, `bg-accent`, `text-on-accent` | category colour (Accent by default) | category light tone |
-| `bg-accent-subtle` | category tint | night-700 |
+| `text-accent`, `bg-accent` + `text-on-accent` | category olive | category light tone |
 
-### How Primary and Accent are used
-
-- **Accent `#3B4600`** is the action colour: buttons, the "Add to box" outline, active tab underline,
-  links, focus outline. White text on it is 10.2:1.
-- **Primary `#7C8B3A`** is only 3.7:1 on white, so it is **never used for small text**. It marks
-  selected states (delivery, caffeine limit, goal), the savings highlight, the info-card badges and
-  the "Contains" box, always with Text `#131A00` on top (4.8:1) or as a border/fill (3:1 needed).
+Primary `#7C8B3A` is 3.7:1 on white, so it's **never small text**: selected states, fills and
+borders only, with Text on top (4.8:1).
 
 ### Contrast (checked, WCAG 2.2 AA)
 
@@ -72,13 +93,15 @@ The brand sheet defines six colours. Everything else is derived from them and co
 | --- | --- |
 | Text on white | 17.9 |
 | Muted text on white | 6.3 |
-| White on Accent (buttons) | 10.2 |
+| White on deep koi (light-theme buttons) | 5.8 |
+| Night on bright koi (dark-theme buttons) | 5.9 |
+| Deep koi on koi tint (savings badge) | 5.0 |
+| Bright koi as a border on white | 3.0 (non-text, needs 3) |
+| Danger on white / on its tint | 6.6 / 6.1 |
+| White on Accent (brand buttons) | 10.2 |
 | Text on Primary | 4.8 |
-| Primary as border/fill on white | 3.7 (non-text, needs 3) |
-| Strong border on white | 3.3 (non-text) |
-| Coffee / tea accent on white | 7.8 / 6.3 |
-| Dark: text / muted on page | 16.8 / 9.1 |
-| Dark: page colour on olive-300 (buttons) | 8.4 |
+| Coffee / tea / matcha accent on white | 12.9 / 7.5 / 10.2 |
+| Dark: text / muted / danger on page | 16.8 / 9.1 / 6.4 |
 
 ## Typography
 
@@ -174,7 +197,7 @@ at 402px, then `md:` / `lg:` add columns.
 | `SuggestionRail`, `SuggestionCard` | Your box, item page | 148px cards with the reason line. Scrolls sideways at every width, so the desktop sidebar stays short enough to keep the total in view. Hidden when empty. |
 | `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. |
 | `CategoryTabs` | Shop | 44px tabs, active = bold + 3px underline, scroll sideways on mobile, centred on desktop. |
-| `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (accent ring), with reason, unavailable (faded, reason, no stepper). |
+| `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (koi ring), with reason, unavailable (faded, reason, no stepper). |
 | `CollapsibleSection` | Shop | "Above your caffeine limit (n)", "Contains things you avoid (n)", "Back soon (n)". |
 | `ViewBoxBar` | Shop | "View your box · n items · £total", always in view. |
 | `BrewHighlights`, `DetailAccordion`, `OrderBar` | Item page | Stats row + a "Contains" box that is never collapsed; accordions; a pinned order bar that becomes quantity + stepper once it's in the box. |
@@ -186,7 +209,7 @@ at 402px, then `md:` / `lg:` add columns.
 | Nothing to suggest | Rail hidden, no empty box. |
 | Over caffeine limit / contains an avoid | Never suggested. In the shop: tucked into a collapsed section with the reason. In the box: kept, with a note. On the item page: the order bar shows the reason. |
 | Out of stock | "Back soon" section; order bar shows "Back soon". |
-| Added from rail | Card border turns accent; add becomes a stepper; rail order doesn't change until the page reopens or a preference changes. |
+| Added from rail | Card border turns koi; add becomes a stepper; rail order doesn't change until the page reopens or a preference changes. |
 | Empty group | "No drinks yet…" / "Nothing to brew with yet…" pointing to the suggestions. |
 | Long name | 1 line in the box, 2 lines on cards and the item header. |
 | Tap a card | Opens `/item/[id]` (the name is stretched over the card); steppers sit above it, so they never navigate. |

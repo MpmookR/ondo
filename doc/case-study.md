@@ -46,6 +46,13 @@ The new palette came as six colours. Two decisions came out of checking them: Pr
 only 3.7:1 on white, so it marks selected states and fills (with Text on top) and is never small
 text; and muted text, tints and a dark theme had to be derived from the brand greens and checked.
 
+Then koi orange joined as the one warm colour, from the moodboard (a moss garden with a koi pond).
+Orange sits opposite olive on the colour wheel, so a little of it does a lot. That forced three
+decisions: koi needs two tones (bright for fills, deep for text and white-text buttons) because no
+single orange passes contrast both ways; it's limited to the main call to action and a few
+highlights; and coffee and tea lost their brown and amber, so every category is an olive shade,
+told apart by icon and pack shape. Warnings got their own red, because koi already reads as alert.
+
 ## Accessibility as a token rule, not a review step
 
 Every colour pair was checked before it became a token (script output in

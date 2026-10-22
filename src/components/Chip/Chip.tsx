@@ -51,7 +51,7 @@ export function ToggleChip({ pressed, onPressedChange, children, className = '',
     >
       <span
         className={`inline-flex h-32 items-center gap-4 rounded-pill border px-16 font-sans text-label transition-colors duration-120 ease-brew ${
-          pressed ? 'border-action bg-action text-action-text' : 'border-border-strong text-text-primary group-hover:bg-bg-subtle'
+          pressed ? 'border-brand bg-brand text-on-brand' : 'border-border-strong text-text-primary group-hover:bg-bg-subtle'
         }`}
       >
         {children}

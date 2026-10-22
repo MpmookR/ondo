@@ -22,7 +22,7 @@ export function Wordmark() {
   return (
     <span className="inline-flex items-center gap-6 font-heading text-title font-bold">
       <span aria-hidden="true" className="grid size-24 place-items-center rounded-pill border-3 border-text-primary">
-        <span className="size-6 rounded-pill bg-primary" />
+        <span className="size-6 rounded-pill bg-spark" />
       </span>
       ondo
     </span>

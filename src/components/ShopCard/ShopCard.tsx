@@ -28,7 +28,7 @@ export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCa
     <article
       data-category={item.category}
       className={`relative flex flex-col overflow-hidden rounded-card border bg-bg-surface ${
-        qty > 0 ? 'border-accent ring-1 ring-accent' : 'border-border'
+        qty > 0 ? 'border-spark ring-1 ring-spark' : 'border-border'
       } ${blocked ? 'opacity-50' : ''}`}
     >
       <div className="relative">

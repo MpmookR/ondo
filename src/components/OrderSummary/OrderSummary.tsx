@@ -107,7 +107,7 @@ export function ItemCard({ item, qty, onQtyChange, warning }: ItemCardProps) {
       </div>
 
       {warning && (
-        <p className="flex items-start gap-4 px-8 font-sans text-body-sm">
+        <p className="flex items-start gap-4 px-8 font-sans text-body-sm text-danger">
           <Icon name="info" size={16} className="mt-2" />
           <span>{warning}. It&apos;s still in your box.</span>
         </p>
@@ -216,7 +216,7 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
 
       <Link
         href={shopHref('for-you')}
-        className="mt-8 flex min-h-44 w-full items-center justify-center gap-8 rounded-pill border border-action font-sans text-label font-bold transition-colors duration-120 ease-brew hover:bg-bg-subtle"
+        className="mt-8 flex min-h-44 w-full items-center justify-center gap-8 rounded-pill border border-brand font-sans text-label font-bold transition-colors duration-120 ease-brew hover:bg-bg-subtle"
       >
         <Icon name="bag" size={20} />
         Add or change items

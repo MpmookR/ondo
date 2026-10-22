@@ -72,14 +72,14 @@ export function BrewHighlights({ item, customer }: BrewHighlightsProps) {
         ))}
       </dl>
 
-      <div className="flex flex-col rounded-sm border border-primary bg-primary-subtle px-16 py-8 font-sans text-label">
+      <div className={`flex flex-col rounded-sm border px-16 py-8 font-sans text-label ${clashes.length > 0 || overLimit ? 'border-danger bg-danger-subtle' : 'border-primary bg-primary-subtle'}`}>
         <h3 className="font-bold">Contains</h3>
         <p className="font-medium">
           {item.contains.length > 0 ? item.contains.map(avoidLabel).join(', ') : isDrink ? 'Just the leaf or bean. No dairy, nuts or gluten.' : 'Not a food item.'}
         </p>
-        {clashes.length > 0 && <p className="font-bold">Contains {clashes.join(', ')}, which you asked us to avoid.</p>}
+        {clashes.length > 0 && <p className="font-bold text-danger">Contains {clashes.join(', ')}, which you asked us to avoid.</p>}
         {overLimit && (
-          <p className="font-bold">Caffeine {item.caffeineLevel} of 5 is above your limit of {customer.maxCaffeine}.</p>
+          <p className="font-bold text-danger">Caffeine {item.caffeineLevel} of 5 is above your limit of {customer.maxCaffeine}.</p>
         )}
       </div>
     </section>

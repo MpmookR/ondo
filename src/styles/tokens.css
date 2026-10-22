@@ -4,8 +4,8 @@
  * Docs: doc/design_system.md
  *
  * Brand palette (from the brand sheet): background #FFFFFF, text #131A00, primary #7C8B3A,
- * accent #3B4600, surface #FFFFFF, border #E2E8F0. Every other value here is derived from
- * those and contrast-checked (see the table in design_system.md).
+ * accent #3B4600, surface #FFFFFF, border #E2E8F0, plus koi orange as the spark (calls to
+ * action and highlights). Every other value is derived and contrast-checked (design_system.md).
  */
 
 /* ---------- Fonts (SIL Open Font License, self-hosted from /public/fonts) ---------- */
@@ -47,13 +47,24 @@
   --raw-sage-200: #b5bd9c;
   --raw-sage-50: #f7f9f0;
 
-  /* Category accents (coffee, tea; matcha uses the brand olive) */
-  --raw-espresso-100: #f3e9e1;
-  --raw-espresso-300: #d9a47f;
-  --raw-espresso-600: #7a4528;
-  --raw-amber-100: #f7ecd9;
-  --raw-amber-300: #e3a64f;
-  --raw-amber-600: #8c5310;
+  /* Koi: the only warm colour. Bright for fills/borders and dark-theme text, deep for text and buttons on white. */
+  --raw-koi-50: #fdebdd;
+  --raw-koi-500: #f26b21;
+  --raw-koi-700: #b83a12;
+  --raw-koi-950: #3a2210;
+
+  /* Danger: warnings and errors, kept apart from koi */
+  --raw-danger-50: #fef3f2;
+  --raw-danger-300: #f97066;
+  --raw-danger-700: #b42318;
+
+  /* Category accents: all olive, told apart by icon and pack shape */
+  --raw-olive-800: #2e3500;     /* coffee */
+  --raw-olive-600: #4f5a1a;     /* tea */
+  --raw-coffee-tint: #e9ecdd;
+  --raw-tea-tint: #f1f4e6;
+  --raw-matcha-tint: #e6edcf;
+  --raw-coffee-light: #dde3c8;  /* dark theme */
 
   /* Responsive type and layout scales (mobile values) */
   --type-display-size: 56px;
@@ -95,8 +106,15 @@
   --theme-text-inverse: var(--raw-white);
   --theme-border: var(--raw-slate-200);
   --theme-border-strong: var(--raw-moss-400);
-  --theme-action: var(--raw-olive-700);
+  --theme-action: var(--raw-koi-700);
   --theme-action-text: var(--raw-white);
+  --theme-brand: var(--raw-olive-700);
+  --theme-on-brand: var(--raw-white);
+  --theme-spark: var(--raw-koi-500);
+  --theme-spark-subtle: var(--raw-koi-50);
+  --theme-on-spark-subtle: var(--raw-koi-700);
+  --theme-danger: var(--raw-danger-700);
+  --theme-danger-subtle: var(--raw-danger-50);
   --theme-primary: var(--raw-olive-500);
   --theme-primary-subtle: var(--raw-olive-100);
   --theme-on-primary: var(--raw-ink);
@@ -116,8 +134,15 @@
   --theme-text-inverse: var(--raw-night-900);
   --theme-border: var(--raw-night-600);
   --theme-border-strong: var(--raw-night-400);
-  --theme-action: var(--raw-olive-300);
+  --theme-action: var(--raw-koi-500);
   --theme-action-text: var(--raw-night-900);
+  --theme-brand: var(--raw-olive-300);
+  --theme-on-brand: var(--raw-night-900);
+  --theme-spark: var(--raw-koi-500);
+  --theme-spark-subtle: var(--raw-koi-950);
+  --theme-on-spark-subtle: var(--raw-koi-500);
+  --theme-danger: var(--raw-danger-300);
+  --theme-danger-subtle: var(--raw-night-700);
   --theme-primary: var(--raw-olive-300);
   --theme-primary-subtle: var(--raw-night-700);
   --theme-on-primary: var(--raw-night-900);
@@ -128,15 +153,15 @@
 }
 
 /* ---------- 3. Category accents ---------- */
-/* Gear is neutral: the theme's text colour on a slate tint. Matcha is the brand olive. */
-[data-category='gear']   { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-slate-100); --on-accent: var(--theme-text-inverse); }
-[data-category='coffee'] { --accent: var(--raw-espresso-600); --accent-subtle: var(--raw-espresso-100); --on-accent: var(--raw-white); }
-[data-category='tea']    { --accent: var(--raw-amber-600);    --accent-subtle: var(--raw-amber-100);    --on-accent: var(--raw-white); }
-[data-category='matcha'] { --accent: var(--raw-olive-700);    --accent-subtle: var(--raw-olive-100);    --on-accent: var(--raw-white); }
+/* One olive family: coffee darkest, tea mid, matcha the brand Accent. Gear is neutral (ink on slate). */
+[data-category='gear']   { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-slate-100);    --on-accent: var(--theme-text-inverse); }
+[data-category='coffee'] { --accent: var(--raw-olive-800);      --accent-subtle: var(--raw-coffee-tint);  --on-accent: var(--raw-white); }
+[data-category='tea']    { --accent: var(--raw-olive-600);      --accent-subtle: var(--raw-tea-tint);     --on-accent: var(--raw-white); }
+[data-category='matcha'] { --accent: var(--raw-olive-700);      --accent-subtle: var(--raw-matcha-tint);  --on-accent: var(--raw-white); }
 
 [data-theme='dark'] [data-category='gear'],   [data-theme='dark'][data-category='gear']   { --accent-subtle: var(--raw-night-700); }
-[data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-espresso-300); --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
-[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-amber-300);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
+[data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-coffee-light); --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
+[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-sage-200);     --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
 [data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-olive-200);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
 
 /* ---------- 4. Semantic tokens → Tailwind utilities ---------- */
@@ -153,6 +178,13 @@
   --color-border-strong: var(--theme-border-strong);
   --color-action: var(--theme-action);
   --color-action-text: var(--theme-action-text);
+  --color-brand: var(--theme-brand);
+  --color-on-brand: var(--theme-on-brand);
+  --color-spark: var(--theme-spark);
+  --color-spark-subtle: var(--theme-spark-subtle);
+  --color-on-spark-subtle: var(--theme-on-spark-subtle);
+  --color-danger: var(--theme-danger);
+  --color-danger-subtle: var(--theme-danger-subtle);
   --color-primary: var(--theme-primary);
   --color-primary-subtle: var(--theme-primary-subtle);
   --color-on-primary: var(--theme-on-primary);
