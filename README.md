@@ -31,6 +31,14 @@ repo rebuilds that proposal under an invented brand, and I did it for four reaso
 Ondo is fictional and so are its products, prices and caffeine levels. The checkout is a demo:
 nothing is charged and the Apple Pay and Google Pay buttons are static.
 
+### Before and after
+
+The original screens, redrawn as brand-free low-fi wireframes, next to the same screens in Ondo.
+The orange numbers pair each problem with its fix; the **Story page** (`/story` in the app)
+explains all six and why each one grows the box or protects conversion.
+
+![Before: the original flow. After: Ondo. Low-fi wireframes with numbered callouts](public/story/overview.png)
+
 ## What's in it
 
 - **Tokens** in one file, themed by two attributes: `data-theme` (light / dark) and
@@ -40,6 +48,7 @@ nothing is charged and the Apple Pay and Google Pay buttons are static.
   goal-based suggestion rail), *Shop* (tabs, unavailable items tucked away with a reason), an
   *item page* with brew highlights, and a demo *checkout*. Light and dark themes switch from the
   header.
+- **A Story page** (`/story`) setting the original flow against Ondo, change by change.
 - **AI guide**: `CLAUDE.md` + `doc/agent.md` keep AI-generated UI on-brand.
 
 ## Run it
