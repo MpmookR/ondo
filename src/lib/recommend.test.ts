@@ -59,7 +59,7 @@ test('unavailable reasons', () => {
 });
 
 test('reducer: quantities, and the rail only refreshes on preference changes', () => {
-  let state: BoxState = { lines: defaultBox, plan: 'fortnightly', customer: defaultCustomer, railLines: defaultBox };
+  let state: BoxState = { lines: defaultBox, plan: 'fortnightly', customer: defaultCustomer, railLines: defaultBox, deliveryDate: null };
   state = boxReducer(state, { type: 'setQty', itemId: 'g-infuser', qty: 1 });
   state = boxReducer(state, { type: 'setQty', itemId: 't-sencha', qty: 2 });
   state = boxReducer(state, { type: 'setQty', itemId: 'c-yirgacheffe', qty: 0 });

@@ -159,6 +159,11 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 
 Motion turns off under `prefers-reduced-motion`.
 
+**Logo:** the emblem (kettle, bowl, leaves and koi-orange steam) lives in `design-assets/logo-originals` as source art (kept locally, not in git)
+(1254px). The site uses resized copies in `public/brand` (96 and 192px WebP for the header, 512px
+PNG for sharing) and `src/app/icon.png` / `apple-icon.png` for the favicon. In dark mode the emblem
+sits on a light disc (`bg-logo-disc`) because its olive outline would vanish on the dark page.
+
 **Utilities:** `highlight` (Primary-tint pill behind a word), `pb-safe` (clears the iPhone home bar),
 `stretched-link` (whole card tappable), `scrollbar-none`. Together they mean components never need
 arbitrary values.
@@ -191,8 +196,13 @@ at 402px, then `md:` / `lg:` add columns.
 | Component | Used on | Notes |
 | --- | --- | --- |
 | `PageHeader`, `SavingsLine` | All pages | Back, wordmark or title, light/dark switch. |
+| `Steps` | Checkout | Progress, not clickable. Current step = bold + 3px brand underline (`aria-current="step"`); done steps get a tick. |
+| `OrderReview` | Checkout | "Your first box": count, cadence and total; expands to every line, subtotal, saving, delivery (£3.95 struck, FREE) and the first-box total, plus a discount-code field. |
+| `WalletButtons` | Checkout | Static demo buttons, no payment API: Apple Pay as button artwork (from the Apple Pay / Google Pay Buttons Figma file), Google Pay drawn by Google's script. "Pay with…" for subscriptions, "Buy with…" for one-off; black on light, white on dark; both full width, 44px tall (Apple artwork centred on Apple's black or white); Apple Pay first. Tapping goes to the order confirmation. |
+| `TextField`, `Checkbox`, `Divider` | Checkout | 48px inputs with label, hint and error (danger colour, `aria-invalid`, announced); native checkbox in the brand colour; "or pay with card" rule. |
+| `DatePicker` | Your box, checkout | Trigger (`field`: bordered date; `link`: "Change") + calendar popover, Monday-first. Earliest date is **tomorrow** (today and the past are disabled). Arrows, Home/End, Page Up/Down, Enter, Escape. Default: a week from today, set in the browser. |
 | `DeliveryCard`, `PreferencesCard` | Your box | Preferences are the quiz answers, editable: goal, caffeine limit (1–5), avoids. Collapsed by default; a change re-ranks the rail. |
-| `FrequencySelector` | Your box | Box-wide setting as a segmented pill radiogroup. A container query puts it beside the title once the card is wide. |
+| `FrequencySelector` | Your box | Box-wide setting as a segmented pill radiogroup. Title, switch, then description, at every width. |
 | `OrderSummary` (`OrderGroup`, `ItemCard`, `ItemThumbnail`) | Your box | Drinks (sub-grouped by category) and Brewing gear, each collapsible; collapsed groups show thumbnails. A line that no longer fits the preferences shows why, and stays. |
 | `SuggestionRail`, `SuggestionCard` | Your box, item page | 148px cards with the reason line. Scrolls sideways at every width, so the desktop sidebar stays short enough to keep the total in view. Hidden when empty. |
 | `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. |

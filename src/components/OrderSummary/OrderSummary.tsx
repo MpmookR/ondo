@@ -200,7 +200,7 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
 
       <div className="px-4 pt-8">
         <OrderGroup
-          title="Brewing gear"
+          title="Add-Ons"
           summary={`${pluralise(totals.gearCount, 'item')} · ${formatPrice(sum(gear))}`}
           collapsedPreview={preview(gear, 'Gear in your box')}
         >

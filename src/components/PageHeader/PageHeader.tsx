@@ -8,6 +8,8 @@ import { Icon } from '../Icon';
 export interface PageHeaderProps {
   /** Page title. Leave out to show the Ondo wordmark. */
   title?: string;
+  /** With the wordmark: the page name screen readers hear after "ondo". */
+  pageName?: string;
   /** Where the back arrow goes. Leave out to hide it. */
   backHref?: string;
   onBack?: () => void;
@@ -18,11 +20,20 @@ export interface PageHeaderProps {
   sticky?: boolean;
 }
 
+/** The Ondo emblem + name. In dark mode the emblem sits on a light disc so its olive outline stays visible. */
 export function Wordmark() {
   return (
-    <span className="inline-flex items-center gap-6 font-heading text-title font-bold">
-      <span aria-hidden="true" className="grid size-24 place-items-center rounded-pill border-3 border-text-primary">
-        <span className="size-6 rounded-pill bg-spark" />
+    <span className="inline-flex items-center font-heading text-title font-bold">
+      <span className="grid size-40 place-items-center rounded-pill bg-logo-disc">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/ondo-mark-96.webp"
+          srcSet="/brand/ondo-mark-96.webp 1x, /brand/ondo-mark-192.webp 2x"
+          width={36}
+          height={36}
+          alt=""
+          className="size-36"
+        />
       </span>
       ondo
     </span>
@@ -32,7 +43,7 @@ export function Wordmark() {
 const iconButton = "relative grid size-24 place-items-center before:absolute before:-inset-10 before:content-['']";
 
 /** Title bar: back, wordmark or title, theme switch. Same layout on every page. */
-export function PageHeader({ title, backHref, onBack, theme, onThemeChange, children, sticky = false }: PageHeaderProps) {
+export function PageHeader({ title, pageName = 'your box', backHref, onBack, theme, onThemeChange, children, sticky = false }: PageHeaderProps) {
   const back = onBack ? (
     <button type="button" onClick={onBack} aria-label="Back" className={iconButton}>
       <Icon name="chevron-left" />
@@ -55,7 +66,7 @@ export function PageHeader({ title, backHref, onBack, theme, onThemeChange, chil
           ) : (
             <h1>
               <Wordmark />
-              <span className="sr-only">: your box</span>
+              <span className="sr-only">: {pageName}</span>
             </h1>
           )}
         </div>
@@ -77,17 +88,19 @@ export function PageHeader({ title, backHref, onBack, theme, onThemeChange, chil
   );
 }
 
-/** "You'll save 10% · Learn more" line under the header on Your box. */
-export function SavingsLine({ saving }: { saving: string }) {
+/** "You'll save 10% · How it works" line under the header. Leave out `learnMoreHref` to hide the link. */
+export function SavingsLine({ saving, learnMoreHref = '#delivery' }: { saving: string; learnMoreHref?: string | null }) {
   return (
     <p className="flex flex-wrap items-center justify-center gap-4 px-16 pb-16 font-sans text-label">
       <Icon name="tag" size={20} />
       <span>
         You&apos;ll save <span className="highlight px-4 py-2">{saving}</span> with a subscription
       </span>
-      <a href="#delivery" className="font-medium text-text-muted underline underline-offset-4">
-        How it works
-      </a>
+      {learnMoreHref && (
+        <a href={learnMoreHref} className="font-medium text-text-muted underline underline-offset-4">
+          How it works
+        </a>
+      )}
     </p>
   );
 }

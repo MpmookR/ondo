@@ -1,6 +1,9 @@
 # Ondo design system
 
 **Ondo** is a fictional caffeine subscription (coffee, tea, matcha and the gear to brew them).
+The product brief: **build your first subscription box**, raising AOV and items per order in a new
+customer's first box **without costing conversion**.
+
 This repo is its design system and a demo shop built only from it, made **with Claude and code**
 by [Mook (Puangpaka Rattana)](https://mooksportfolio.netlify.app/).
 

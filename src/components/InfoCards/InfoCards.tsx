@@ -4,8 +4,10 @@ import { useId, useState } from 'react';
 import type { CaffeineLevel, Customer, Goal } from '@/types';
 import { goals } from '@/data/goals';
 import { avoidOptions } from '@/data/labels';
+import type { ISODate } from '@/lib/dates';
 import { caffeineLabel } from '../CaffeineMeter';
 import { ToggleChip } from '../Chip';
+import { DatePicker } from '../DatePicker';
 import { Icon, type IconName } from '../Icon';
 import { useRadioGroup } from '../shared/useRadioGroup';
 
@@ -19,21 +21,20 @@ function Badge({ icon }: { icon: IconName }) {
   );
 }
 
-export function DeliveryCard({ date }: { date: string }) {
+export interface DeliveryCardProps {
+  date: ISODate | null;
+  onDateChange: (date: ISODate) => void;
+}
+
+/** First delivery date. Tapping the date opens a calendar; the earliest slot is tomorrow. */
+export function DeliveryCard({ date, onDateChange }: DeliveryCardProps) {
   return (
-    <div className={`flex items-center justify-between gap-8 p-8 ${cardClass}`}>
+    <div className={`relative z-40 flex items-center justify-between gap-8 p-8 ${cardClass}`}>
       <span className="flex items-center gap-8 font-sans text-label">
         <Badge icon="truck" />
         Your first delivery
       </span>
-      <button
-        type="button"
-        className="flex min-h-36 items-center gap-12 rounded-sm border border-border-strong px-8 font-sans text-label"
-        aria-label={`First delivery ${date}, change date`}
-      >
-        {date}
-        <Icon name="chevron-down" size={20} />
-      </button>
+      <DatePicker value={date} onChange={onDateChange} label="First delivery date" placeholder="Choose date" />
     </div>
   );
 }

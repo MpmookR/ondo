@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { catalogue } from '@/data/catalogue';
 import { goalById } from '@/data/goals';
-import { FIRST_DELIVERY } from '@/data/labels';
 import { planById } from '@/data/plans';
 import { unavailableReason } from '@/lib/recommend';
 import {
@@ -13,14 +13,18 @@ import {
   PageHeader,
   PreferencesCard,
   SavingsLine,
+  Steps,
   SuggestionRail,
   useBox,
   useFreshRail,
 } from '@/components';
+import { CHECKOUT_STEPS, STEP_DELIVERY } from '@/data/labels';
+import { formatPrice } from '@/lib/format';
 
 /** Your box: the order summary. Mobile first; two columns from 1024px. */
 export function YourBoxPage() {
   useFreshRail();
+  const router = useRouter();
   const { state, dispatch, totals, suggestions, setQty, theme, setTheme } = useBox();
   const goal = goalById(state.customer.goal);
   const plan = planById(state.plan);
@@ -28,12 +32,14 @@ export function YourBoxPage() {
   return (
     <>
       <PageHeader theme={theme} onThemeChange={setTheme}>
-        <SavingsLine saving="10%" />
+        {/* The real saving once there's a subscription saving, otherwise the best one on offer. */}
+        <SavingsLine saving={totals.discount > 0 ? formatPrice(totals.discount) : '10%'} />
+        <Steps steps={CHECKOUT_STEPS} current={STEP_DELIVERY} />
       </PageHeader>
 
       <main className="mx-auto w-full max-w-content px-16 pb-240 pt-16 lg:grid lg:grid-cols-12 lg:items-start lg:gap-24 lg:px-24 lg:pb-48 lg:pt-24">
         <div className="mx-auto flex max-w-column flex-col gap-16 lg:col-span-7 lg:mx-0 lg:max-w-none">
-          <DeliveryCard date={FIRST_DELIVERY} />
+          <DeliveryCard date={state.deliveryDate} onDateChange={(date) => dispatch({ type: 'setDeliveryDate', date })} />
           <PreferencesCard
             customer={state.customer}
             onGoalChange={(g) => dispatch({ type: 'setGoal', goal: g })}
@@ -57,7 +63,7 @@ export function YourBoxPage() {
             lines={state.lines}
             onQtyChange={setQty}
           />
-          <BoxTotal totals={totals} cadence={plan.cadence} discountRate={plan.discount} />
+          <BoxTotal totals={totals} cadence={plan.cadence} discountRate={plan.discount} onCheckout={() => router.push('/checkout')} />
         </div>
       </main>
     </>

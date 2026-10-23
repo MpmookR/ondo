@@ -37,6 +37,7 @@ const start: BoxState = {
   plan: 'fortnightly',
   customer: defaultCustomer,
   railLines: [],
+  deliveryDate: null,
 };
 
 export const WholeBox: Story = {

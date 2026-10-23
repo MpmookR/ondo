@@ -1,4 +1,7 @@
-# Product Requirements: Ondo design system and demo
+# Product Requirements: Build your first subscription box
+
+> **Business goal:** raise AOV (average order value) and items per order in a new customer's
+> first box **without costing conversion**.
 
 Ondo is an invented caffeine subscription brand: coffee, tea, matcha and the gear to brew them.
 This repo is a portfolio piece. It shows a design system built **with Claude and code**, and a
@@ -24,15 +27,32 @@ already know *how* they want caffeine to fit their day; the shop doesn't ask.
 
 ## Goal
 
-Help a new subscriber build a first box that fits their day, and raise items per box
-**without hiding the price**. The total is always visible.
+**Business goal:** raise AOV and items per order in a new customer's first box **without costing
+conversion**.
+
+**Customer goal:** build a first box that fits how they want their day to feel, quickly, with a
+reason for every suggestion and the price always in view.
+
+The two pull against each other: every extra suggestion is a chance to add an item and a chance to
+make the box feel pushy or expensive. So each part of the design either **grows the box** or
+**protects conversion**, and the second always wins a tie.
+
+| Grows the box (AOV, items per order) | Protects conversion (the guard rail) |
+| --- | --- |
+| Goal-based rail: up to 6 suggestions, each with a one-line reason | Total, saving and cadence always visible (sticky bar on mobile, sidebar on desktop) |
+| Pairings and "brews your…" gear: adds a second category to the box | Hard filters: nothing above the caffeine limit or containing an avoid is ever suggested |
+| "Easy to try" tasters (≤ £6) as a low-risk first add | Rail is hidden when nothing qualifies (no filler); it never reshuffles while you add |
+| Shop "For you" tab uses the same rules | One tap to add, one tap to undo; nothing is pre-added to the box |
+| Subscription saving shown up front (10% / 5%) | One-off is always an option; "skip, swap or pause any time" next to the choice |
+| | Checkout shows the full breakdown, the delivery date and the terms in plain English before "Pay" |
+| | No health claims on cards; goal language only in rail titles |
 
 ## Target user
 
 People who drink caffeine daily, on mobile first, who are curious but busy. They don't need a
 lesson in coffee; they want a sensible box and a reason for each suggestion.
 
-## Goals the customer can pick
+## Customer goals (what the rail is tuned to)
 
 | Goal id | Label | Typical picks |
 | --- | --- | --- |
@@ -53,11 +73,16 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
    the rail. Items the customer can't have are tucked into collapsed sections with the reason.
 4. **Item page** (`/item/[id]`): pack, description, caffeine, brew highlights, a "Contains" box that
    is never collapsed, brew guide, a "Goes well with this" rail and a pinned order bar.
-5. **Light and dark themes**, switchable from the header on every page.
-6. **AI guide:** `CLAUDE.md` + `doc/agent.md` so Claude Code (or any AI coding tool) builds
+5. **Checkout** (`/checkout`): progress steps (Sign up · Delivery · Payment), "Your first box"
+   summary that expands to every line, subtotal, saving, free delivery and the total; first delivery
+   date with a "Change" calendar (earliest slot tomorrow); Apple Pay / Google Pay; card form with
+   inline validation; billing address; "Pay £…" button; plain-English subscription terms and
+   reassurance. **Demo only: no payment is taken**, and the page says so.
+6. **Light and dark themes**, switchable from the header on every page.
+7. **AI guide:** `CLAUDE.md` + `doc/agent.md` so Claude Code (or any AI coding tool) builds
    on-brand by default.
-7. **Case study:** `doc/case-study.md`, how the system was built with Claude and where I overruled it.
-8. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
+8. **Case study:** `doc/case-study.md`, how the system was built with Claude and where I overruled it.
+9. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
 
 ### Out
 - Checkout, accounts, payments, a backend.
@@ -112,6 +137,12 @@ contains dairy and the grinder is out of stock, so none of them can appear.
 
 ## Success metrics (for a real launch, not the demo)
 
-- **Primary:** items per first box, share of boxes with more than one category.
-- **Guard rail:** subscription conversion from the box page.
-- **Diagnostic:** rail impressions, add rate from the rail, adds by category.
+Measured on **new customers' first boxes**, in an A/B test against the box page without the rail.
+
+- **Primary:** AOV and items per order.
+- **Guard rail:** conversion from the box page to a started subscription (or a paid one-off), with a
+  stop threshold agreed before the test (for example, a drop of more than 1–2 percentage points).
+- **Secondary:** share of first boxes with more than one category (drinks + gear), subscription
+  vs one-off mix.
+- **Diagnostic:** rail impressions, add rate from the rail by position and reason, removals of
+  rail-added items before checkout (a sign of regret), adds by category.

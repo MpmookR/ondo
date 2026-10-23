@@ -1,4 +1,5 @@
 import type { BoxLine, Customer, Goal, Item, PlanId } from '../types';
+import type { ISODate } from './dates';
 
 export type Theme = 'light' | 'dark';
 
@@ -11,6 +12,8 @@ export interface BoxState {
    * preference changes, not on every add, so cards don't reshuffle under the customer's thumb.
    */
   railLines: BoxLine[];
+  /** First delivery, as 'YYYY-MM-DD'. Null until the browser sets a default (today + 7 days). */
+  deliveryDate: ISODate | null;
 }
 
 export type BoxAction =
@@ -19,7 +22,8 @@ export type BoxAction =
   | { type: 'setGoal'; goal: Goal }
   | { type: 'setMaxCaffeine'; maxCaffeine: Customer['maxCaffeine'] }
   | { type: 'toggleAvoid'; avoid: string }
-  | { type: 'refreshRail' };
+  | { type: 'refreshRail' }
+  | { type: 'setDeliveryDate'; date: ISODate };
 
 export const MAX_QTY = 9;
 
@@ -53,6 +57,8 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
     }
     case 'refreshRail':
       return { ...state, railLines: state.lines };
+    case 'setDeliveryDate':
+      return { ...state, deliveryDate: action.date };
   }
 }
 

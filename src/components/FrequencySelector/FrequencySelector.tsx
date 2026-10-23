@@ -6,9 +6,9 @@ import { Icon } from '../Icon';
 import { useRadioGroup } from '../shared/useRadioGroup';
 
 const descriptions: Record<PlanId, string> = {
-  fortnightly: 'The same box every 2 weeks. Skip, swap or pause any time.',
-  monthly: 'The same box every 4 weeks. Skip, swap or pause any time.',
-  once: 'Just this box, at full price. No subscription.',
+  fortnightly: 'The same box every 2 weeks. Skip, swap or pause any time',
+  monthly: 'The same box every 4 weeks. Skip, swap or pause any time',
+  once: 'Just this box, at full price. No subscription',
 };
 
 const subLabel = (discount: number) => (discount > 0 ? `Save ${Math.round(discount * 100)}%` : 'Full price');
@@ -18,26 +18,19 @@ export interface FrequencySelectorProps {
   onChange: (plan: PlanId) => void;
 }
 
-/** A box-wide setting (Frive's Plan Type pattern): a segmented pill, stacked below 560px of width. */
+/** A box-wide setting: title, segmented pill, description. Same layout at every width. */
 export function FrequencySelector({ value, onChange }: FrequencySelectorProps) {
   const { getOptionProps } = useRadioGroup(plans.map((p) => p.id), value, onChange);
 
   return (
-    <section id="delivery" className="@container scroll-mt-16 rounded-card border border-border bg-bg-surface p-16 shadow-card">
-      <div className="flex flex-col gap-8 @xl:flex-row @xl:items-center @xl:justify-between @xl:gap-24">
-        <div className="flex flex-col gap-4 @xl:min-w-0 @xl:flex-1">
-          <h2 id="frequency-label" className="flex items-center gap-8 font-sans text-label">
-            <Icon name="truck" size={20} />
-            Delivery
-          </h2>
-          <p className="hidden font-sans text-body-sm text-text-muted @xl:block">{descriptions[value]}</p>
-        </div>
+    <section id="delivery" className="scroll-mt-16 rounded-card border border-border bg-bg-surface p-16 shadow-card">
+      <div className="flex flex-col gap-8">
+        <h2 id="frequency-label" className="flex items-center gap-8 font-sans text-label">
+          <Icon name="truck" size={20} />
+          Delivery
+        </h2>
 
-        <div
-          role="radiogroup"
-          aria-labelledby="frequency-label"
-          className="flex gap-4 rounded-pill bg-bg-subtle p-4 @xl:w-400 @xl:shrink-0"
-        >
+        <div role="radiogroup" aria-labelledby="frequency-label" className="flex gap-4 rounded-pill bg-bg-subtle p-4">
           {plans.map((plan, i) => {
             const selected = plan.id === value;
             return (
@@ -57,7 +50,7 @@ export function FrequencySelector({ value, onChange }: FrequencySelectorProps) {
           })}
         </div>
 
-        <p className="px-4 font-sans text-body-sm text-text-muted @xl:hidden">{descriptions[value]}</p>
+        <p className="px-4 text-center font-sans text-body-sm text-text-muted">{descriptions[value]}</p>
       </div>
     </section>
   );

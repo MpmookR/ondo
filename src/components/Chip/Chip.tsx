@@ -24,7 +24,7 @@ export function Chip({ children, tone = 'note', className = '' }: ChipProps) {
   );
 }
 
-/** Label + value pill, e.g. "Size 250g" (the role Frive's kcal pill played). */
+/** Label + value pill, e.g. "Size 250g". */
 export function Pill({ label, value, className = '' }: { label: string; value: string; className?: string }) {
   return (
     <span className={`inline-flex h-20 shrink-0 items-center gap-4 rounded-sm bg-bg-subtle px-8 font-sans text-footnote ${className}`}>

@@ -23,7 +23,6 @@ export const avoidOptions = [{ id: 'dairy', label: 'Dairy' }] as const;
 
 export const avoidLabel = (id: string) => avoidOptions.find((a) => a.id === id)?.label ?? id;
 
-export const FIRST_DELIVERY = 'Tue 3 Nov';
 
 export type ShopTabId = 'for-you' | Category;
 export const shopTabs: { id: ShopTabId; label: string }[] = [
@@ -33,3 +32,8 @@ export const shopTabs: { id: ShopTabId; label: string }[] = [
   { id: 'matcha', label: 'Matcha' },
   { id: 'gear', label: 'Gear' },
 ];
+
+/** The journey shown in the header: Your box is "Delivery" (step 2), checkout is "Payment" (step 3). */
+export const CHECKOUT_STEPS = ['Sign up', 'Delivery', 'Payment'];
+export const STEP_DELIVERY = 1;
+export const STEP_PAYMENT = 2;

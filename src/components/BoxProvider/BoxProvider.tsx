@@ -7,6 +7,7 @@ import { defaultBox, defaultCustomer } from '@/data/customer';
 import { goalById } from '@/data/goals';
 import { planById } from '@/data/plans';
 import { boxReducer, totals as computeTotals, type BoxAction, type BoxState, type Theme, type Totals } from '@/lib/box';
+import { addDays, todayISO } from '@/lib/dates';
 import { recommend } from '@/lib/recommend';
 
 export const INITIAL_BOX: BoxState = {
@@ -14,7 +15,11 @@ export const INITIAL_BOX: BoxState = {
   plan: 'fortnightly',
   customer: defaultCustomer,
   railLines: defaultBox,
+  deliveryDate: null,
 };
+
+/** Default first delivery: a week from today. The rest of the delivery rules come later. */
+export const DEFAULT_LEAD_DAYS = 7;
 
 interface BoxContextValue {
   state: BoxState;
@@ -34,6 +39,11 @@ const THEME_KEY = 'ondo-theme';
 export function BoxProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(boxReducer, INITIAL_BOX);
   const [theme, setThemeState] = useState<Theme>('light');
+
+  // Set the default delivery date in the browser, so it's relative to the real today, not build day.
+  useEffect(() => {
+    dispatch({ type: 'setDeliveryDate', date: addDays(todayISO(), DEFAULT_LEAD_DAYS) });
+  }, []);
 
   // Remember the viewer's theme (a per-viewer convenience; the page works without it).
   useEffect(() => {

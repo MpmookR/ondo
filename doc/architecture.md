@@ -33,6 +33,7 @@ React state (box, goal, plan)  →  "Build your box" page
 | --- | --- | --- |
 | `/` | Your box (order summary) | `PageHeader`, `DeliveryCard`, `PreferencesCard`, `FrequencySelector`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
 | `/shop?tab=for-you\|coffee\|tea\|matcha\|gear` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `ViewBoxBar` |
+| `/checkout` | Checkout (demo, nothing is charged) | `PageHeader`, `Steps`, `OrderReview`, `DatePicker`, `WalletButtons`, `TextField`, `Checkbox`, `Divider` |
 | `/item/[id]` | Product page (pre-rendered for every item) | `PageHeader`, `ProductImage`, `BrewHighlights`, `DetailAccordion`, `BrewGuide`, `SuggestionRail`, `OrderBar` |
 
 The box, preferences, delivery plan and theme live in `BoxProvider` (React context in the root
@@ -44,7 +45,7 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
 /src
   /app                    # Routes only: layout, /, /shop, /item/[id], globals.css
   /views                  # The three screens, composed from components (not part of the system)
-    YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx
+    YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx  CheckoutPage.tsx
   /components             # The design system: one folder per component, each with stories
     Icon/ Button/ Chip/ CategoryBadge/ CaffeineMeter/ BrewGuide/ Stepper/ Price/ ProductImage/
     PageHeader/ InfoCards/ FrequencySelector/ OrderSummary/ SuggestionCard/ SuggestionRail/
@@ -56,6 +57,8 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
     recommend.test.ts
     box.ts                # Reducer, totals
     format.ts  routes.ts
+    dates.ts              # Local YYYY-MM-DD dates, calendar grid, earliest delivery (tomorrow)
+    payment.ts            # Card formatting, brand, Luhn and expiry checks (demo checkout)
   /data
     catalogue.ts  customer.ts  goals.ts  plans.ts  labels.ts
   /styles

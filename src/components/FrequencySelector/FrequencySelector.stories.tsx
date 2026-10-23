@@ -20,7 +20,7 @@ export const Mobile: Story = {
 };
 
 export const Wide: Story = {
-  parameters: { docs: { description: { story: 'A container query puts the switch beside the title once the card is wide enough.' } } },
+  parameters: { docs: { description: { story: 'Same stacked layout as mobile: title, switch, description.' } } },
   decorators: [(Story) => <div className="max-w-content"><Story /></div>],
   render: Mobile.render,
 };
