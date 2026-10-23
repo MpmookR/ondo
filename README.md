@@ -1,4 +1,4 @@
-# Ondo design system
+# Ondo
 
 **Ondo** is a fictional caffeine subscription (coffee, tea, matcha and the gear to brew them).
 The product brief: **build your first subscription box**, raising AOV and items per order in a new
