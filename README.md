@@ -7,12 +7,39 @@ customer's first box **without costing conversion**.
 This repo is its design system and a demo shop built only from it, made **with Claude and code**
 by [Mook (Puangpaka Rattana)](https://mooksportfolio.netlify.app/).
 
+## Background: why this project exists
+
+Ondo recreates a **take-home task from one of my job interviews**: a goal-based cross-sell on the
+order summary of a food subscription's first box. I presented a working prototype on the day. This
+repo rebuilds that proposal under an invented brand, and I did it for four reasons:
+
+1. **To share the work openly.** The original used the company's brand, design system, products
+   and Figma files, which aren't mine to publish. Ondo replaces all of it (name, logo, colours,
+   type, catalogue, copy) so I can show the thinking without exposing anyone's brand or data.
+2. **To keep the proposal, not the paint.** What I want to show is the product idea and how it was
+   built: suggestions tied to the customer's goal, each with a reason; hard filters that are never
+   ranked away; a rail that doesn't reshuffle while you add; the price always in view; and an
+   A/B plan with conversion as the guard rail. All of that carries over to a caffeine
+   subscription unchanged.
+3. **To prove the design system, not just the screens.** Moving the same UI onto a brand-new
+   palette and typeface (and changing both again mid-project) is a real test: if a screen only
+   looks right in one brand, the brand was hard-coded somewhere. Here every visual value comes
+   from one tokens file.
+4. **To keep developing it.** A take-home stops at the presentation. As my own project I can carry
+   on: checkout, delivery dates, dark mode, and whatever comes next, built with Claude and code.
+
+Ondo is fictional and so are its products, prices and caffeine levels. The checkout is a demo:
+nothing is charged and the Apple Pay and Google Pay buttons are static.
+
+## What's in it
+
 - **Tokens** in one file, themed by two attributes: `data-theme` (light / dark) and
   `data-category` (coffee / tea / matcha). One component, every look.
 - **Components** documented in Storybook, every state in both themes, accessibility checks on.
-- **Three mobile-first screens** built only from the system: *Your box* (order summary with a
-  goal-based suggestion rail), *Shop* (tabs, unavailable items tucked away with a reason) and an
-  *item page* with brew highlights. Light and dark themes switch from the header.
+- **Four mobile-first screens** built only from the system: *Your box* (order summary with a
+  goal-based suggestion rail), *Shop* (tabs, unavailable items tucked away with a reason), an
+  *item page* with brew highlights, and a demo *checkout*. Light and dark themes switch from the
+  header.
 - **AI guide**: `CLAUDE.md` + `doc/agent.md` keep AI-generated UI on-brand.
 
 ## Run it
