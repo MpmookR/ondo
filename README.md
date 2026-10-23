@@ -60,7 +60,6 @@ npm run lint             # type-check
 | [doc/prd.md](doc/prd.md) | Product, goals, recommendation rules, wording rules |
 | [doc/architecture.md](doc/architecture.md) | Stack, structure, data model |
 | [doc/agent.md](doc/agent.md) | Rules for AI coding tools and the definition of done |
-| [doc/case-study.md](doc/case-study.md) | How it was built with Claude |
 
 ## Credits
 

@@ -81,11 +81,10 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
 6. **Light and dark themes**, switchable from the header on every page.
 7. **AI guide:** `CLAUDE.md` + `doc/agent.md` so Claude Code (or any AI coding tool) builds
    on-brand by default.
-8. **Case study:** `doc/case-study.md`, how the system was built with Claude and where I overruled it.
-9. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
+8. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
 
 ### Out
-- Checkout, accounts, payments, a backend.
+- Real payments (the checkout is a demo), accounts, a backend.
 - Real product data or real caffeine figures (all values are illustrative).
 
 ## Recommendation rules (v1, rules-based)

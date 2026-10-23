@@ -14,7 +14,7 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: 'Ondo · Your box',
-  description: 'Ondo is a fictional caffeine subscription and design system case study by Mook (Puangpaka Rattana).',
+  description: 'Ondo is a fictional caffeine subscription and design system project by Mook (Puangpaka Rattana).',
   openGraph: { images: ['/brand/ondo-mark-512.png'] },
 };
 
