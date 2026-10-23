@@ -53,7 +53,7 @@ const changes: Change[] = [
   {
     n: 6,
     title: 'Put the total first',
-    before: 'Checkout lists every line before you reach the total.',
+    before: 'The box and its total sit at the bottom of the payment page, below the Pay Now button, after every line in the order.',
     after: '“Your first box” opens with the total and cadence; every line, the saving and free delivery are one tap away. The delivery date can be changed in place.',
     effects: ['Protects conversion'],
   },
