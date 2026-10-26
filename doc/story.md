@@ -74,8 +74,8 @@ The page opens compact, and expands one group at a time.
   compact, and it's the input behind every suggestion on the page.
 - **2 · Compact.** The order summary collapses to a count, a price and thumbnails ("8 meals ·
   £00.00", x3 x2 x3). Add-ons collapse the same way. The whole box fits on one screen.
-- **1 · Recognised.** Expanded, the box is a vertical list with quantity steppers, like the
-  basket in every delivery app they already use. Add-ons are grouped by category (Breakfast,
+- **1 · Recognised.** Expanded, the order summary is a vertical list with quantity steppers,
+  like the basket in every delivery app they already use. Add-ons are grouped by category (Breakfast,
   Juices) with their own totals.
 - **3 · Relevant.** "For your [goal] goal" suggests items that fit the goal or pair with
   something in the box, and each card says why ("Fits your [goal] goal", "Goes with your
@@ -149,7 +149,7 @@ disclaimers. Everything is open at once, so it's one long scroll inside a layer.
 - **2 · Compact.** The nutrition table, ingredients and disclaimers are all fully expanded, so
   the useful parts are pushed far down.
 
-### After: a full page (my proposal)
+### After: a full page
 
 Because the meal page holds so much information, I propose it opens as a **full page** in this
 version.
