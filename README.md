@@ -33,11 +33,8 @@ nothing is charged and the Apple Pay and Google Pay buttons are static.
 
 ### Before and after
 
-The original screens, redrawn as brand-free low-fi wireframes, next to the same screens in Ondo.
-The orange numbers pair each problem with its fix; the **Story page** (`/story` in the app)
-explains all six and why each one grows the box or protects conversion.
-
-![Before: the original flow. After: Ondo. Low-fi wireframes with numbered callouts](public/story/overview.png)
+[doc/story.md](doc/story.md) walks through the original flow and the redesign, screen by screen:
+what each change was and which principle it serves.
 
 ## What's in it
 
@@ -48,7 +45,6 @@ explains all six and why each one grows the box or protects conversion.
   goal-based suggestion rail), *Shop* (tabs, unavailable items tucked away with a reason), an
   *item page* with brew highlights, and a demo *checkout*. Light and dark themes switch from the
   header.
-- **A Story page** (`/story`) setting the original flow against Ondo, change by change.
 - **AI guide**: `CLAUDE.md` + `doc/agent.md` keep AI-generated UI on-brand.
 
 ## Run it
@@ -69,6 +65,7 @@ npm run lint             # type-check
 | [doc/prd.md](doc/prd.md) | Product, goals, recommendation rules, wording rules |
 | [doc/architecture.md](doc/architecture.md) | Stack, structure, data model |
 | [doc/agent.md](doc/agent.md) | Rules for AI coding tools and the definition of done |
+| [doc/story.md](doc/story.md) | The redesign story: before and after, screen by screen |
 
 ## Credits
 

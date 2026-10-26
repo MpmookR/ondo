@@ -34,7 +34,7 @@ export function YourBoxPage() {
       <PageHeader theme={theme} onThemeChange={setTheme}>
         {/* The real saving once there's a subscription saving, otherwise the best one on offer. */}
         <SavingsLine saving={totals.discount > 0 ? formatPrice(totals.discount) : '10%'} />
-        <Steps steps={CHECKOUT_STEPS} current={STEP_DELIVERY} />
+        {/* <Steps steps={CHECKOUT_STEPS} current={STEP_DELIVERY} /> */}
       </PageHeader>
 
       <main className="mx-auto w-full max-w-content px-16 pb-240 pt-16 lg:grid lg:grid-cols-12 lg:items-start lg:gap-24 lg:px-24 lg:pb-48 lg:pt-24">
