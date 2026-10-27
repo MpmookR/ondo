@@ -6,8 +6,8 @@ import { recommend } from '@/lib/recommend';
 
 export const item = (id: string) => itemById(id)!;
 
-export const sampleTotals: Totals = { drinkCount: 2, gearCount: 1, count: 3, subtotal: 39, discount: 3.9, total: 35.1 };
-export const emptyTotals: Totals = { drinkCount: 0, gearCount: 0, count: 0, subtotal: 0, discount: 0, total: 0 };
+export const sampleTotals: Totals = { drinkCount: 2, addOnCount: 1, count: 3, subtotal: 39, discount: 3.9, total: 35.1 };
+export const emptyTotals: Totals = { drinkCount: 0, addOnCount: 0, count: 0, subtotal: 0, discount: 0, total: 0 };
 
 export const sampleSuggestions = recommend(defaultCustomer, defaultBox, catalogue, { goalLabel: 'calm focus' });
 

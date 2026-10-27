@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useId, useState, type ReactNode } from 'react';
 import type { BoxLine, Category, Item } from '@/types';
-import { categoryLabel, categoryOrder } from '@/data/labels';
+import { addOnCategories, categoryLabel, drinkCategories, isDrinkCategory } from '@/data/labels';
 import type { Totals } from '@/lib/box';
 import { formatPrice, pluralise } from '@/lib/format';
 import { itemHref, shopHref } from '@/lib/routes';
@@ -83,7 +83,7 @@ export interface ItemCardProps {
 
 /** One line in the box: pack, name, two-line description, up to three badges, price and stepper. */
 export function ItemCard({ item, qty, onQtyChange, warning }: ItemCardProps) {
-  const isDrink = item.category !== 'gear';
+  const isDrink = isDrinkCategory(item.category);
   return (
     <article
       data-category={item.category}
@@ -135,17 +135,19 @@ export interface OrderSummaryProps {
 
 type Entry = { line: BoxLine; item: Item };
 
-/** "Order summary": Drinks and Brewing gear, each collapsible; drinks are sub-grouped by category. */
+/** "Your box": Drinks and Add-ons, each collapsible and sub-grouped by category. */
 export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor }: OrderSummaryProps) {
   const entries = lines
     .map((line) => ({ line, item: catalogue.find((i) => i.id === line.itemId) }))
     .filter((e): e is Entry => Boolean(e.item));
-  const drinks = entries.filter((e) => e.item.category !== 'gear');
-  const gear = entries.filter((e) => e.item.category === 'gear');
-  const drinkGroups = categoryOrder
-    .filter((c): c is Exclude<Category, 'gear'> => c !== 'gear')
-    .map((category) => ({ category, entries: drinks.filter((e) => e.item.category === category) }))
-    .filter((g) => g.entries.length > 0);
+  const drinks = entries.filter((e) => isDrinkCategory(e.item.category));
+  const addOns = entries.filter((e) => !isDrinkCategory(e.item.category));
+  const groupBy = (list: Entry[], categories: Category[]) =>
+    categories
+      .map((category) => ({ category, entries: list.filter((e) => e.item.category === category) }))
+      .filter((g) => g.entries.length > 0);
+  const drinkGroups = groupBy(drinks, drinkCategories);
+  const addOnGroups = groupBy(addOns, addOnCategories);
 
   const sum = (list: Entry[]) => list.reduce((n, e) => n + e.item.price * e.line.qty, 0);
   const line = ({ line, item }: Entry) => (
@@ -156,6 +158,15 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
       onQtyChange={(qty) => onQtyChange(item.id, qty)}
       warning={warningFor?.(item)}
     />
+  );
+  const subgroup = ({ category, entries: list }: { category: Category; entries: Entry[] }) => (
+    <div key={category} className="flex flex-col gap-8 border-t border-border">
+      <div className="flex items-center justify-between pt-8 font-sans text-caption uppercase tracking-wide text-text-muted">
+        <h3>{categoryLabel[category]}</h3>
+        <span>{pluralise(list.reduce((n, e) => n + e.line.qty, 0), 'item')}</span>
+      </div>
+      {list.map(line)}
+    </div>
   );
   const preview = (list: Entry[], label: string) =>
     list.length > 0 ? (
@@ -183,15 +194,7 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
               No drinks yet. Pick a few from the suggestions or the shop.
             </p>
           ) : (
-            drinkGroups.map(({ category, entries: list }) => (
-              <div key={category} className="flex flex-col gap-8 border-t border-border">
-                <div className="flex items-center justify-between pt-8 font-sans text-caption uppercase tracking-wide text-text-muted">
-                  <h3>{categoryLabel[category]}</h3>
-                  <span>{pluralise(list.reduce((n, e) => n + e.line.qty, 0), 'item')}</span>
-                </div>
-                {list.map(line)}
-              </div>
-            ))
+            drinkGroups.map(subgroup)
           )}
         </OrderGroup>
       </div>
@@ -201,15 +204,15 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
       <div className="px-4 pt-8">
         <OrderGroup
           title="Add-Ons"
-          summary={`${pluralise(totals.gearCount, 'item')} · ${formatPrice(sum(gear))}`}
-          collapsedPreview={preview(gear, 'Gear in your box')}
+          summary={`${pluralise(totals.addOnCount, 'item')} · ${formatPrice(sum(addOns))}`}
+          collapsedPreview={preview(addOns, 'Add-ons in your box')}
         >
-          {gear.length === 0 ? (
+          {addOnGroups.length === 0 ? (
             <p className="border-t border-border pt-8 font-sans text-body-sm text-text-muted">
-              Nothing to brew with yet. We&apos;ve picked a few things that go with your drinks.
+              No add-ons yet. We&apos;ve picked a few things that go with your drinks.
             </p>
           ) : (
-            <div className="flex flex-col gap-8 border-t border-border pt-8">{gear.map(line)}</div>
+            addOnGroups.map(subgroup)
           )}
         </OrderGroup>
       </div>

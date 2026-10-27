@@ -2,7 +2,7 @@
 
 import { useId, useState, type ReactNode } from 'react';
 import type { Customer, Item } from '@/types';
-import { avoidLabel } from '@/data/labels';
+import { avoidLabel, isDrinkCategory, isFoodCategory } from '@/data/labels';
 import { formatPrice } from '@/lib/format';
 import { Icon } from '../Icon';
 import { Stepper } from '../Stepper';
@@ -46,7 +46,7 @@ export interface BrewHighlightsProps {
  * Rows with no data are skipped.
  */
 export function BrewHighlights({ item, customer }: BrewHighlightsProps) {
-  const isDrink = item.category !== 'gear';
+  const isDrink = isDrinkCategory(item.category);
   const stats = [
     { label: 'Caffeine', value: isDrink ? `${item.caffeineLevel}/5` : undefined },
     { label: 'Size', value: isDrink ? undefined : item.size },
@@ -75,7 +75,13 @@ export function BrewHighlights({ item, customer }: BrewHighlightsProps) {
       <div className={`flex flex-col rounded-sm border px-16 py-8 font-sans text-label ${clashes.length > 0 || overLimit ? 'border-danger bg-danger-subtle' : 'border-primary bg-primary-subtle'}`}>
         <h3 className="font-bold">Contains</h3>
         <p className="font-medium">
-          {item.contains.length > 0 ? item.contains.map(avoidLabel).join(', ') : isDrink ? 'Just the leaf or bean. No dairy, nuts or gluten.' : 'Not a food item.'}
+          {item.contains.length > 0
+            ? item.contains.map(avoidLabel).join(', ')
+            : isDrink
+              ? 'Just the leaf or bean. No dairy, nuts or gluten.'
+              : isFoodCategory(item.category)
+                ? 'None of the allergens we track: no dairy, nuts, gluten, soya or sesame.'
+                : 'Not a food item.'}
         </p>
         {clashes.length > 0 && <p className="font-bold text-danger">Contains {clashes.join(', ')}, which you asked us to avoid.</p>}
         {overLimit && (

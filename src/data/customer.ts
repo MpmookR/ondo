@@ -3,6 +3,10 @@ import type { BoxLine, Customer } from '@/types';
 /** The demo customer: answers from the onboarding quiz. */
 export const defaultCustomer: Customer = {
   goal: 'calm-focus',
+  drinkers: 1,
+  cupsPerDay: 2,
+  drinks: ['coffee', 'tea'],
+  brewKit: ['filter', 'teapot'],
   maxCaffeine: 4,
   avoids: ['dairy'],
 };

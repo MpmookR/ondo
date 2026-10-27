@@ -41,7 +41,7 @@ function ThemePanel({ theme }: { theme: 'light' | 'dark' }) {
       </div>
       <p className="mt-32 font-mono text-eyebrow uppercase text-text-muted">Category accents</p>
       <div className="mt-16 grid grid-cols-2 gap-12">
-        {(['coffee', 'tea', 'matcha', 'gear'] as const).map((c) => (
+        {(['coffee', 'tea', 'matcha', 'gear', 'bites', 'sweeteners'] as const).map((c) => (
           <div key={c} data-category={c} className="rounded-card border border-border bg-bg-surface p-16">
             <div className="flex gap-8">
               <span className="size-32 rounded-pill bg-accent" />

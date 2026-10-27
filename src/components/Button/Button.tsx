@@ -1,10 +1,10 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, ComponentPropsWithRef } from 'react';
 import { Icon, type IconName } from '../Icon';
 
 export type ButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost';
 export type ButtonSize = 'md' | 'lg';
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ComponentPropsWithRef<'button'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: IconName;

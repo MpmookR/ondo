@@ -4,7 +4,7 @@ export type IconName =
   | 'plus' | 'minus' | 'trash' | 'check' | 'add'
   | 'chevron-left' | 'chevron-down' | 'chevron-up' | 'arrow-right'
   | 'info' | 'truck' | 'sliders' | 'tag' | 'bag' | 'sun' | 'moon'
-  | 'bean' | 'leaf' | 'whisk' | 'kettle';
+  | 'bean' | 'leaf' | 'whisk' | 'kettle' | 'cookie' | 'jar';
 
 const paths: Record<IconName, ReactNode> = {
   plus: <path d="M12 5v14M5 12h14" />,
@@ -80,6 +80,19 @@ const paths: Record<IconName, ReactNode> = {
       <path d="M17 13l3-3M10 4h4M12 4v2" />
     </>
   ),
+  cookie: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M9 9h.01M14.5 8.5h.01M15 14h.01M9.5 15h.01M12 11.5h.01" strokeWidth="2.5" />
+    </>
+  ),
+  jar: (
+    <>
+      <path d="M8 4h8v3H8z" />
+      <path d="M7 7h10a1 1 0 0 1 1 1v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8a1 1 0 0 1 1-1z" />
+      <path d="M6 12h12" />
+    </>
+  ),
 };
 
 export interface IconProps extends SVGProps<SVGSVGElement> {
@@ -111,4 +124,4 @@ export function Icon({ name, size = 24, className = '', ...rest }: IconProps) {
   );
 }
 
-export const categoryIcon = { coffee: 'bean', tea: 'leaf', matcha: 'whisk', gear: 'kettle' } as const;
+export const categoryIcon = { coffee: 'bean', tea: 'leaf', matcha: 'whisk', gear: 'kettle', bites: 'cookie', sweeteners: 'jar' } as const;

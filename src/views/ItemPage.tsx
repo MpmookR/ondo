@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { catalogue, itemById } from '@/data/catalogue';
 import { goalById } from '@/data/goals';
-import { brewMethodLabel } from '@/data/labels';
+import { brewMethodLabel, isDrinkCategory } from '@/data/labels';
 import { qtyOf } from '@/lib/box';
 import { recommendForItem, unavailableReason } from '@/lib/recommend';
 import {
@@ -38,11 +38,13 @@ export function ItemPage({ itemId }: { itemId: string }) {
   const router = useRouter();
   const { state, suggestions, setQty, theme, setTheme } = useBox();
   const item = itemById(itemId)!;
-  const isDrink = item.category !== 'gear';
+  const isDrink = isDrinkCategory(item.category);
+  // Bites and sweeteners don't brew anything; they list the drinks they go with instead.
+  const pairsWith = (item.pairsWith ?? []).map(itemById).filter((i) => i !== undefined);
   const qty = qtyOf(state.lines, item.id);
   const goal = goalById(state.customer.goal);
 
-  // Drinks: the same rules with this drink as the context. Gear: the box's own rail, minus this item.
+  // Drinks: the same rules with this drink as the context. Add-ons: the box's own rail, minus this item.
   const pairings = useMemo(
     () =>
       isDrink
@@ -94,7 +96,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
                   Levels are relative, for comparing Ondo products. Caffeine varies with how you brew.
                 </p>
               </DetailAccordion>
-            ) : (
+            ) : item.brewMethods.length > 0 ? (
               <DetailAccordion title="Brews">
                 <ul className="flex flex-wrap gap-8">
                   {item.brewMethods.map((m) => (
@@ -104,6 +106,18 @@ export function ItemPage({ itemId }: { itemId: string }) {
                   ))}
                 </ul>
               </DetailAccordion>
+            ) : (
+              pairsWith.length > 0 && (
+                <DetailAccordion title="Pairs with">
+                  <ul className="flex flex-wrap gap-8">
+                    {pairsWith.map((p) => (
+                      <li key={p.id}>
+                        <Chip tone="outline">{p.name}</Chip>
+                      </li>
+                    ))}
+                  </ul>
+                </DetailAccordion>
+              )
             )}
             <DetailAccordion title="Delivery & storage">
               <p className="font-sans text-body">

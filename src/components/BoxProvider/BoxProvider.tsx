@@ -12,7 +12,7 @@ import { recommend } from '@/lib/recommend';
 
 export const INITIAL_BOX: BoxState = {
   lines: defaultBox,
-  plan: 'fortnightly',
+  plan: 'every-15',
   customer: defaultCustomer,
   railLines: defaultBox,
   deliveryDate: null,

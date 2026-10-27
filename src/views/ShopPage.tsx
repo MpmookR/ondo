@@ -1,14 +1,23 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { Item } from '@/types';
 import { catalogue } from '@/data/catalogue';
 import { goalById } from '@/data/goals';
-import { avoidLabel, shopTabs, type ShopTabId } from '@/data/labels';
+import {
+  avoidLabel,
+  caffeineBands,
+  inCaffeineBand,
+  isDrinkCategory,
+  shopTabs,
+  type CaffeineBand,
+  type ShopTabId,
+} from '@/data/labels';
 import { qtyOf } from '@/lib/box';
 import { recommend } from '@/lib/recommend';
 import { shopHref } from '@/lib/routes';
-import { CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail } from '@/components';
+import { CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail } from '@/components';
 
 const GRID = 'grid grid-cols-2 gap-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-24';
 const PANEL_ID = 'shop-panel';
@@ -20,6 +29,8 @@ export function ShopPage() {
   const { state, totals, setQty, theme, setTheme } = useBox();
   const { customer } = state;
   const goal = goalById(customer.goal);
+  // Kept when switching between Coffee, Tea and Matcha, so "Low" stays low across drinks.
+  const [band, setBand] = useState<CaffeineBand>('all');
 
   const requested = params.get('tab');
   const tab = shopTabs.find((t) => t.id === requested) ?? shopTabs[0];
@@ -31,8 +42,9 @@ export function ShopPage() {
 
   const renderForYou = () => {
     const picks = recommend(customer, state.railLines, catalogue, { limit: 20, goalLabel: goal.railLabel });
-    const drinks = picks.filter((s) => s.item.category !== 'gear');
+    const drinks = picks.filter((s) => isDrinkCategory(s.item.category));
     const gear = picks.filter((s) => s.item.category === 'gear');
+    const onTheSide = picks.filter((s) => s.item.category === 'bites' || s.item.category === 'sweeteners');
     const avoiding = customer.avoids.length ? `, avoiding ${customer.avoids.map((a) => avoidLabel(a).toLowerCase()).join(', ')}` : '';
     return (
       <>
@@ -51,6 +63,12 @@ export function ShopPage() {
             <div className={GRID}>{gear.map((s) => card(s.item, { reason: s.reason }))}</div>
           </section>
         )}
+        {onTheSide.length > 0 && (
+          <section aria-labelledby="fy-side" className="flex flex-col gap-12">
+            <h2 id="fy-side" className="font-heading text-title">On the side</h2>
+            <div className={GRID}>{onTheSide.map((s) => card(s.item, { reason: s.reason }))}</div>
+          </section>
+        )}
         {picks.length === 0 && (
           <p className="rounded-card border border-border bg-bg-surface p-16 font-sans text-body">
             Nothing new fits your answers right now. Browse the other tabs.
@@ -60,8 +78,16 @@ export function ShopPage() {
     );
   };
 
-  const renderCategory = (category: ShopTabId) => {
-    const inTab = catalogue.filter((i) => i.category === category);
+  const renderCategory = (category: Exclude<ShopTabId, 'for-you'>) => {
+    const allInTab = catalogue.filter((i) => i.category === category);
+    const filterable = isDrinkCategory(category);
+    const counts = {
+      all: allInTab.length,
+      ...Object.fromEntries(caffeineBands.map((b) => [b.id, allInTab.filter((i) => inCaffeineBand(i.caffeineLevel, b.id)).length])),
+    } as Record<CaffeineBand, number>;
+    // A band with nothing on this tab (say Low on Matcha) shows everything, without forgetting the choice.
+    const activeBand: CaffeineBand = counts[band] > 0 ? band : 'all';
+    const inTab = filterable ? allInTab.filter((i) => inCaffeineBand(i.caffeineLevel, activeBand)) : allInTab;
     const available: Item[] = [];
     const overLimit: Item[] = [];
     const avoided: Item[] = [];
@@ -75,7 +101,8 @@ export function ShopPage() {
     }
     return (
       <>
-        <div className={GRID}>{available.map((item) => card(item))}</div>
+        {filterable && <CaffeineFilter value={activeBand} onChange={setBand} counts={counts} />}
+        {available.length > 0 && <div className={GRID}>{available.map((item) => card(item))}</div>}
         {overLimit.length > 0 && (
           <CollapsibleSection title={`Above your caffeine limit (${overLimit.length})`}>
             <div className={GRID}>{overLimit.map((item) => card(item, { unavailable: 'Above your caffeine limit' }))}</div>

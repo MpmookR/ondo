@@ -157,13 +157,16 @@
 }
 
 /* ---------- 3. Category accents ---------- */
-/* One olive family: coffee darkest, tea mid, matcha the brand Accent. Gear is neutral (ink on slate). */
-[data-category='gear']   { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-slate-100);    --on-accent: var(--theme-text-inverse); }
+/* One olive family: coffee darkest, tea mid, matcha the brand Accent. Add-ons (gear, bites,
+   sweeteners) are neutral (ink on slate), so the drinks keep the colour. */
+[data-category='gear'], [data-category='bites'], [data-category='sweeteners'] { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-slate-100);    --on-accent: var(--theme-text-inverse); }
 [data-category='coffee'] { --accent: var(--raw-olive-800);      --accent-subtle: var(--raw-coffee-tint);  --on-accent: var(--raw-white); }
 [data-category='tea']    { --accent: var(--raw-olive-600);      --accent-subtle: var(--raw-tea-tint);     --on-accent: var(--raw-white); }
 [data-category='matcha'] { --accent: var(--raw-olive-700);      --accent-subtle: var(--raw-matcha-tint);  --on-accent: var(--raw-white); }
 
-[data-theme='dark'] [data-category='gear'],   [data-theme='dark'][data-category='gear']   { --accent-subtle: var(--raw-night-700); }
+[data-theme='dark'] [data-category='gear'],   [data-theme='dark'][data-category='gear'],
+[data-theme='dark'] [data-category='bites'],  [data-theme='dark'][data-category='bites'],
+[data-theme='dark'] [data-category='sweeteners'], [data-theme='dark'][data-category='sweeteners'] { --accent-subtle: var(--raw-night-700); }
 [data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-coffee-light); --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
 [data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-sage-200);     --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
 [data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-olive-200);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }

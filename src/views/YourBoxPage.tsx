@@ -4,11 +4,11 @@ import { useRouter } from 'next/navigation';
 import { catalogue } from '@/data/catalogue';
 import { goalById } from '@/data/goals';
 import { planById } from '@/data/plans';
+import { suggestDelivery } from '@/lib/delivery';
 import { unavailableReason } from '@/lib/recommend';
 import {
   BoxTotal,
   DeliveryCard,
-  FrequencySelector,
   OrderSummary,
   PageHeader,
   PreferencesCard,
@@ -28,6 +28,7 @@ export function YourBoxPage() {
   const { state, dispatch, totals, suggestions, setQty, theme, setTheme } = useBox();
   const goal = goalById(state.customer.goal);
   const plan = planById(state.plan);
+  const deliverySuggestion = suggestDelivery(state.lines, catalogue, state.customer);
 
   return (
     <>
@@ -39,14 +40,15 @@ export function YourBoxPage() {
 
       <main className="mx-auto w-full max-w-content px-16 pb-240 pt-16 lg:grid lg:grid-cols-12 lg:items-start lg:gap-24 lg:px-24 lg:pb-48 lg:pt-24">
         <div className="mx-auto flex max-w-column flex-col gap-16 lg:col-span-7 lg:mx-0 lg:max-w-none">
-          <DeliveryCard date={state.deliveryDate} onDateChange={(date) => dispatch({ type: 'setDeliveryDate', date })} />
-          <PreferencesCard
-            customer={state.customer}
-            onGoalChange={(g) => dispatch({ type: 'setGoal', goal: g })}
-            onMaxCaffeineChange={(level) => dispatch({ type: 'setMaxCaffeine', maxCaffeine: level })}
-            onToggleAvoid={(avoid) => dispatch({ type: 'toggleAvoid', avoid })}
+          <PreferencesCard customer={state.customer} onChange={(patch) => dispatch({ type: 'updateCustomer', patch })} />
+          <DeliveryCard
+            plan={state.plan}
+            onPlanChange={(p) => dispatch({ type: 'setPlan', plan: p })}
+            date={state.deliveryDate}
+            onDateChange={(date) => dispatch({ type: 'setDeliveryDate', date })}
+            suggestion={deliverySuggestion}
+            drinkers={state.customer.drinkers}
           />
-          <FrequencySelector value={state.plan} onChange={(p) => dispatch({ type: 'setPlan', plan: p })} />
           <OrderSummary
             lines={state.lines}
             catalogue={catalogue}

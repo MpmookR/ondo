@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from 'react';
 import type { BoxLine, Item, Plan } from '@/types';
+import { isDrinkCategory } from '@/data/labels';
 import type { Totals } from '@/lib/box';
 import { formatDay, type ISODate } from '@/lib/dates';
 import { formatPrice, pluralise } from '@/lib/format';
@@ -38,12 +39,12 @@ export function OrderReview({ lines, catalogue, totals, plan, deliveryDate, defa
   const entries = lines
     .map((l) => ({ qty: l.qty, item: catalogue.find((i) => i.id === l.itemId) }))
     .filter((e): e is Entry => Boolean(e.item));
-  const drinks = entries.filter((e) => e.item.category !== 'gear');
-  const gear = entries.filter((e) => e.item.category === 'gear');
+  const drinks = entries.filter((e) => isDrinkCategory(e.item.category));
+  const addOns = entries.filter((e) => !isDrinkCategory(e.item.category));
   const subscription = plan.discount > 0;
   const summary = [
     pluralise(totals.drinkCount, 'drink'),
-    totals.gearCount > 0 ? pluralise(totals.gearCount, 'gear item') : null,
+    totals.addOnCount > 0 ? pluralise(totals.addOnCount, 'add-on') : null,
     subscription ? `Every ${plan.label}` : 'One-off',
   ]
     .filter(Boolean)
@@ -101,7 +102,7 @@ export function OrderReview({ lines, catalogue, totals, plan, deliveryDate, defa
         </dl>
 
         {group('Drinks', drinks)}
-        {group('Brewing gear', gear)}
+        {group('Add-ons', addOns)}
 
         <dl className="flex flex-col gap-4 border-t border-border pt-8 font-sans text-body-sm">
           <div className={row}>

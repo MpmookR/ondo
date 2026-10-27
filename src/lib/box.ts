@@ -1,5 +1,6 @@
 import type { BoxLine, Customer, Goal, Item, PlanId } from '../types';
 import type { ISODate } from './dates';
+import { isDrinkCategory } from '../data/labels';
 
 export type Theme = 'light' | 'dark';
 
@@ -22,6 +23,7 @@ export type BoxAction =
   | { type: 'setGoal'; goal: Goal }
   | { type: 'setMaxCaffeine'; maxCaffeine: Customer['maxCaffeine'] }
   | { type: 'toggleAvoid'; avoid: string }
+  | { type: 'updateCustomer'; patch: Partial<Customer> }
   | { type: 'refreshRail' }
   | { type: 'setDeliveryDate'; date: ISODate };
 
@@ -55,6 +57,8 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
       const next = avoids.includes(action.avoid) ? avoids.filter((a) => a !== action.avoid) : [...avoids, action.avoid];
       return { ...state, customer: { ...state.customer, avoids: next }, railLines: state.lines };
     }
+    case 'updateCustomer':
+      return { ...state, customer: { ...state.customer, ...action.patch }, railLines: state.lines };
     case 'refreshRail':
       return { ...state, railLines: state.lines };
     case 'setDeliveryDate':
@@ -64,7 +68,8 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
 
 export interface Totals {
   drinkCount: number;
-  gearCount: number;
+  /** Gear, bites and sweeteners. */
+  addOnCount: number;
   count: number;
   subtotal: number;
   discount: number;
@@ -75,16 +80,16 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 
 export function totals(lines: BoxLine[], catalogue: Item[], discountRate: number): Totals {
   let drinkCount = 0;
-  let gearCount = 0;
+  let addOnCount = 0;
   let subtotal = 0;
   for (const line of lines) {
     const item = catalogue.find((i) => i.id === line.itemId);
     if (!item) continue;
-    if (item.category === 'gear') gearCount += line.qty;
-    else drinkCount += line.qty;
+    if (isDrinkCategory(item.category)) drinkCount += line.qty;
+    else addOnCount += line.qty;
     subtotal += item.price * line.qty;
   }
   subtotal = round2(subtotal);
   const discount = round2(subtotal * discountRate);
-  return { drinkCount, gearCount, count: drinkCount + gearCount, subtotal, discount, total: round2(subtotal - discount) };
+  return { drinkCount, addOnCount, count: drinkCount + addOnCount, subtotal, discount, total: round2(subtotal - discount) };
 }

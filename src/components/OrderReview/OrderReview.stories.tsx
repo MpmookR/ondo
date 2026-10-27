@@ -18,7 +18,7 @@ const meta = {
     lines,
     catalogue,
     totals: totals(lines, catalogue, 0.1),
-    plan: planById('fortnightly'),
+    plan: planById('every-15'),
     deliveryDate: '2026-10-29',
   },
   decorators: [(Story) => <Phone><Story /></Phone>],

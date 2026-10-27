@@ -31,8 +31,8 @@ React state (box, goal, plan)  →  "Build your box" page
 
 | Route | Screen | Built from |
 | --- | --- | --- |
-| `/` | Your box (order summary) | `PageHeader`, `DeliveryCard`, `PreferencesCard`, `FrequencySelector`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
-| `/shop?tab=for-you\|coffee\|tea\|matcha\|gear` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `ViewBoxBar` |
+| `/` | Your box (order summary) | `PageHeader`, `PreferencesCard`, `DeliveryCard`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
+| `/shop?tab=for-you\|coffee\|tea\|matcha\|gear\|bites\|sweeteners` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `ViewBoxBar` |
 | `/checkout` | Checkout (demo, nothing is charged) | `PageHeader`, `Steps`, `OrderReview`, `DatePicker`, `WalletButtons`, `TextField`, `Checkbox`, `Divider` |
 | `/item/[id]` | Product page (pre-rendered for every item) | `PageHeader`, `ProductImage`, `BrewHighlights`, `DetailAccordion`, `BrewGuide`, `SuggestionRail`, `OrderBar` |
 
@@ -48,7 +48,7 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
     YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx  CheckoutPage.tsx
   /components             # The design system: one folder per component, each with stories
     Icon/ Button/ Chip/ CategoryBadge/ CaffeineMeter/ BrewGuide/ Stepper/ Price/ ProductImage/
-    PageHeader/ InfoCards/ FrequencySelector/ OrderSummary/ SuggestionCard/ SuggestionRail/
+    PageHeader/ InfoCards/ OrderSummary/ SuggestionCard/ SuggestionRail/
     BoxTotal/ CategoryTabs/ CollapsibleSection/ ShopCard/ ViewBoxBar/ ItemDetail/
     BoxProvider/          # State shared by every page
     shared/useRadioGroup.ts
@@ -58,6 +58,7 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
     box.ts                # Reducer, totals
     format.ts  routes.ts
     dates.ts              # Local YYYY-MM-DD dates, calendar grid, earliest delivery (tomorrow)
+    delivery.ts           # Cups in the box and the suggested delivery frequency
     payment.ts            # Card formatting, brand, Luhn and expiry checks (demo checkout)
   /data
     catalogue.ts  customer.ts  goals.ts  plans.ts  labels.ts
@@ -74,9 +75,14 @@ CLAUDE.md                 # Entry point for AI coding tools
 ## Data model
 
 ```ts
-type Category = 'coffee' | 'tea' | 'matcha' | 'gear';
+type DrinkCategory = 'coffee' | 'tea' | 'matcha';
+type AddOnCategory = 'gear' | 'bites' | 'sweeteners';
+type Category = DrinkCategory | AddOnCategory;
 type Goal = 'strong-start' | 'calm-focus' | 'no-crash' | 'cutting-down';
 type BrewMethod = 'espresso' | 'filter' | 'moka' | 'cold-brew' | 'steep' | 'whisk';
+type BrewKit = 'espresso-machine' | 'filter' | 'moka-pot' | 'cafetiere' | 'teapot' | 'whisk' | 'grinder';
+type Count = 1 | 2 | 3 | 4;        // 4 = 4 or more
+type PlanId = 'every-15' | 'every-30' | 'every-45' | 'once';
 
 interface Item {
   id: string;
@@ -84,16 +90,17 @@ interface Item {
   category: Category;
   description: string;
   notes: string[];                 // tasting notes, e.g. ['cocoa', 'cherry']
-  caffeineLevel: 0 | 1 | 2 | 3 | 4 | 5;   // 0 for gear
+  caffeineLevel: 0 | 1 | 2 | 3 | 4 | 5;   // 0 for add-ons
   price: number;
   size: string;                    // '250g', '50 bags', '30g tin'
   isSample?: boolean;
   brew?: BrewGuide;                // drinks only
-  brewMethods: BrewMethod[];       // drinks: how it can be brewed; gear: what it brews
+  brewMethods: BrewMethod[];       // drinks: how it can be brewed; gear: what it brews; [] for bites and sweeteners
   contains: string[];              // e.g. ['dairy'] for a latte blend
   goalTags: Goal[];
   pairsWith?: string[];            // item ids
   inStock: boolean;
+  cups?: number;                   // drinks: rough cups per pack, for the delivery suggestion
 }
 
 interface BrewGuide {
@@ -104,7 +111,15 @@ interface BrewGuide {
   whisk?: string;                  // matcha, e.g. 'M-shape, 20 s'
 }
 
-interface Customer { goal: Goal; maxCaffeine: 1 | 2 | 3 | 4 | 5; avoids: string[]; }
+interface Customer {               // the core onboarding answers
+  goal: Goal;
+  drinkers: Count;                 // how many people drink it
+  cupsPerDay: Count;               // per person
+  drinks: ('coffee' | 'tea' | 'matcha')[];   // empty = not sure yet
+  brewKit: BrewKit[];              // what they brew with; empty = nothing yet
+  maxCaffeine: 1 | 2 | 3 | 4 | 5;
+  avoids: string[];
+}
 interface BoxLine { itemId: string; qty: number; }
 ```
 
@@ -124,6 +139,17 @@ recommend(customer, box, catalogue, limit = 6): Suggestion[]
 5. **Stability:** the rail is worked out from `railLines`, a copy of the box taken when a page opens
    or a preference changes, so items added from the rail stay where they are and show a stepper.
 6. **Item page:** `recommendForItem(item, …)` runs the same function with that drink as the context.
+
+## Delivery suggestion (`lib/delivery.ts`)
+
+```ts
+suggestDelivery(lines, catalogue, customer): DeliverySuggestion | null
+// { planId, cupsInBox, cupsPerDay, daysLasting, runsShort }
+```
+
+Cups in the box ÷ (people × cups a day) gives the days the box lasts; the suggestion is the closest
+frequency, with `runsShort` under 15 days. Null when the box has no drinks. Rules in
+[prd.md](prd.md#delivery-frequency-your-box).
 
 ## Production notes
 

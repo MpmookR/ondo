@@ -1,4 +1,5 @@
 import type { BoxLine, BrewMethod, Customer, Item, Suggestion } from '../types';
+import { isDrinkCategory } from '../data/labels';
 
 /** Points per signal. Documented in doc/prd.md; change both together. */
 export const POINTS = {
@@ -17,9 +18,9 @@ interface Context {
   drinks: Item[];
 }
 
-const isDrink = (item: Item) => item.category !== 'gear';
+const isDrink = (item: Item) => isDrinkCategory(item.category);
 
-/** The rail's context: the drinks in the box (not gear), so adding gear never reshuffles the rail. */
+/** The rail's context: the drinks in the box (not add-ons), so adding an add-on never reshuffles the rail. */
 function buildContext(box: BoxLine[], catalogue: Item[]): Context {
   const inBox = box
     .filter((line) => line.qty > 0)
@@ -46,7 +47,7 @@ function pairedDrink(item: Item, drinks: Item[]): Item | undefined {
 
 /** Gear that can brew a drink in the box (only counted when there's no explicit pairing). */
 function drinkThisGearBrews(item: Item, drinks: Item[]): Item | undefined {
-  if (isDrink(item)) return undefined;
+  if (item.category !== 'gear') return undefined;
   return drinks.find((d) => d.brewMethods.some((m: BrewMethod) => item.brewMethods.includes(m)));
 }
 

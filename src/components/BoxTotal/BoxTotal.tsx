@@ -4,7 +4,7 @@ import { Icon } from '../Icon';
 
 export interface BoxTotalProps {
   totals: Totals;
-  /** "every 2 weeks", "once"… */
+  /** "every 15 days", "once"… */
   cadence: string;
   discountRate: number;
   onCheckout?: () => void;
@@ -15,8 +15,8 @@ export interface BoxTotalProps {
  * Desktop: a sticky card in the sidebar.
  */
 export function BoxTotal({ totals, cadence, discountRate, onCheckout }: BoxTotalProps) {
-  const { drinkCount, gearCount, subtotal, total } = totals;
-  const gearText = gearCount === 0 ? 'no gear' : pluralise(gearCount, 'gear item');
+  const { drinkCount, addOnCount, subtotal, total } = totals;
+  const addOnText = addOnCount === 0 ? 'no add-ons' : pluralise(addOnCount, 'add-on');
   const note =
     discountRate > 0
       ? `Includes ${Math.round(discountRate * 100)}% subscription saving & free delivery`
@@ -29,7 +29,7 @@ export function BoxTotal({ totals, cadence, discountRate, onCheckout }: BoxTotal
           <div className="flex flex-col gap-4">
             <p className="font-sans text-label font-bold">Box total</p>
             <p className="font-sans text-caption text-text-muted">
-              {pluralise(drinkCount, 'drink')} · {gearText}
+              {pluralise(drinkCount, 'drink')} · {addOnText}
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">

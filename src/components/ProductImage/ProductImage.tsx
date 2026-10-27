@@ -1,5 +1,6 @@
 import type { Category } from '@/types';
-import { Icon } from '../Icon';
+import { isDrinkCategory } from '@/data/labels';
+import { Icon, categoryIcon } from '../Icon';
 
 export interface ProductImageProps {
   category: Category;
@@ -10,7 +11,8 @@ export interface ProductImageProps {
 
 /**
  * Illustrated pack shot (Ondo has no product photography): a coffee bag, tea box or matcha tin
- * drawn in the category accent. Decorative, so it's hidden from screen readers.
+ * drawn in the category accent; add-ons show their category icon. Decorative, so it's hidden
+ * from screen readers.
  */
 export function ProductImage({ category, label, className = '' }: ProductImageProps) {
   return (
@@ -19,8 +21,8 @@ export function ProductImage({ category, label, className = '' }: ProductImagePr
       data-category={category}
       className={`relative grid place-items-center overflow-hidden bg-accent-subtle text-accent ${className}`}
     >
-      {category === 'gear' ? (
-        <Icon name="kettle" size={48} className="h-1/2 w-auto" />
+      {!isDrinkCategory(category) ? (
+        <Icon name={categoryIcon[category]} size={48} className="h-1/2 w-auto" />
       ) : (
         <svg viewBox="0 0 64 80" className="h-3/4 w-auto">
           {category === 'coffee' && (

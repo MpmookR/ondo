@@ -46,7 +46,7 @@ export function ToggleChip({ pressed, onPressedChange, children, className = '',
       type="button"
       aria-pressed={pressed}
       onClick={() => onPressedChange(!pressed)}
-      className={`group inline-flex h-44 items-center ${className}`}
+      className={`group inline-flex h-44 items-center disabled:pointer-events-none disabled:opacity-40 ${className}`}
       {...rest}
     >
       <span

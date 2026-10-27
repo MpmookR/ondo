@@ -34,7 +34,7 @@ const start: BoxState = {
     { itemId: 't-sencha', qty: 2 },
     { itemId: 'g-pour-over', qty: 1 },
   ],
-  plan: 'fortnightly',
+  plan: 'every-15',
   customer: defaultCustomer,
   railLines: [],
   deliveryDate: null,

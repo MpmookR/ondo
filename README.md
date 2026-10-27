@@ -1,6 +1,7 @@
 # Ondo
 
-**Ondo** is a fictional caffeine subscription (coffee, tea, matcha and the gear to brew them).
+**Ondo** is a fictional caffeine subscription (coffee, tea, matcha, the gear to brew them, and
+bites and sweeteners to go with them).
 The product brief: **build your first subscription box**, raising AOV and items per order in a new
 customer's first box **without costing conversion**.
 

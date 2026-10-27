@@ -16,7 +16,7 @@ Nobody translates a design name into a different code name, which is how design 
 
 `--color-*: initial` removes Tailwind's default palette, so only Ondo colours exist.
 
-**Theming is attributes, not components.** One `ShopCard` serves coffee, tea, matcha and gear:
+**Theming is attributes, not components.** One `ShopCard` serves coffee, tea, matcha and every add-on:
 `data-category` on any ancestor swaps the accent, and `data-theme="dark"` swaps the whole surface
 set. Components only ever use semantic utilities, so they never need to know which theme they're in.
 
@@ -65,7 +65,7 @@ pack shape** (bean + bag, leaf + box, whisk + tin):
 | Coffee | `#2E3500` | `#E9ECDD` | `#DDE3C8` |
 | Tea | `#4F5A1A` | `#F1F4E6` | `#B5BD9C` |
 | Matcha | `#3B4600` (brand Accent) | `#E6EDCF` | `#C9D88A` |
-| Gear | Text colour (neutral) | `#F1F5F9` | Text colour |
+| Gear, Bites, Sweeteners (add-ons) | Text colour (neutral) | `#F1F5F9` | Text colour |
 
 ### Semantic
 
@@ -183,13 +183,13 @@ at 402px, then `md:` / `lg:` add columns.
 | --- | --- |
 | `Icon` | Line icons on a 24px grid, `currentColor`. Decorative unless labelled. |
 | `Button`, `IconButton` | `primary`, `accent`, `secondary`, `ghost`. 44px minimum. |
-| `Chip`, `Pill`, `ToggleChip` | Tasting notes (`note`), quiet labels (`outline`), label + value (`Pill`, e.g. "Size 250g"), on/off filters. |
-| `CategoryBadge` | Coffee / Tea / Matcha / Gear. Sets its own `data-category`. |
+| `Chip`, `Pill`, `ToggleChip` | Tasting notes (`note`), quiet labels (`outline`), label + value (`Pill`, e.g. "Size 250g"), on/off filters. A disabled `ToggleChip` fades to 40%. |
+| `CategoryBadge` | Coffee / Tea / Matcha / Gear / Bites / Sweeteners, each with its icon (bean, leaf, whisk, kettle, cookie, jar). Sets its own `data-category`. |
 | `CaffeineMeter` | 5 beans filled to the level + text. `compact` keeps the words for screen readers only. |
 | `BrewGuide` | Ratio, water, time in mono; tea adds steeps, matcha adds the whisk. |
 | `Stepper` | 0 → outlined "Add to box"; 1 → bin + plus; 2+ → minus + plus. 24px icons, 44px hit areas. Sizes `default`, `compact`, `bar`. |
 | `Price` | Display face, tabular figures; optional was-price and "each". |
-| `ProductImage` | Illustrated pack shot (bag, box, tin, or the kettle for gear) in the category accent. Ondo has no photography. |
+| `ProductImage` | Illustrated pack shot (bag, box, tin) in the category accent; add-ons show their category icon. Ondo has no photography. |
 
 ### Patterns
 
@@ -201,12 +201,13 @@ at 402px, then `md:` / `lg:` add columns.
 | `WalletButtons` | Checkout | Static demo buttons, no payment API: Apple Pay as button artwork (from the Apple Pay / Google Pay Buttons Figma file), Google Pay drawn by Google's script. "Pay with…" for subscriptions, "Buy with…" for one-off; black on light, white on dark; both full width, 44px tall (Apple artwork centred on Apple's black or white); Apple Pay first. Tapping goes to the order confirmation. |
 | `TextField`, `Checkbox`, `Divider` | Checkout | 48px inputs with label, hint and error (danger colour, `aria-invalid`, announced); native checkbox in the brand colour; "or pay with card" rule. |
 | `DatePicker` | Your box, checkout | Trigger (`field`: bordered date; `link`: "Change") + calendar popover, Monday-first. Earliest date is **tomorrow** (today and the past are disabled). Arrows, Home/End, Page Up/Down, Enter, Escape. Default: a week from today, set in the browser. |
-| `DeliveryCard`, `PreferencesCard` | Your box | Preferences are the quiz answers, editable: goal, caffeine limit (1–5), avoids. Collapsed by default; a change re-ranks the rail. |
-| `FrequencySelector` | Your box | Box-wide setting as a segmented pill radiogroup. Title, switch, then description, at every width. |
-| `OrderSummary` (`OrderGroup`, `ItemCard`, `ItemThumbnail`) | Your box | Drinks (sub-grouped by category) and Brewing gear, each collapsible; collapsed groups show thumbnails. A line that no longer fits the preferences shows why, and stays. |
+| `PreferencesCard` | Your box | The onboarding answers. Collapsed to the goal; open, a summary (label / value rows) with "Edit preferences", which swaps in the controls: goal, people and cups a day (pill radiogroups), drinks and brew kit (toggle chips), caffeine limit (1–5), avoids. A change re-ranks the rail. |
+| `DeliveryCard` | Your box | Collapsed to "Every 30 days · Tue 3 Nov" (opens on a link to `#delivery`). Open: a suggestion with its reason, how often (segmented pill radiogroup with the saving under each option and "skip, swap or pause" below), then the first delivery date and the next delivery. The suggestion never changes the choice by itself. |
+| `OrderSummary` (`OrderGroup`, `ItemCard`, `ItemThumbnail`) | Your box | Drinks and Add-ons, each collapsible and sub-grouped by category; collapsed groups show thumbnails. A line that no longer fits the preferences shows why, and stays. |
 | `SuggestionRail`, `SuggestionCard` | Your box, item page | 148px cards with the reason line. Scrolls sideways at every width, so the desktop sidebar stays short enough to keep the total in view. Hidden when empty. |
 | `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. |
 | `CategoryTabs` | Shop | 44px tabs, active = bold + 3px underline, scroll sideways on mobile, centred on desktop. |
+| `CaffeineFilter` | Shop (drink tabs) | A row of `ToggleChip`s: All · Low · Medium · High, each with its count. Single choice; tapping the selected band returns to All; empty bands are disabled. |
 | `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (koi ring), with reason, unavailable (faded, reason, no stepper). |
 | `CollapsibleSection` | Shop | "Above your caffeine limit (n)", "Contains things you avoid (n)", "Back soon (n)". |
 | `ViewBoxBar` | Shop | "View your box · n items · £total", always in view. |

@@ -5,7 +5,7 @@ import { emptyTotals, sampleTotals } from '@/stories/fixtures';
 const meta = {
   title: 'Patterns/BoxTotal',
   component: BoxTotal,
-  args: { totals: sampleTotals, cadence: 'every 2 weeks', discountRate: 0.1 },
+  args: { totals: sampleTotals, cadence: 'every 15 days', discountRate: 0.1 },
   parameters: { docs: { description: { component: 'Fixed to the bottom below 1024px; a card in the sidebar above. Resize the canvas to see both.' } } },
   decorators: [(Story) => <div className="min-h-320"><Story /></div>],
 } satisfies Meta<typeof BoxTotal>;

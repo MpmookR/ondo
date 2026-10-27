@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Item } from '@/types';
+import { isDrinkCategory } from '@/data/labels';
 import { itemHref } from '@/lib/routes';
 import { caffeineText } from '../CaffeineMeter';
 import { CategoryBadge } from '../CategoryBadge';
@@ -21,7 +22,7 @@ export interface ShopCardProps {
 
 /** Shop grid card: 2 columns on mobile, 3 at 768px, 4 at 1024px. */
 export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCardProps) {
-  const isDrink = item.category !== 'gear';
+  const isDrink = isDrinkCategory(item.category);
   const blocked = Boolean(unavailable) && qty === 0;
 
   return (
