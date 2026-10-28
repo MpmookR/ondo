@@ -5,14 +5,15 @@ export const defaultCustomer: Customer = {
   goal: 'calm-focus',
   drinkers: 1,
   cupsPerDay: 2,
-  drinks: ['coffee', 'tea'],
-  brewKit: ['filter', 'teapot'],
+  drinks: ['coffee', 'matcha'],
+  brewKit: ['filter'],
   maxCaffeine: 4,
   avoids: ['dairy'],
 };
 
 /** First box, pre-filled from the quiz. */
 export const defaultBox: BoxLine[] = [
-  { itemId: 'c-yirgacheffe', qty: 1 },
-  { itemId: 't-sencha', qty: 1 },
+  { itemId: 'c-yirgacheffe', qty: 2 },
+  { itemId: 'm-ceremonial', qty: 1 },
+  { itemId: 's-vanilla-syrup', qty: 1 },
 ];
