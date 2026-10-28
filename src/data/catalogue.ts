@@ -117,63 +117,63 @@ export const catalogue: Item[] = [
 
   // ---- Gear ----
   {
-    id: 'g-moka-pot', name: 'Three-Cup Moka Pot', category: 'gear',
+    id: 'g-moka-pot', name: 'Three-Cup Moka Pot', category: 'gear', image: '/brand/shop/web/g-moka-pot',
     description: 'Aluminium stovetop brewer.', notes: [], caffeineLevel: 0, price: 32, size: '3 cup',
     brewMethods: ['moka'], contains: [], goalTags: ['strong-start'], inStock: true,
   },
   {
-    id: 'g-pour-over', name: 'Ceramic Pour-Over Set', category: 'gear',
+    id: 'g-pour-over', name: 'Ceramic Pour-Over Set', category: 'gear', image: '/brand/shop/web/g-pour-over',
     description: 'Dripper, 40 filters and a glass server.', notes: [], caffeineLevel: 0, price: 28, size: '600ml',
     brewMethods: ['filter'], contains: [], goalTags: [], inStock: true,
   },
   {
-    id: 'g-whisk-set', name: 'Bamboo Whisk & Bowl Set', category: 'gear',
+    id: 'g-whisk-set', name: 'Bamboo Whisk & Bowl Set', category: 'gear', image: '/brand/shop/web/g-whisk-set',
     description: '80-prong chasen, holder and a stoneware bowl.', notes: [], caffeineLevel: 0, price: 26, size: 'Set of 3',
     brewMethods: ['whisk'], contains: [], goalTags: ['calm-focus'], inStock: true,
   },
   {
-    id: 'g-cold-brew-bottle', name: 'Cold-Brew Bottle', category: 'gear',
+    id: 'g-cold-brew-bottle', name: 'Cold-Brew Bottle', category: 'gear', image: '/brand/shop/web/g-cold-brew-bottle',
     description: 'Glass bottle with a fine mesh filter. Coffee or tea.', notes: [], caffeineLevel: 0, price: 18, size: '1 litre',
     brewMethods: ['cold-brew'], contains: [], goalTags: ['no-crash'], inStock: true,
   },
   {
-    id: 'g-infuser', name: 'Glass Infuser Mug', category: 'gear',
+    id: 'g-infuser', name: 'Glass Infuser Mug', category: 'gear', image: '/brand/shop/web/g-infuser',
     description: 'Double-walled mug with a steel infuser.', notes: [], caffeineLevel: 0, price: 16, size: '350ml',
     brewMethods: ['steep'], contains: [], goalTags: [], inStock: true,
   },
   {
-    id: 'g-grinder', name: 'Conical Hand Grinder', category: 'gear',
+    id: 'g-grinder', name: 'Conical Hand Grinder', category: 'gear', image: '/brand/shop/web/g-grinder',
     description: 'Steel burrs, 40 click settings.', notes: [], caffeineLevel: 0, price: 45, size: '30g hopper',
     brewMethods: ['filter', 'espresso', 'moka'], contains: [], goalTags: [], inStock: false,
   },
 
   // ---- Bites ----
   {
-    id: 'b-biscotti', name: 'Almond Biscotti', category: 'bites',
+    id: 'b-biscotti', name: 'Almond Biscotti', category: 'bites', image: '/brand/shop/web/b-biscotti',
     description: 'Twice-baked with whole almonds, made for dunking.', notes: ['almond', 'vanilla'], caffeineLevel: 0,
     price: 4.5, size: '6 pieces', brewMethods: [], contains: ['nuts', 'gluten'], goalTags: [],
     pairsWith: ['c-night-shift', 'c-moka'], inStock: true,
   },
   {
-    id: 'b-shortbread', name: 'Butter Shortbread', category: 'bites',
+    id: 'b-shortbread', name: 'Butter Shortbread', category: 'bites', image: '/brand/shop/web/b-shortbread',
     description: 'Short, crumbly and properly buttery.', notes: ['butter', 'sea salt'], caffeineLevel: 0,
     price: 5, size: '8 fingers', brewMethods: [], contains: ['dairy', 'gluten'], goalTags: [],
     pairsWith: ['t-assam'], inStock: true,
   },
   {
-    id: 'b-oat-cookies', name: 'Oat & Raisin Cookies', category: 'bites',
+    id: 'b-oat-cookies', name: 'Oat & Raisin Cookies', category: 'bites', image: '/brand/shop/web/b-oat-cookies',
     description: 'Chewy, not too sweet, and made without dairy.', notes: ['oat', 'raisin', 'cinnamon'], caffeineLevel: 0,
     price: 5.5, size: '6 cookies', brewMethods: [], contains: ['gluten'], goalTags: [],
     pairsWith: ['c-half-half', 'c-decaf'], inStock: true,
   },
   {
-    id: 'b-dark-chocolate', name: 'Dark Chocolate Thins', category: 'bites',
+    id: 'b-dark-chocolate', name: 'Dark Chocolate Thins', category: 'bites', image: '/brand/shop/web/b-dark-chocolate',
     description: '70% cocoa, snapped thin.', notes: ['cocoa', 'cherry'], caffeineLevel: 0,
     price: 4, size: '100g', brewMethods: [], contains: ['soya'], goalTags: [],
     pairsWith: ['m-ceremonial', 'c-moka'], inStock: true,
   },
   {
-    id: 'b-rice-crackers', name: 'Sesame Rice Crackers', category: 'bites',
+    id: 'b-rice-crackers', name: 'Sesame Rice Crackers', category: 'bites', image: '/brand/shop/web/b-rice-crackers',
     description: 'Light, savoury and made without gluten.', notes: ['sesame', 'toasted rice'], caffeineLevel: 0,
     price: 4, size: '80g', brewMethods: [], contains: ['sesame'], goalTags: [],
     pairsWith: ['t-sencha', 'm-everyday'], inStock: true,
@@ -181,19 +181,19 @@ export const catalogue: Item[] = [
 
   // ---- Sweeteners ----
   {
-    id: 's-demerara', name: 'Demerara Sugar Cubes', category: 'sweeteners',
+    id: 's-demerara', name: 'Demerara Sugar Cubes', category: 'sweeteners', image: '/brand/shop/web/s-demerara',
     description: 'Golden, crunchy cubes with a light toffee note.', notes: ['toffee'], caffeineLevel: 0,
     price: 3, size: '500g', brewMethods: [], contains: [], goalTags: [],
     pairsWith: ['t-assam', 'c-moka'], inStock: true,
   },
   {
-    id: 's-honey', name: 'Wildflower Honey', category: 'sweeteners',
+    id: 's-honey', name: 'Wildflower Honey', category: 'sweeteners', image: '/brand/shop/web/s-honey',
     description: 'Runny, floral honey from British hives.', notes: ['floral'], caffeineLevel: 0,
     price: 7.5, size: '340g jar', brewMethods: [], contains: [], goalTags: [],
     pairsWith: ['t-honeybush', 't-chai'], inStock: true,
   },
   {
-    id: 's-vanilla-syrup', name: 'Vanilla Syrup', category: 'sweeteners',
+    id: 's-vanilla-syrup', name: 'Vanilla Syrup', category: 'sweeteners', image: '/brand/shop/web/s-vanilla-syrup',
     description: 'For lattes and iced coffee. One pump per cup.', notes: ['vanilla'], caffeineLevel: 0,
     price: 6.5, size: '250ml', brewMethods: [], contains: [], goalTags: [],
     pairsWith: ['m-everyday', 'c-cold-brew-taster'], inStock: true,

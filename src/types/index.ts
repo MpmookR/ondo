@@ -36,7 +36,7 @@ export interface Item {
   pairsWith?: string[];
   inStock: boolean;
   /**
-   * Drinks only: pack shot base path, without size or extension. ProductImage loads
+   * Pack shot base path, without size or extension. ProductImage loads
    * `${image}-304.webp` and `${image}-684.webp` (transparent, 3:4). Items without one show their icon.
    */
   image?: string;

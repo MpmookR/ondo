@@ -194,7 +194,7 @@ at 402px, then `md:` / `lg:` add columns.
 | `BrewGuide` | Ratio, water, time in mono; tea adds steeps, matcha adds the whisk. |
 | `Stepper` | 0 → outlined "Add to box"; 1 → bin + plus; 2+ → minus + plus. 24px icons, 44px hit areas. Sizes `default`, `compact`, `bar`. |
 | `Price` | Display face, tabular figures; optional was-price and "each". |
-| `ProductImage` | Pack shot. Drinks use their photo (`item.image`: transparent 3:4 art from `public/brand/shop`, web copies at 304 and 684px in `public/brand/shop/web`) on `bg-bg-product`; pass `sizes` for its display width. Items without one fall back to a drawn pack in the category accent; add-ons show their category icon. |
+| `ProductImage` | Pack shot. Every product uses its photo (`item.image`: transparent 3:4 art from `public/brand/shop`, web copies at 304 and 684px in `public/brand/shop/web`) on `bg-bg-product`; pass `sizes` for its display width. An item without one falls back to a drawn pack or its category icon. |
 
 ### Patterns
 
