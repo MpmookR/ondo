@@ -1,5 +1,9 @@
 # Ondo
 
+[![Ondo on a phone: the Shop's "For you" tab, an item page with Add to box, and Your box with the box total and Go to checkout](doc/img/ondo-hero.webp)](https://ondo-hazel.vercel.app/)
+
+<sub>Shop → item → your first box, built only from the design system. [Try the live demo](https://ondo-hazel.vercel.app/).</sub>
+
 **Ondo** is a fictional caffeine subscription (coffee, tea, matcha, the gear to brew them, and
 bites and sweeteners to go with them).
 The product brief: **build your first subscription box**, raising AOV and items per order in a new
