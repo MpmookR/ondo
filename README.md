@@ -8,6 +8,9 @@ customer's first box **without costing conversion**.
 This repo is its design system and a demo shop built only from it, made **with Claude and code**
 by [Mook (Puangpaka Rattana)](https://mooksportfolio.netlify.app/).
 
+**Live demo: [ondo-hazel.vercel.app](https://ondo-hazel.vercel.app/)**. The shop is designed
+**mobile first**, so it's best viewed on a phone or in a narrow browser window.
+
 ## Background: why this project exists
 
 Ondo recreates a **take-home task from one of my job interviews**: a goal-based cross-sell on the

@@ -20,22 +20,17 @@ export interface PageHeaderProps {
   sticky?: boolean;
 }
 
-/** The Ondo emblem + name. In dark mode the emblem sits on a light disc so its olive outline stays visible. */
+/**
+ * The Ondo logo (the kettle carries the name). Shown at its own 3:4 shape, 48px tall.
+ * Green on light pages, Vanilla on dark: CSS swaps them (logo-light / logo-dark), no theme branching.
+ */
 export function Wordmark() {
   return (
-    <span className="inline-flex items-center font-heading text-title font-bold">
-      <span className="grid size-40 place-items-center rounded-pill bg-logo-disc">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/ondo-mark-96.webp"
-          srcSet="/brand/ondo-mark-96.webp 1x, /brand/ondo-mark-192.webp 2x"
-          width={36}
-          height={36}
-          alt=""
-          className="size-36"
-        />
-      </span>
-      ondo
+    <span className="inline-flex items-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/ondo-logo-green.webp" width={36} height={48} alt="Ondo" className="logo-light h-48 w-auto" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/ondo-logo-vanilla.webp" width={36} height={48} alt="Ondo" className="logo-dark h-48 w-auto" />
     </span>
   );
 }

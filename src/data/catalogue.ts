@@ -7,7 +7,7 @@ import type { Item } from '@/types';
 export const catalogue: Item[] = [
   // ---- Coffee ----
   {
-    id: 'c-moka', name: 'Moka Morning Blend', category: 'coffee',
+    id: 'c-moka', name: 'Moka Morning Blend', category: 'coffee', image: '/brand/shop/web/c-moka',
     description: 'A dense, sweet blend built for the stovetop.',
     notes: ['cocoa', 'toffee', 'hazelnut'], caffeineLevel: 5, price: 12.5, size: '250g',
     brew: { ratio: '1:7', tempC: 95, time: '4–5 min' },
@@ -15,14 +15,14 @@ export const catalogue: Item[] = [
     pairsWith: ['g-moka-pot'], inStock: true, cups: 16,
   },
   {
-    id: 'c-night-shift', name: 'Night Shift Espresso', category: 'coffee',
+    id: 'c-night-shift', name: 'Night Shift Espresso', category: 'coffee', image: '/brand/shop/web/c-night-shift',
     description: 'Dark, syrupy and unapologetic.',
     notes: ['dark chocolate', 'molasses'], caffeineLevel: 5, price: 13, size: '250g',
     brew: { ratio: '1:2', tempC: 93, time: '28 s' },
     brewMethods: ['espresso'], contains: [], goalTags: ['strong-start'], inStock: true, cups: 16,
   },
   {
-    id: 'c-yirgacheffe', name: 'Yirgacheffe Filter', category: 'coffee',
+    id: 'c-yirgacheffe', name: 'Yirgacheffe Filter', category: 'coffee', image: '/brand/shop/web/c-yirgacheffe',
     description: 'Washed Ethiopian with a clean, floral cup.',
     notes: ['jasmine', 'bergamot', 'peach'], caffeineLevel: 4, price: 14, size: '250g',
     brew: { ratio: '1:16', tempC: 94, time: '3–4 min' },
@@ -30,21 +30,21 @@ export const catalogue: Item[] = [
     pairsWith: ['g-pour-over'], inStock: true, cups: 16,
   },
   {
-    id: 'c-half-half', name: 'Half & Half Blend', category: 'coffee',
+    id: 'c-half-half', name: 'Half & Half Blend', category: 'coffee', image: '/brand/shop/web/c-half-half',
     description: 'Half regular, half Swiss Water decaf. All of the taste.',
     notes: ['caramel', 'hazelnut'], caffeineLevel: 2, price: 11.5, size: '250g',
     brew: { ratio: '1:16', tempC: 94, time: '3–4 min' },
     brewMethods: ['filter', 'moka'], contains: [], goalTags: ['cutting-down', 'no-crash'], inStock: true, cups: 16,
   },
   {
-    id: 'c-decaf', name: 'Swiss Water Decaf', category: 'coffee',
+    id: 'c-decaf', name: 'Swiss Water Decaf', category: 'coffee', image: '/brand/shop/web/c-decaf',
     description: 'Chemical-free decaf from Colombia.',
     notes: ['malt', 'plum'], caffeineLevel: 1, price: 11, size: '250g',
     brew: { ratio: '1:16', tempC: 94, time: '3–4 min' },
     brewMethods: ['filter', 'espresso'], contains: [], goalTags: ['cutting-down'], inStock: true, cups: 16,
   },
   {
-    id: 'c-cold-brew-taster', name: 'Cold Brew Taster', category: 'coffee',
+    id: 'c-cold-brew-taster', name: 'Cold Brew Taster', category: 'coffee', image: '/brand/shop/web/c-cold-brew-taster',
     description: 'Coarse-ground for overnight steeping. Two batches.',
     notes: ['chocolate', 'orange'], caffeineLevel: 4, price: 5.5, size: '100g', isSample: true,
     brew: { ratio: '1:8', tempC: 4, time: '14–16 h' },
@@ -54,7 +54,7 @@ export const catalogue: Item[] = [
 
   // ---- Tea ----
   {
-    id: 't-sencha', name: 'Shizuoka Sencha', category: 'tea',
+    id: 't-sencha', name: 'Shizuoka Sencha', category: 'tea', image: '/brand/shop/web/t-sencha',
     description: 'Steamed green tea, bright and gently sweet.',
     notes: ['cut grass', 'sweet pea'], caffeineLevel: 2, price: 9, size: '80g',
     brew: { ratio: '1g : 60ml', tempC: 70, time: '1 min', steeps: 3 },
@@ -62,28 +62,28 @@ export const catalogue: Item[] = [
     pairsWith: ['g-infuser'], inStock: true, cups: 25,
   },
   {
-    id: 't-oolong', name: 'Tieguanyin Oolong', category: 'tea',
+    id: 't-oolong', name: 'Tieguanyin Oolong', category: 'tea', image: '/brand/shop/web/t-oolong',
     description: 'Rolled oolong that opens up over many steeps.',
     notes: ['orchid', 'cream'], caffeineLevel: 2, price: 11, size: '80g',
     brew: { ratio: '1g : 50ml', tempC: 90, time: '45 s', steeps: 6 },
     brewMethods: ['steep'], contains: [], goalTags: ['no-crash', 'calm-focus'], inStock: true, cups: 25,
   },
   {
-    id: 't-assam', name: 'Assam Breakfast', category: 'tea',
+    id: 't-assam', name: 'Assam Breakfast', category: 'tea', image: '/brand/shop/web/t-assam',
     description: 'Malty black tea that stands up to milk.',
     notes: ['malt', 'honey'], caffeineLevel: 3, price: 8, size: '50 bags',
     brew: { ratio: '1 bag : 250ml', tempC: 100, time: '4 min' },
     brewMethods: ['steep'], contains: [], goalTags: ['strong-start'], inStock: true, cups: 50,
   },
   {
-    id: 't-chai', name: 'Masala Chai Latte Blend', category: 'tea',
+    id: 't-chai', name: 'Masala Chai Latte Blend', category: 'tea', image: '/brand/shop/web/t-chai',
     description: 'Black tea, spices and milk powder. Just add water.',
     notes: ['cardamom', 'clove', 'ginger'], caffeineLevel: 3, price: 9.5, size: '200g',
     brew: { ratio: '2 tsp : 200ml', tempC: 90, time: 'Stir' },
     brewMethods: ['steep'], contains: ['dairy'], goalTags: ['no-crash'], inStock: true, cups: 20,
   },
   {
-    id: 't-honeybush', name: 'Honeybush & Orange Peel', category: 'tea',
+    id: 't-honeybush', name: 'Honeybush & Orange Peel', category: 'tea', image: '/brand/shop/web/t-honeybush',
     description: 'Caffeine-free South African herbal.',
     notes: ['honey', 'orange'], caffeineLevel: 0, price: 7, size: '80g',
     brew: { ratio: '1g : 80ml', tempC: 100, time: '5 min' },
@@ -92,7 +92,7 @@ export const catalogue: Item[] = [
 
   // ---- Matcha ----
   {
-    id: 'm-ceremonial', name: 'Kyoto Ceremonial Matcha', category: 'matcha',
+    id: 'm-ceremonial', name: 'Kyoto Ceremonial Matcha', category: 'matcha', image: '/brand/shop/web/m-ceremonial',
     description: 'First-harvest Uji matcha for drinking straight.',
     notes: ['umami', 'sweet cream'], caffeineLevel: 3, price: 24, size: '30g tin',
     brew: { ratio: '2g : 70ml', tempC: 75, time: '20 s', whisk: 'M-shape, 20 s' },
@@ -100,7 +100,7 @@ export const catalogue: Item[] = [
     pairsWith: ['g-whisk-set'], inStock: true, cups: 15,
   },
   {
-    id: 'm-everyday', name: 'Everyday Latte Matcha', category: 'matcha',
+    id: 'm-everyday', name: 'Everyday Latte Matcha', category: 'matcha', image: '/brand/shop/web/m-everyday',
     description: 'Robust second-harvest matcha for lattes.',
     notes: ['grassy', 'nutty'], caffeineLevel: 3, price: 14, size: '50g',
     brew: { ratio: '2g : 50ml', tempC: 80, time: '15 s', whisk: 'Then add milk' },
@@ -108,7 +108,7 @@ export const catalogue: Item[] = [
     pairsWith: ['g-whisk-set'], inStock: true, cups: 25,
   },
   {
-    id: 'm-taster', name: 'Matcha Taster Tin', category: 'matcha',
+    id: 'm-taster', name: 'Matcha Taster Tin', category: 'matcha', image: '/brand/shop/web/m-taster',
     description: 'Ten servings of ceremonial grade to try first.',
     notes: ['umami', 'seaweed'], caffeineLevel: 3, price: 5, size: '10g', isSample: true,
     brew: { ratio: '2g : 70ml', tempC: 75, time: '20 s', whisk: 'M-shape, 20 s' },

@@ -24,7 +24,7 @@ export function SuggestionCard({ suggestion, qty, onQtyChange }: SuggestionCardP
       }`}
     >
       <div className="relative">
-        <ProductImage category={item.category} label={item.size} className="h-120 w-full rounded-sm" />
+        <ProductImage category={item.category} label={item.size} image={item.image} className="h-120 w-full rounded-sm" />
         <CategoryBadge category={item.category} className="absolute left-4 top-4" />
       </div>
 

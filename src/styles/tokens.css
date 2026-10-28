@@ -3,9 +3,9 @@
  * Layers: 1 raw palette → 2 theme → 3 category accent → 4 @theme (semantic) → 5 utilities.
  * Docs: doc/design_system.md
  *
- * Brand palette (from the brand sheet): background #FFFFFF, text #131A00, primary #7C8B3A,
- * accent #3B4600, surface #FFFFFF, border #E2E8F0, plus koi orange as the spark (calls to
- * action and highlights). Every other value is derived and contrast-checked (design_system.md).
+ * Brand palette: Vanilla #FFEEBC, Columbia Blue #D2E8FF, Cal Poly Green #26422A, Bistre #5D372A
+ * and Flame #EA672D (the spark). Playful and colour-blocked; every other value is derived and
+ * contrast-checked (design_system.md).
  */
 
 /* ---------- Fonts (SIL Open Font License, self-hosted from /public/fonts) ---------- */
@@ -22,49 +22,52 @@
 
 /* ---------- 1. Raw palette ---------- */
 :root {
-  /* Brand */
-  --raw-white: #ffffff;
-  --raw-ink: #131a00;           /* Text */
-  --raw-olive-500: #7c8b3a;     /* Primary */
-  --raw-olive-700: #3b4600;     /* Accent */
-  --raw-slate-200: #e2e8f0;     /* Border */
+  /* Brand: five colours, used as bold colour blocks */
+  --raw-vanilla: #ffeebc;       /* Vanilla: the canvas */
+  --raw-columbia: #d2e8ff;      /* Columbia Blue: selection, info, tea */
+  --raw-green: #26422a;         /* Cal Poly Green: the brand, matcha */
+  --raw-bistre: #5d372a;        /* Bistre: text, coffee */
+  --raw-flame: #ea672d;         /* Flame: the spark (calls to action, highlights) */
 
-  /* Derived from the brand greens */
-  --raw-olive-50: #f4f6ee;      /* quiet fill (tracks, pills) */
-  --raw-olive-100: #eef2e2;     /* primary tint */
-  --raw-olive-200: #c9d88a;     /* dark-theme accent */
-  --raw-olive-300: #a9b96a;     /* dark-theme primary */
-  --raw-moss-600: #5c6440;      /* muted text, 6.3:1 on white */
-  --raw-moss-400: #8a917a;      /* strong border, 3.3:1 on white */
-  --raw-slate-100: #f1f5f9;     /* gear tint (border family) */
+  /* Light canvas, derived from Vanilla */
+  --raw-vanilla-50: #fffcf2;    /* card surface */
+  --raw-vanilla-100: #fff6dc;   /* page */
+  --raw-vanilla-300: #f3e0a8;   /* border */
 
-  /* Dark theme: built on the brand's text colour */
-  --raw-night-900: #131a00;
-  --raw-night-800: #1c2408;
-  --raw-night-700: #2c3614;
-  --raw-night-600: #3a4520;
-  --raw-night-400: #6b7748;
-  --raw-sage-200: #b5bd9c;
-  --raw-sage-50: #f7f9f0;
+  /* Text, derived from Bistre */
+  --raw-bistre-950: #2b1810;    /* text on Flame (5.2:1) */
+  --raw-bistre-600: #7a5444;    /* muted text, 5.7:1 on Vanilla */
+  --raw-bistre-400: #9c7e62;    /* strong border, 3.5:1 on the page */
+  --raw-latte: #f4e1d2;         /* coffee tint */
 
-  /* Koi: the only warm colour. Bright for fills/borders and dark-theme text, deep for text and buttons on white. */
-  --raw-koi-50: #fdebdd;
-  --raw-koi-500: #f26b21;
-  --raw-koi-700: #b83a12;
-  --raw-koi-950: #3a2210;
+  /* Blue, derived from Columbia Blue */
+  --raw-blue-700: #2f5f8f;      /* Primary: borders, text, tea accent (6.5:1 on cards) */
+  --raw-blue-950: #1e3347;      /* dark-theme blue tint */
 
-  /* Danger: warnings and errors, kept apart from koi */
+  /* Green, derived from Cal Poly Green */
+  --raw-green-100: #dcead3;     /* matcha tint */
+  --raw-green-300: #a8cfa4;     /* dark-theme brand */
+  --raw-green-200: #b9dbb2;     /* dark-theme matcha */
+  --raw-green-500: #6c9370;     /* dark-theme strong border */
+
+  /* Flame tones */
+  --raw-flame-50: #fde3d2;      /* flame tint */
+  --raw-flame-300: #f59a68;     /* flame text on dark */
+  --raw-flame-700: #a33e15;     /* flame text on its tint (5.3:1) */
+  --raw-flame-950: #3e2516;     /* dark-theme flame tint */
+
+  /* Dark theme: built on Cal Poly Green */
+  --raw-night-900: #13241a;
+  --raw-night-800: #1a2f21;
+  --raw-night-700: #26422a;     /* = Cal Poly Green */
+  --raw-night-600: #355a3a;
+  --raw-oat-200: #d8cca5;       /* dark muted text */
+  --raw-coffee-light: #f2cdb4;  /* dark coffee accent */
+
+  /* Danger: warnings and errors, kept apart from Flame */
   --raw-danger-50: #fef3f2;
   --raw-danger-300: #f97066;
   --raw-danger-700: #b42318;
-
-  /* Category accents: all olive, told apart by icon and pack shape */
-  --raw-olive-800: #2e3500;     /* coffee */
-  --raw-olive-600: #4f5a1a;     /* tea */
-  --raw-coffee-tint: #e9ecdd;
-  --raw-tea-tint: #f1f4e6;
-  --raw-matcha-tint: #e6edcf;
-  --raw-coffee-light: #dde3c8;  /* dark theme */
 
   /* Responsive type and layout scales (mobile values) */
   --type-display-size: 56px;
@@ -98,32 +101,32 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --theme-bg-page: var(--raw-white);
-  --theme-bg-surface: var(--raw-white);
-  --theme-bg-subtle: var(--raw-olive-50);
-  --theme-text-primary: var(--raw-ink);
-  --theme-text-muted: var(--raw-moss-600);
-  --theme-text-inverse: var(--raw-white);
-  --theme-border: var(--raw-slate-200);
-  --theme-border-strong: var(--raw-moss-400);
-  --theme-action: var(--raw-koi-700);
-  --theme-action-text: var(--raw-white);
-  --theme-brand: var(--raw-olive-700);
-  --theme-on-brand: var(--raw-white);
-  --theme-spark: var(--raw-koi-500);
-  --theme-spark-subtle: var(--raw-koi-50);
-  --theme-on-spark-subtle: var(--raw-koi-700);
+  --theme-bg-page: var(--raw-vanilla-100);
+  --theme-bg-surface: var(--raw-vanilla-50);
+  --theme-bg-subtle: var(--raw-vanilla);
+  --theme-bg-product: var(--raw-vanilla-50);
+  --theme-text-primary: var(--raw-bistre);
+  --theme-text-muted: var(--raw-bistre-600);
+  --theme-text-inverse: var(--raw-vanilla);
+  --theme-border: var(--raw-vanilla-300);
+  --theme-border-strong: var(--raw-bistre-400);
+  --theme-action: var(--raw-flame);
+  --theme-action-text: var(--raw-bistre-950);
+  --theme-brand: var(--raw-green);
+  --theme-on-brand: var(--raw-vanilla);
+  --theme-spark: var(--raw-flame);
+  --theme-spark-subtle: var(--raw-flame-50);
+  --theme-on-spark-subtle: var(--raw-flame-700);
   --theme-danger: var(--raw-danger-700);
   --theme-danger-subtle: var(--raw-danger-50);
-  --theme-primary: var(--raw-olive-500);
-  --theme-primary-subtle: var(--raw-olive-100);
-  --theme-on-primary: var(--raw-ink);
-  --theme-logo-disc: transparent;
+  --theme-primary: var(--raw-blue-700);
+  --theme-primary-subtle: var(--raw-columbia);
+  --theme-on-primary: var(--raw-vanilla-50);
   --theme-wallet-apple: #000000; /* Apple Pay button black (brand colour, not Ondo's) */
-  --theme-shadow-tint: 19 26 0;
-  --accent: var(--raw-olive-700);
-  --accent-subtle: var(--raw-olive-100);
-  --on-accent: var(--raw-white);
+  --theme-shadow-tint: 93 55 42;
+  --accent: var(--raw-green);
+  --accent-subtle: var(--raw-green-100);
+  --on-accent: var(--raw-vanilla);
 }
 
 [data-theme='dark'] {
@@ -131,45 +134,46 @@
   --theme-bg-page: var(--raw-night-900);
   --theme-bg-surface: var(--raw-night-800);
   --theme-bg-subtle: var(--raw-night-700);
-  --theme-text-primary: var(--raw-sage-50);
-  --theme-text-muted: var(--raw-sage-200);
+  --theme-bg-product: var(--raw-vanilla-50); /* pack shots stay on cream in both themes */
+  --theme-text-primary: var(--raw-vanilla);
+  --theme-text-muted: var(--raw-oat-200);
   --theme-text-inverse: var(--raw-night-900);
   --theme-border: var(--raw-night-600);
-  --theme-border-strong: var(--raw-night-400);
-  --theme-action: var(--raw-koi-500);
+  --theme-border-strong: var(--raw-green-500);
+  --theme-action: var(--raw-flame);
   --theme-action-text: var(--raw-night-900);
-  --theme-brand: var(--raw-olive-300);
+  --theme-brand: var(--raw-green-300);
   --theme-on-brand: var(--raw-night-900);
-  --theme-spark: var(--raw-koi-500);
-  --theme-spark-subtle: var(--raw-koi-950);
-  --theme-on-spark-subtle: var(--raw-koi-500);
+  --theme-spark: var(--raw-flame);
+  --theme-spark-subtle: var(--raw-flame-950);
+  --theme-on-spark-subtle: var(--raw-flame-300);
   --theme-danger: var(--raw-danger-300);
-  --theme-danger-subtle: var(--raw-night-700);
-  --theme-primary: var(--raw-olive-300);
-  --theme-primary-subtle: var(--raw-night-700);
+  --theme-danger-subtle: var(--raw-night-800);
+  --theme-primary: var(--raw-columbia);
+  --theme-primary-subtle: var(--raw-blue-950);
   --theme-on-primary: var(--raw-night-900);
-  --theme-logo-disc: var(--raw-sage-50);
   --theme-wallet-apple: #ffffff; /* Apple Pay button white on dark backgrounds */
   --theme-shadow-tint: 0 0 0;
-  --accent: var(--raw-olive-200);
+  --accent: var(--raw-green-300);
   --accent-subtle: var(--raw-night-700);
   --on-accent: var(--raw-night-900);
 }
 
 /* ---------- 3. Category accents ---------- */
-/* One olive family: coffee darkest, tea mid, matcha the brand Accent. Add-ons (gear, bites,
-   sweeteners) are neutral (ink on slate), so the drinks keep the colour. */
-[data-category='gear'], [data-category='bites'], [data-category='sweeteners'] { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-slate-100);    --on-accent: var(--theme-text-inverse); }
-[data-category='coffee'] { --accent: var(--raw-olive-800);      --accent-subtle: var(--raw-coffee-tint);  --on-accent: var(--raw-white); }
-[data-category='tea']    { --accent: var(--raw-olive-600);      --accent-subtle: var(--raw-tea-tint);     --on-accent: var(--raw-white); }
-[data-category='matcha'] { --accent: var(--raw-olive-700);      --accent-subtle: var(--raw-matcha-tint);  --on-accent: var(--raw-white); }
+/* Colour-blocked: coffee is Bistre on latte, tea is blue on Columbia Blue, matcha is green on
+   green tint. Add-ons (gear, bites, sweeteners) sit on Vanilla in the text colour, so the
+   drinks keep the strongest colour. */
+[data-category='gear'], [data-category='bites'], [data-category='sweeteners'] { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-vanilla); --on-accent: var(--theme-text-inverse); }
+[data-category='coffee'] { --accent: var(--raw-bistre);   --accent-subtle: var(--raw-latte);     --on-accent: var(--raw-vanilla); }
+[data-category='tea']    { --accent: var(--raw-blue-700); --accent-subtle: var(--raw-columbia);  --on-accent: var(--raw-vanilla-50); }
+[data-category='matcha'] { --accent: var(--raw-green);    --accent-subtle: var(--raw-green-100); --on-accent: var(--raw-vanilla); }
 
 [data-theme='dark'] [data-category='gear'],   [data-theme='dark'][data-category='gear'],
 [data-theme='dark'] [data-category='bites'],  [data-theme='dark'][data-category='bites'],
 [data-theme='dark'] [data-category='sweeteners'], [data-theme='dark'][data-category='sweeteners'] { --accent-subtle: var(--raw-night-700); }
 [data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-coffee-light); --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
-[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-sage-200);     --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
-[data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-olive-200);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
+[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-columbia);     --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
+[data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-green-200);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
 
 /* ---------- 4. Semantic tokens → Tailwind utilities ---------- */
 /* inline: utilities read the variables where they're used, so data-theme / data-category work on any element */
@@ -178,6 +182,7 @@
   --color-bg-page: var(--theme-bg-page);
   --color-bg-surface: var(--theme-bg-surface);
   --color-bg-subtle: var(--theme-bg-subtle);
+  --color-bg-product: var(--theme-bg-product);
   --color-text-primary: var(--theme-text-primary);
   --color-text-muted: var(--theme-text-muted);
   --color-text-inverse: var(--theme-text-inverse);
@@ -185,7 +190,6 @@
   --color-border-strong: var(--theme-border-strong);
   --color-action: var(--theme-action);
   --color-action-text: var(--theme-action-text);
-  --color-logo-disc: var(--theme-logo-disc);
   --color-wallet-apple: var(--theme-wallet-apple);
   --color-brand: var(--theme-brand);
   --color-on-brand: var(--theme-on-brand);

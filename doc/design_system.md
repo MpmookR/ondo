@@ -8,7 +8,7 @@ Nobody translates a design name into a different code name, which is how design 
 
 | Layer | Where | Example |
 | --- | --- | --- |
-| 1. Raw palette | `:root` in `tokens.css` | `--raw-olive-700: #3b4600` |
+| 1. Raw palette | `:root` in `tokens.css` | `--raw-green: #26422a` |
 | 2. Theme (light / dark) | `:root`, `[data-theme="dark"]` | `--theme-bg-page: var(--raw-white)` |
 | 3. Category accent | `[data-category="coffee"]` etc. | `--accent: var(--raw-espresso-600)` |
 | 4. Semantic tokens | `@theme` | `--color-bg-page: var(--theme-bg-page)` |
@@ -22,86 +22,89 @@ set. Components only ever use semantic utilities, so they never need to know whi
 
 ## Colour
 
-The brand sheet defines six colours; koi orange was added as the one warm colour, taken from the
-moodboard (moss garden, koi pond). Everything else is derived and contrast-checked.
+Playful and colour-blocked. Five brand colours, each with one clear job, used in big confident
+blocks (a whole card tint, a whole button) rather than thin lines. Everything else is derived and
+contrast-checked.
 
-| Brand role | Hex | Token |
-| --- | --- | --- |
-| Background / Surface | `#FFFFFF` | `--raw-white` → `bg-bg-page`, `bg-bg-surface` (cards separated by border + shadow) |
-| Text | `#131A00` | `--raw-ink` → `text-text-primary` |
-| Primary | `#7C8B3A` | `--raw-olive-500` → `bg-primary`, `border-primary` |
-| Accent | `#3B4600` | `--raw-olive-700` → `brand` (secondary actions), matcha accent, default `accent` |
-| Border | `#E2E8F0` | `--raw-slate-200` → `border-border` |
-| **Koi (spark)** | `#F26B21` / `#B83A12` | `--raw-koi-500` / `-700` → `action` (main calls to action), `spark` (highlights) |
+| Brand colour | Hex | Job | Token |
+| --- | --- | --- | --- |
+| **Vanilla** | `#FFEEBC` | The canvas: page tone, quiet fills, add-on tint, text on dark | `--raw-vanilla` → `bg-bg-subtle` (page and cards use lighter Vanilla) |
+| **Bistre** | `#5D372A` | Text and coffee | `--raw-bistre` → `text-text-primary`, coffee accent |
+| **Cal Poly Green** | `#26422A` | The brand: secondary buttons, tabs, toggles, matcha, the dark theme | `--raw-green` → `brand`, matcha accent |
+| **Columbia Blue** | `#D2E8FF` | Selection and info: selected cards, info panels, tea | `--raw-columbia` → `bg-primary-subtle`, tea tint |
+| **Flame** | `#EA672D` | The spark: the main call to action and small highlights | `--raw-flame` → `action`, `spark` |
 
 ### Roles, in order of how much of the screen they cover
 
-1. **White + Text + Border**: the structure. Most of every screen.
-2. **Olive** (Primary, Accent and the category shades): the brand. Selected states, secondary buttons,
-   tabs, categories, info badges.
-3. **Koi**: the spark, roughly 5–10% of a screen. Only the main call to action on each page
-   (Go to checkout, Add to box · price, View your box), the savings badge, the dot in the logo
-   and the "in your box" outline on cards. If it spreads, it stops working.
-4. **Danger red**: warnings only (contains something you avoid, above your caffeine limit). Koi
-   is never used for warnings, because red-orange already reads as "alert" or "sale".
+1. **Vanilla + Bistre**: the structure. Warm cream surfaces, brown text. Most of every screen.
+2. **Green, Blue and the category tints**: the personality. Category blocks, selected states,
+   secondary buttons, info panels.
+3. **Flame**: the spark, roughly 5–10% of a screen. Only the main call to action on each page
+   (Go to checkout, Add to box · price, View your box), the savings highlight and the "in your
+   box" outline on cards. If it spreads, it stops working.
+4. **Danger red**: warnings only (contains something you avoid, above your caffeine limit).
+   Flame is never used for warnings.
 
-### Koi needs two tones
+### Flame buttons use dark text
 
-| Tone | Hex | Use | Why |
-| --- | --- | --- | --- |
-| Bright koi | `#F26B21` | Borders, the logo dot, dark-theme buttons (with dark text) | 3.0:1 on white: fine for non-text, not for text |
-| Deep koi | `#B83A12` | Light-theme buttons (white text), text on the koi tint | 5.8:1 with white |
+White on Flame is only 3.2:1, so Flame buttons carry dark Bistre text (`#2B1810`, 5.2:1) in both
+themes. That keeps the bright Flame itself on the button instead of a muddier deep orange.
 
-Avoid the in-between red-orange (around `#D9481C`): it misses 4.5:1 with both white and dark text.
+| Tone | Hex | Use |
+| --- | --- | --- |
+| Flame | `#EA672D` | Button fill, borders, highlights (3.0:1 on the page: non-text only) |
+| Flame tint / deep | `#FDE3D2` / `#A33E15` | Savings highlight: deep Flame text on the tint (5.3:1) |
+| Dark-theme tint / light | `#3E2516` / `#F59A68` | The same highlight on the dark page (6.6:1) |
 
-### Categories are all olive
+### Categories are colour-blocked
 
-Coffee, tea and matcha used to have brown, amber and green accents. Next to koi, the warm ones
-muddied the palette, so every category is now an olive shade and they're told apart by **icon and
-pack shape** (bean + bag, leaf + box, whisk + tin):
+Each drink has its own colour from the palette, and is also told apart by **icon and pack
+shape** (bean + bag, leaf + box, whisk + tin), so colour is never the only cue:
 
 | Category | Accent | Tint | Dark-theme accent |
 | --- | --- | --- | --- |
-| Coffee | `#2E3500` | `#E9ECDD` | `#DDE3C8` |
-| Tea | `#4F5A1A` | `#F1F4E6` | `#B5BD9C` |
-| Matcha | `#3B4600` (brand Accent) | `#E6EDCF` | `#C9D88A` |
-| Gear, Bites, Sweeteners (add-ons) | Text colour (neutral) | `#F1F5F9` | Text colour |
+| Coffee | Bistre `#5D372A` | Latte `#F4E1D2` | `#F2CDB4` |
+| Tea | Blue `#2F5F8F` | Columbia Blue `#D2E8FF` | Columbia Blue |
+| Matcha | Cal Poly Green `#26422A` | `#DCEAD3` | `#B9DBB2` |
+| Gear, Bites, Sweeteners (add-ons) | Text colour (neutral) | Vanilla `#FFEEBC` | Text colour |
 
 ### Semantic
 
 | Utility | Light | Dark |
 | --- | --- | --- |
-| `bg-bg-page`, `bg-bg-surface` | white | night-900 / night-800 |
-| `bg-bg-subtle` | olive-50 | night-700 |
-| `text-text-primary` / `text-text-muted` | ink / moss-600 | sage-50 / sage-200 |
-| `border-border` / `border-border-strong` | slate-200 / moss-400 | night-600 / night-400 |
-| `bg-action` + `text-action-text` | deep koi + white | bright koi + night-900 |
-| `bg-brand`, `border-brand` + `text-on-brand` | Accent + white | olive-300 + night-900 |
-| `border-spark`, `bg-spark` | bright koi | bright koi |
-| `bg-spark-subtle` + `text-on-spark-subtle` | koi-50 + deep koi | koi-950 + bright koi |
-| `text-danger`, `border-danger`, `bg-danger-subtle` | `#B42318` on `#FEF3F2` | `#F97066` on night-700 |
-| `bg-primary`, `border-primary` + `text-on-primary` | Primary + ink | olive-300 + night-900 |
-| `bg-primary-subtle` | olive-100 | night-700 |
-| `text-accent`, `bg-accent` + `text-on-accent` | category olive | category light tone |
+| `bg-bg-page` / `bg-bg-surface` | vanilla-100 `#FFF6DC` / vanilla-50 `#FFFCF2` | night-900 / night-800 |
+| `bg-bg-subtle` | Vanilla | night-700 (Cal Poly Green) |
+| `bg-bg-product` | vanilla-50 | vanilla-50 (pack shots stay on cream) |
+| `text-text-primary` / `text-text-muted` | Bistre / bistre-600 `#7A5444` | Vanilla / oat-200 `#D8CCA5` |
+| `border-border` / `border-border-strong` | vanilla-300 `#F3E0A8` / bistre-400 `#9C7E62` | night-600 / green-500 |
+| `bg-action` + `text-action-text` | Flame + bistre-950 | Flame + night-900 |
+| `bg-brand`, `border-brand` + `text-on-brand` | Cal Poly Green + Vanilla | green-300 `#A8CFA4` + night-900 |
+| `border-spark`, `bg-spark` | Flame | Flame |
+| `bg-spark-subtle` + `text-on-spark-subtle` | flame-50 + flame-700 | flame-950 + flame-300 |
+| `text-danger`, `border-danger`, `bg-danger-subtle` | `#B42318` on `#FEF3F2` | `#F97066` on night-800 |
+| `bg-primary`, `border-primary` + `text-on-primary` | blue-700 `#2F5F8F` + vanilla-50 | Columbia Blue + night-900 |
+| `bg-primary-subtle` | Columbia Blue | blue-950 `#1E3347` |
+| `text-accent`, `bg-accent` + `text-on-accent` | category colour | category light tone |
 
-Primary `#7C8B3A` is 3.7:1 on white, so it's **never small text**: selected states, fills and
-borders only, with Text on top (4.8:1).
+Dark theme is built on Cal Poly Green (night-900 `#13241A`, night-800 `#1A2F21`, night-700
+`#26422A`, night-600 `#355A3A`) with Vanilla text, like the green-on-cream packaging flipped.
 
 ### Contrast (checked, WCAG 2.2 AA)
 
 | Pair | Ratio |
 | --- | --- |
-| Text on white | 17.9 |
-| Muted text on white | 6.3 |
-| White on deep koi (light-theme buttons) | 5.8 |
-| Night on bright koi (dark-theme buttons) | 5.9 |
-| Deep koi on koi tint (savings badge) | 5.0 |
-| Bright koi as a border on white | 3.0 (non-text, needs 3) |
-| Danger on white / on its tint | 6.6 / 6.1 |
-| White on Accent (brand buttons) | 10.2 |
-| Text on Primary | 4.8 |
-| Coffee / tea / matcha accent on white | 12.9 / 7.5 / 10.2 |
-| Dark: text / muted / danger on page | 16.8 / 9.1 / 6.4 |
+| Text (Bistre) on page / on cards / on Vanilla | 9.5 / 10.0 / 8.9 |
+| Muted text on page / on Vanilla | 6.1 / 5.7 |
+| Dark text on Flame (buttons, both themes) | 5.2 / 5.0 |
+| Flame as a border on the page | 3.0 (non-text, needs 3) |
+| Deep Flame on Flame tint (savings highlight) | 5.3 |
+| Strong border on the page | 3.5 (non-text) |
+| Danger on page / on its tint | 6.1 / 6.1 |
+| Vanilla on Cal Poly Green (brand buttons) | 9.6 |
+| Blue on cards / on Columbia Blue (tea, Primary) | 6.5 / 5.3 |
+| Bistre on latte / green on matcha tint | 8.1 / 8.8 |
+| Dark: text / muted / danger on page | 14.1 / 10.1 / 5.8 |
+| Dark: Flame text on its tint | 6.6 |
 
 ## Typography
 
@@ -159,12 +162,14 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 
 Motion turns off under `prefers-reduced-motion`.
 
-**Logo:** the emblem (kettle, bowl, leaves and koi-orange steam) lives in `design-assets/logo-originals` as source art (kept locally, not in git)
-(1254px). The site uses resized copies in `public/brand` (96 and 192px WebP for the header, 512px
-PNG for sharing) and `src/app/icon.png` / `apple-icon.png` for the favicon. In dark mode the emblem
-sits on a light disc (`bg-logo-disc`) because its olive outline would vanish on the dark page.
+**Logo:** a kettle with the name across its handle, so it doubles as the wordmark. Source art
+(1093 × 1439, one per brand colour) is in `public/brand/logo`. The header uses 3× web copies,
+`public/brand/ondo-logo-green.webp` and `ondo-logo-vanilla.webp` (109 × 144, about 6KB), shown at
+36 × 48. Keep the 3:4 shape: never force it into a square. Green on light pages, Vanilla on dark,
+swapped by the `logo-light` / `logo-dark` utilities. The favicon and sharing image still use the
+old emblem.
 
-**Utilities:** `highlight` (Primary-tint pill behind a word), `pb-safe` (clears the iPhone home bar),
+**Utilities:** `highlight` (Flame-tint pill behind a word), `pb-safe` (clears the iPhone home bar),
 `stretched-link` (whole card tappable), `scrollbar-none`. Together they mean components never need
 arbitrary values.
 
@@ -189,7 +194,7 @@ at 402px, then `md:` / `lg:` add columns.
 | `BrewGuide` | Ratio, water, time in mono; tea adds steeps, matcha adds the whisk. |
 | `Stepper` | 0 → outlined "Add to box"; 1 → bin + plus; 2+ → minus + plus. 24px icons, 44px hit areas. Sizes `default`, `compact`, `bar`. |
 | `Price` | Display face, tabular figures; optional was-price and "each". |
-| `ProductImage` | Illustrated pack shot (bag, box, tin) in the category accent; add-ons show their category icon. Ondo has no photography. |
+| `ProductImage` | Pack shot. Drinks use their photo (`item.image`: transparent 3:4 art from `public/brand/shop`, web copies at 304 and 684px in `public/brand/shop/web`) on `bg-bg-product`; pass `sizes` for its display width. Items without one fall back to a drawn pack in the category accent; add-ons show their category icon. |
 
 ### Patterns
 
@@ -208,7 +213,7 @@ at 402px, then `md:` / `lg:` add columns.
 | `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. |
 | `CategoryTabs` | Shop | 44px tabs, active = bold + 3px underline, scroll sideways on mobile, centred on desktop. |
 | `CaffeineFilter` | Shop (drink tabs) | A row of `ToggleChip`s: All · Low · Medium · High, each with its count. Single choice; tapping the selected band returns to All; empty bands are disabled. |
-| `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (koi ring), with reason, unavailable (faded, reason, no stepper). |
+| `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (Flame ring), with reason, unavailable (faded, reason, no stepper). |
 | `CollapsibleSection` | Shop | "Above your caffeine limit (n)", "Contains things you avoid (n)", "Back soon (n)". |
 | `ViewBoxBar` | Shop | "View your box · n items · £total", always in view. |
 | `BrewHighlights`, `DetailAccordion`, `OrderBar` | Item page | Stats row + a "Contains" box that is never collapsed; accordions; a pinned order bar that becomes quantity + stepper once it's in the box. |
@@ -220,7 +225,7 @@ at 402px, then `md:` / `lg:` add columns.
 | Nothing to suggest | Rail hidden, no empty box. |
 | Over caffeine limit / contains an avoid | Never suggested. In the shop: tucked into a collapsed section with the reason. In the box: kept, with a note. On the item page: the order bar shows the reason. |
 | Out of stock | "Back soon" section; order bar shows "Back soon". |
-| Added from rail | Card border turns koi; add becomes a stepper; rail order doesn't change until the page reopens or a preference changes. |
+| Added from rail | Card border turns Flame; add becomes a stepper; rail order doesn't change until the page reopens or a preference changes. |
 | Empty group | "No drinks yet…" / "Nothing to brew with yet…" pointing to the suggestions. |
 | Long name | 1 line in the box, 2 lines on cards and the item header. |
 | Tap a card | Opens `/item/[id]` (the name is stretched over the card); steppers sit above it, so they never navigate. |

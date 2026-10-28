@@ -33,7 +33,7 @@ export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCa
       } ${blocked ? 'opacity-50' : ''}`}
     >
       <div className="relative">
-        <ProductImage category={item.category} label={item.size} className="h-120 w-full md:h-140 lg:h-160" />
+        <ProductImage category={item.category} label={item.size} image={item.image} className="h-120 w-full md:h-140 lg:h-160" />
         <CategoryBadge category={item.category} className="absolute left-8 top-8" />
       </div>
 

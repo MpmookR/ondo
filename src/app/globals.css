@@ -44,6 +44,17 @@
   }
 }
 
+/* Logo swap: the green logo on light pages, the Vanilla one on dark. display:none also hides the
+   other one from screen readers. */
+@utility logo-light {
+  display: block;
+  :where([data-theme='dark']) & { display: none; }
+}
+@utility logo-dark {
+  display: none;
+  :where([data-theme='dark']) & { display: block; }
+}
+
 /* Tinted pill behind a word ("You'll save 10%"). */
 @utility highlight {
   background-color: var(--color-spark-subtle);

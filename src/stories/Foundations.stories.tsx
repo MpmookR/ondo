@@ -12,7 +12,7 @@ const semantic = [
   ['bg-text-muted', 'text-muted'],
   ['bg-border', 'border'],
   ['bg-border-strong', 'border-strong'],
-  ['bg-action', 'action (koi)'],
+  ['bg-action', 'action (flame)'],
   ['bg-brand', 'brand'],
   ['bg-spark', 'spark'],
   ['bg-spark-subtle', 'spark-subtle'],

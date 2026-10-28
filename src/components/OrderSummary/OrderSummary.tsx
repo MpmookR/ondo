@@ -59,7 +59,7 @@ export function ItemThumbnail({ item, qty }: { item: Item; qty: number }) {
   return (
     <li className="w-40 shrink-0">
       <Link href={itemHref(item.id)} className="flex flex-col items-center gap-2 rounded-sm">
-        <ProductImage category={item.category} className="size-40 rounded-sm" />
+        <ProductImage category={item.category} image={item.image} sizes="40px" className="size-40 rounded-sm" />
         <span aria-hidden="true" className="font-sans text-caption text-text-muted">
           x{qty}
         </span>
@@ -90,7 +90,7 @@ export function ItemCard({ item, qty, onQtyChange, warning }: ItemCardProps) {
       className="relative flex flex-col gap-8 rounded-sm border border-border bg-bg-surface px-4 py-8"
     >
       <div className="flex items-start gap-8">
-        <ProductImage category={item.category} label={item.size} className="h-88 w-88 shrink-0 rounded-sm" />
+        <ProductImage category={item.category} label={item.size} image={item.image} sizes="88px" className="h-88 w-88 shrink-0 rounded-sm" />
         <div className="flex min-w-0 flex-1 flex-col gap-4 pr-4">
           <h4 className="truncate font-sans text-label">
             <Link href={itemHref(item.id)} className="stretched-link">

@@ -35,6 +35,11 @@ export interface Item {
   goalTags: Goal[];
   pairsWith?: string[];
   inStock: boolean;
+  /**
+   * Drinks only: pack shot base path, without size or extension. ProductImage loads
+   * `${image}-304.webp` and `${image}-684.webp` (transparent, 3:4). Items without one show their icon.
+   */
+  image?: string;
   /** Drinks only: roughly how many cups one pack makes. Used to suggest how often to deliver. */
   cups?: number;
 }

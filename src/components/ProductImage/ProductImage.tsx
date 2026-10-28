@@ -6,15 +6,38 @@ export interface ProductImageProps {
   category: Category;
   /** Short text printed on the pack label, e.g. the size. Pass rounding in className. */
   label?: string;
+  /** Pack shot base path (`item.image`). When set, the photo replaces the drawn pack. */
+  image?: string;
+  /** How wide the image shows, so the browser picks the 304px or 684px file. */
+  sizes?: string;
   className?: string;
 }
 
 /**
- * Illustrated pack shot (Ondo has no product photography): a coffee bag, tea box or matcha tin
- * drawn in the category accent; add-ons show their category icon. Decorative, so it's hidden
- * from screen readers.
+ * Pack shot. Drinks with an `image` show the photo (transparent PNG art, on `bg-bg-product`);
+ * anything else falls back to a pack drawn in the category accent, and add-ons show their
+ * category icon. Decorative (the name is always next to it), so it's hidden from screen readers.
  */
-export function ProductImage({ category, label, className = '' }: ProductImageProps) {
+export function ProductImage({ category, label, image, sizes = '(min-width: 1024px) 240px, 50vw', className = '' }: ProductImageProps) {
+  if (image) {
+    return (
+      <div aria-hidden="true" className={`relative overflow-hidden bg-bg-product ${className}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${image}-304.webp`}
+          srcSet={`${image}-304.webp 304w, ${image}-684.webp 684w`}
+          sizes={sizes}
+          width={304}
+          height={400}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 size-full object-contain"
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       aria-hidden="true"
