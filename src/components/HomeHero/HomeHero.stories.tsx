@@ -58,7 +58,8 @@ export const TypedHeadlineOnly: Story = {
   name: 'TypedHeadline on its own',
   render: () => (
     <TypedHeadline
-      phrases={['Picked for you.', 'Delivered easy.', 'Brewed slow.']}
+      lead="A box for"
+      phrases={['early birds.', 'tea people.', 'matcha mornings.', 'slow sippers.']}
       className="font-heading text-hero text-brand"
     />
   ),

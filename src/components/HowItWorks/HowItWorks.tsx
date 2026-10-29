@@ -156,10 +156,10 @@ export function HowItWorks() {
           </p>
           <h2 id="how-it-works-title" className="font-heading text-display text-brand">
             <span className="block">
-              <WordReveal text="Three steps" />
+              <WordReveal text="From your first sip" />
             </span>
             <span className="block">
-              <WordReveal text="to a slower morning" start={2} />
+              <WordReveal text="to your doorstep" start={4} />
             </span>
           </h2>
         </Reveal>

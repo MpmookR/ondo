@@ -72,8 +72,12 @@
   /* Brew scene (the homepage hero illustration). Only HomeHero / BrewScene use these. */
   --raw-illo-wall-top: #fff4d6;
   --raw-illo-wall-bottom: #f3dda6;
-  --raw-illo-light-day: rgb(255 255 255 / 0.6);
+  --raw-illo-light-day: rgb(255 252 240 / 0.9);   /* sun shafts */
   --raw-illo-light-night: rgb(255 238 188 / 0.12);
+  --raw-illo-glow-day: rgb(255 205 120 / 0.38);   /* warm halo round the shafts */
+  --raw-illo-glow-night: rgb(255 238 188 / 0.05);
+  --raw-illo-shade-day: rgb(93 55 42 / 0.1);      /* the wall away from the window */
+  --raw-illo-mote-day: #d9a96a;                   /* dust catching the sun */
   --raw-illo-wood: #9a6644;
   --raw-illo-wood-edge: #c9936a;
   --raw-illo-wood-back: #a87250;    /* tabletop, far edge */
@@ -159,6 +163,9 @@
   --illo-wall-top: var(--raw-illo-wall-top);
   --illo-wall-bottom: var(--raw-illo-wall-bottom);
   --illo-light: var(--raw-illo-light-day);
+  --illo-glow: var(--raw-illo-glow-day);
+  --illo-shade: var(--raw-illo-shade-day);
+  --illo-mote: var(--raw-illo-mote-day);
   --illo-wood-top: var(--raw-illo-wood);
   --illo-wood-bottom: var(--raw-bistre);
   --illo-wood-edge: var(--raw-illo-wood-edge);
@@ -235,6 +242,9 @@
   --illo-wall-top: var(--raw-night-800);
   --illo-wall-bottom: var(--raw-night-900);
   --illo-light: var(--raw-illo-light-night);
+  --illo-glow: var(--raw-illo-glow-night);
+  --illo-shade: transparent;
+  --illo-mote: var(--raw-oat-200);
   --illo-steam: var(--raw-oat-200);
   --illo-table-shadow: var(--raw-illo-table-shadow-night);
 
@@ -286,6 +296,8 @@
   --color-illo-wall-top: var(--illo-wall-top);
   --color-illo-wall-bottom: var(--illo-wall-bottom);
   --color-illo-light: var(--illo-light);
+  --color-illo-glow: var(--illo-glow);
+  --color-illo-shade: var(--illo-shade);
   --color-illo-wood-top: var(--illo-wood-top);
   --color-illo-wood-bottom: var(--illo-wood-bottom);
   --color-illo-wood-edge: var(--illo-wood-edge);
@@ -373,7 +385,10 @@
 
   /* Brew scene loops: slow on purpose (calm), and off under prefers-reduced-motion.
      `-late` versions start half a cycle later so two drops or wisps never move together. */
-  --animate-brew-light: brew-light 10s ease-in-out infinite;
+  /* Sun rays: each drifts sideways and brightens on its own slow cycle (negative delays start them mid-way). */
+  --animate-brew-ray: brew-ray 12s ease-in-out infinite;
+  --animate-brew-ray-slow: brew-ray 18s ease-in-out -6s infinite;
+  --animate-brew-ray-late: brew-ray 14s ease-in-out -10s infinite;
   --animate-brew-drop: brew-drop 3.2s var(--ease-drip) infinite;
   --animate-brew-drop-late: brew-drop 3.2s var(--ease-drip) 1.6s infinite;
   --animate-brew-ripple: brew-ripple 3.2s ease-out infinite;
@@ -415,7 +430,10 @@
   --animate-page-in: page-in 3000ms var(--ease-brew) both;
   --animate-preload-failsafe: preload-failsafe 400ms ease-out 10s both;
 
-  @keyframes brew-light { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.9; } }
+  @keyframes brew-ray {
+    0%, 100% { opacity: 0.5; transform: translateX(0) skewX(-14deg); }
+    50% { opacity: 1; transform: translateX(-56px) skewX(-14deg); }
+  }
   @keyframes brew-drop {
     0% { transform: translateY(0); opacity: 0; }
     8%, 85% { opacity: 1; }

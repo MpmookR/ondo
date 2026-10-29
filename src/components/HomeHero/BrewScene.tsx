@@ -74,7 +74,7 @@ export function BrewScene({ className = '', level }: BrewSceneProps) {
       </defs>
 
       {/* Dust in the light */}
-      <g fill="var(--illo-steam)">
+      <g fill="var(--illo-mote)">
         <circle className={`animate-brew-mote ${still}`} cx="290" cy="120" r="1.6" opacity="0.9" />
         <circle className={`animate-brew-mote-slow ${still}`} cx="262" cy="210" r="1.2" opacity="0.8" />
         <circle className={`animate-brew-mote ${still}`} cx="300" cy="260" r="1.8" opacity="0.7" />

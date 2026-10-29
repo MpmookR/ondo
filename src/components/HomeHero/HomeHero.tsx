@@ -12,8 +12,10 @@ export interface HomeHeroProps {
   onThemeChange?: (theme: Theme) => void;
 }
 
-/** Typed in turn. The longest must still fit on one line at `text-hero` (about 18 characters). */
-const HEADLINE = ['Picked for you', 'Delivered easy', 'Unique to brew', 'Calm your mornings'];
+/** Typed in turn under the "A box for" eyebrow. The longest must fit on one line at `text-hero` (about 18 characters). */
+const HEADLINE = ['Early birds', 'Tea people', 'Matcha mornings', 'Slow sippers'];
+/** Screen readers hear the eyebrow first, then this, once, instead of each phrase in turn. */
+const HEADLINE_LABEL = 'early birds, tea people, matcha mornings and slow sippers.';
 
 const navLink =
   'flex min-h-44 items-center rounded-pill px-12 font-sans text-label font-semibold ' +
@@ -70,11 +72,14 @@ function Table({ className = '' }: { className?: string }) {
 export function HomeHero({ theme, onThemeChange }: HomeHeroProps) {
   return (
     <section className="relative overflow-hidden bg-linear-to-b from-illo-wall-top to-illo-wall-bottom">
-      {/* Morning light through a window, slowly brightening and dimming */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-64 w-1/3 -skew-x-12 bg-illo-light blur-2xl animate-brew-light motion-reduce:animate-none"
-      />
+      {/* Sunlight through a window on the right: the far wall in soft shade, a broad warm glow and
+          two brighter shafts, each drifting and brightening on its own slow cycle. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-r from-illo-shade to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-1/2 -skew-x-12 bg-illo-glow blur-3xl animate-brew-ray-slow motion-reduce:animate-none" />
+        <div className="absolute inset-y-0 right-64 w-1/4 -skew-x-12 bg-illo-light blur-2xl animate-brew-ray motion-reduce:animate-none" />
+        <div className="absolute inset-y-0 right-1/3 w-1/12 -skew-x-12 bg-illo-light blur-xl animate-brew-ray-late motion-reduce:animate-none" />
+      </div>
 
       <header className="relative mx-auto flex max-w-content items-center justify-between gap-16 px-margin py-12">
         <Link
@@ -108,9 +113,9 @@ export function HomeHero({ theme, onThemeChange }: HomeHeroProps) {
       {/* The scene overlaps the tabletop (negative margin) so the carafe and plant stand on it, not behind it. */}
       <div className="relative z-10 mx-auto flex max-w-content flex-col px-margin lg:-mb-48 lg:grid lg:grid-cols-12 lg:grid-rows-2 lg:gap-x-gutter lg:pt-24">
         <div className="flex animate-brew-rise flex-col gap-12 pb-16 pt-16 motion-reduce:animate-none lg:col-span-7 lg:row-start-1 lg:gap-16 lg:self-end lg:pb-8 lg:pt-48">
-          <p className="font-sans text-eyebrow uppercase text-text-muted">Coffee · Tea · Matcha</p>
+          <p className="font-sans text-eyebrow uppercase text-text-muted">A box for</p>
           {/* Typed one at a time; the size scales so the longest phrase always fits on one line. */}
-          <TypedHeadline phrases={HEADLINE} className="font-heading text-hero text-brand" />
+          <TypedHeadline phrases={HEADLINE} label={HEADLINE_LABEL} className="font-heading text-hero text-brand" />
         </div>
 
         <div className="lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:self-end">

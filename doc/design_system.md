@@ -168,8 +168,8 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 
 Motion turns off under `prefers-reduced-motion`.
 
-**Brew scene motion** (homepage hero only): slow loops, so the page feels calm. `animate-brew-light`
-(window light, 10s), `animate-brew-drop` (3.2s, `ease-drip`), `animate-brew-ripple`,
+**Brew scene motion** (homepage hero only): slow loops, so the page feels calm. `animate-brew-ray` (`-slow`, `-late`: three sun rays
+that each drift sideways and brighten, 12–18s), `animate-brew-drop` (3.2s, `ease-drip`), `animate-brew-ripple`,
 `animate-brew-steam` (7s), `animate-brew-fill` (12s), `animate-brew-sway` (8s), `animate-brew-mote`,
 and `animate-brew-rise` (the words fade up once). `animate-caret` blinks the headline's typing caret.
 
@@ -194,8 +194,9 @@ two drops or wisps never move together. Each element also carries `motion-reduce
 `origin-shape-center` / `origin-shape-bottom` make SVG shapes scale or turn around their own box.
 
 **Illustration colours:** the brew scene's wall, light, wood, ceramic, glass, coffee and plant are
-`--illo-*` tokens (raw values `--raw-illo-*`). In dark the wall turns into an evening green and the
-light dims; the objects keep their colours. The table is `--illo-table-*` (back, front, grain, bevel, edge, shadow). Only `HomeHero` and `BrewScene` use them; the wall and
+`--illo-*` tokens (raw values `--raw-illo-*`). In light the far wall sits in soft shade (`illo-shade`) so the warm glow (`illo-glow`) and the
+shafts (`illo-light`) read as sunlight, with golden dust (`illo-mote`); in dark the wall turns into
+an evening green and the light dims; the objects keep their colours. The table is `--illo-table-*` (back, front, grain, bevel, edge, shadow). Only `HomeHero` and `BrewScene` use them; the wall and
 wood are also utilities (`from-illo-wall-top`, `bg-illo-light`, `border-illo-wood-edge` …).
 
 **Logo:** a kettle with the name across its handle, so it doubles as the wordmark. Source art
@@ -240,7 +241,7 @@ at 402px, then `md:` / `lg:` add columns.
 | `Preloader` | Homepage | The brew scene with an empty carafe that fills (`BrewScene level`, 0–1) as a counter climbs 0–100%. Waits at 90% until the page and fonts have loaded (at most 6s), takes at least 4.2s (eased in and out, like a pour), holds full for a moment, then slowly (3s) zooms into the coffee while a circle opens to reveal the page. Once per browser session. A progress bar for screen readers ("Loading Ondo"); page scrolling is locked until it opens. |
 | `BestSellers` | Homepage | Products standing in arches (`rounded-t-pill`, a 2px outline in the drink's accent): 2 columns on mobile, 4 from 1024px. Name, size and price, caffeine as words, tasting notes. Hover slowly lifts the pack; the whole arch opens the product page. Scroll-in: headline lines slide up, arches appear, products rise in left to right, then their words. Items come from `data/bestSellers.ts`. |
 | `HowItWorks` | Homepage | Editorial: a headline whose words slide up, then three steps in a zig-zag (photo arch on one side, a big step number, a hairline, the title and copy on the other), each arch tinted in a drink's accent with real pack shots that drift on scroll. The last step ends with "Start with step one" (Flame; never on screen with the hero's), then a slow ticker of the promises (runs only while on screen, decorative). Loaded as its own chunk. Without JavaScript or with reduced motion, everything simply shows. |
-| `HomeHero`, `BrewScene`, `TypedHeadline` | Homepage | "Sunday Drip": a pour-over dripping into a carafe that slowly fills, steam, a swaying plant and moving window light, drawn in SVG (no video). Its own nav (the ONDO name in type, Shop, Your box, theme switch), a `text-hero` headline that types its phrases in turn (`TypedHeadline`: Flame caret, screen readers hear every phrase once, still on the last one under reduced motion), Flame "Build your first box" and an outlined "Browse the shop". Mobile: headline on top, then the scene on its table, then the words and buttons. From 1024px: a 12-column grid, headline and words in 7 columns meeting at the middle of the scene, the scene in the last 5 (`max-w-scene`, 460px), standing on a full-width 3D table (a perspective top with planks and grain, a lit front edge, a shadow on the floor; the scene overlaps the top so things stand on it). Decorative scene is `aria-hidden`. |
+| `HomeHero`, `BrewScene`, `TypedHeadline` | Homepage | "Sunday Drip": a pour-over dripping into a carafe that slowly fills, steam, a swaying plant and moving window light, drawn in SVG (no video). Its own nav (the ONDO name in type, Shop, Your box, theme switch), a "A box for" eyebrow over a `text-hero` headline that types early birds, tea people, matcha mornings, slow sippers in turn (`TypedHeadline`; Flame caret, screen readers hear every phrase once, still on the last one under reduced motion), Flame "Build your first box" and an outlined "Browse the shop". Mobile: headline on top, then the scene on its table, then the words and buttons. From 1024px: a 12-column grid, headline and words in 7 columns meeting at the middle of the scene, the scene in the last 5 (`max-w-scene`, 460px), standing on a full-width 3D table (a perspective top with planks and grain, a lit front edge, a shadow on the floor; the scene overlaps the top so things stand on it). Decorative scene is `aria-hidden`. |
 | `Steps` | Checkout | Progress, not clickable. Current step = bold + 3px brand underline (`aria-current="step"`); done steps get a tick. |
 | `OrderReview` | Checkout | "Your first box": count, cadence and total; expands to every line, subtotal, saving, delivery (£3.95 struck, FREE) and the first-box total, plus a discount-code field. |
 | `WalletButtons` | Checkout | Static demo buttons, no payment API: Apple Pay as button artwork (from the Apple Pay / Google Pay Buttons Figma file), Google Pay drawn by Google's script. "Pay with…" for subscriptions, "Buy with…" for one-off; black on light, white on dark; both full width, 44px tall (Apple artwork centred on Apple's black or white); Apple Pay first. Tapping goes to the order confirmation. |

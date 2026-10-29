@@ -5,6 +5,10 @@ import { useEffect, useState } from 'react';
 export interface TypedHeadlineProps {
   /** Typed one after another, then round again. Keep each short enough to fit on one line. */
   phrases: string[];
+  /** Words that always show on the line above, e.g. "A box for". */
+  lead?: string;
+  /** What screen readers hear instead of every phrase in turn. Defaults to the lead and phrases joined. */
+  label?: string;
   className?: string;
 }
 
@@ -24,7 +28,7 @@ type Phase = 'hold' | 'deleting' | 'typing';
  * It starts fully typed (no empty flash, and it reads fine without JavaScript), and stays still
  * on the last phrase when the visitor prefers reduced motion.
  */
-export function TypedHeadline({ phrases, className = '' }: TypedHeadlineProps) {
+export function TypedHeadline({ phrases, lead, label, className = '' }: TypedHeadlineProps) {
   const [index, setIndex] = useState(0);
   const [length, setLength] = useState(phrases[0]?.length ?? 0);
   const [phase, setPhase] = useState<Phase>('hold');
@@ -76,7 +80,12 @@ export function TypedHeadline({ phrases, className = '' }: TypedHeadlineProps) {
 
   return (
     <h1 className={className}>
-      <span className="sr-only">{phrases.join(' ')}</span>
+      <span className="sr-only">{label ?? [lead, ...phrases].filter(Boolean).join(' ')}</span>
+      {lead && (
+        <span aria-hidden="true" className="block whitespace-nowrap">
+          {lead}
+        </span>
+      )}
       <span aria-hidden="true" className="block whitespace-nowrap">
         {/* A no-break space keeps the line's height while it's empty. */}
         <span className="border-r-4 border-spark pr-4 animate-caret motion-reduce:animate-none">{shown || ' '}</span>
