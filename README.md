@@ -1,19 +1,17 @@
-# Ondo
+# ☕️ Ondo
 
 [![Ondo on a phone: the Shop's "For you" tab, an item page with Add to box, and Your box with the box total and Go to checkout](doc/img/ondo-hero.webp)](https://ondo-hazel.vercel.app/)
 
-<sub>Shop → item → your first box, built only from the design system. [Try the live demo](https://ondo-hazel.vercel.app/).</sub>
+**Shop → item → your first box, built only from the design system. [Try the live demo](https://ondo-hazel.vercel.app/).**
 
 **Ondo** is a fictional caffeine subscription (coffee, tea, matcha, the gear to brew them, and
 bites and sweeteners to go with them).
 The product brief: **build your first subscription box**, raising AOV and items per order in a new
 customer's first box **without costing conversion**.
 
-This repo is its design system and a demo shop built only from it, made **with Claude and code**
-by [Mook (Puangpaka Rattana)](https://mooksportfolio.netlify.app/).
-
-**Live demo: [ondo-hazel.vercel.app](https://ondo-hazel.vercel.app/)**. The shop is designed
-**mobile first**, so it's best viewed on a phone or in a narrow browser window.
+**[❇️ Live demo](https://ondo-hazel.vercel.app/)**. 
+**[📑 Ondo Case Study](https://mooksportfolio.netlify.app/projects/ondo)**
+The shop is designed **mobile first**, so it's best viewed on a phone or in a narrow browser window.
 
 ## Background: why this project exists
 
