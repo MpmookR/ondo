@@ -20,6 +20,7 @@ import {
 } from '@/components';
 import { CHECKOUT_STEPS, STEP_DELIVERY } from '@/data/labels';
 import { formatPrice } from '@/lib/format';
+import { homeHref } from '@/lib/routes';
 
 /** Your box: the order summary. Mobile first; two columns from 1024px. */
 export function YourBoxPage() {
@@ -32,7 +33,7 @@ export function YourBoxPage() {
 
   return (
     <>
-      <PageHeader theme={theme} onThemeChange={setTheme}>
+      <PageHeader backHref={homeHref} theme={theme} onThemeChange={setTheme}>
         {/* The real saving once there's a subscription saving, otherwise the best one on offer. */}
         <SavingsLine saving={totals.discount > 0 ? formatPrice(totals.discount) : '10%'} />
         {/* <Steps steps={CHECKOUT_STEPS} current={STEP_DELIVERY} /> */}

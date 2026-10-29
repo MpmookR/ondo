@@ -69,9 +69,36 @@
   --raw-danger-300: #f97066;
   --raw-danger-700: #b42318;
 
+  /* Brew scene (the homepage hero illustration). Only HomeHero / BrewScene use these. */
+  --raw-illo-wall-top: #fff4d6;
+  --raw-illo-wall-bottom: #f3dda6;
+  --raw-illo-light-day: rgb(255 255 255 / 0.6);
+  --raw-illo-light-night: rgb(255 238 188 / 0.12);
+  --raw-illo-wood: #9a6644;
+  --raw-illo-wood-edge: #c9936a;
+  --raw-illo-wood-back: #a87250;    /* tabletop, far edge */
+  --raw-illo-wood-bevel: #e6bd93;   /* light catching the table's front edge */
+  --raw-illo-table-shadow-day: rgb(43 24 16 / 0.22);
+  --raw-illo-table-shadow-night: rgb(0 0 0 / 0.4);
+  --raw-illo-ceramic-light: #f7a273;
+  --raw-illo-rim-light: #fbb68c;
+  --raw-illo-rim-dark: #c4501c;
+  --raw-illo-coffee: #7a4128;
+  --raw-illo-crema: #8a5032;
+  --raw-illo-collar-light: #d9a57a;
+  --raw-illo-collar: #b98258;
+  --raw-illo-collar-dark: #8a5a3c;
+  --raw-illo-pot-light: #e7d3b0;
+  --raw-illo-pot: #b89e78;
+  --raw-illo-pot-rim: #efe0c2;
+  --raw-illo-leaf-light: #4e7f55;
+  --raw-illo-drop-light: #c98a5e;
+  --raw-illo-drop-dark: #3e2219;
+
   /* Responsive type and layout scales (mobile values) */
   --type-display-size: 56px;
   --type-display-leading: 56px;
+  --type-hero-size: clamp(32px, 9vw, 64px);  /* homepage headline: grows with the screen; ~18 characters fit */
   --type-heading-size: 28px;
   --type-heading-leading: 32px;
   --type-title-size: 20px;
@@ -86,6 +113,7 @@
   :root {
     --type-display-size: 96px;
     --type-display-leading: 92px;
+    --type-hero-size: clamp(44px, 4vw, 60px);  /* beside the scene, in 7 of 12 columns */
     --type-heading-size: 40px;
     --type-heading-leading: 44px;
     --type-title-size: 22px;
@@ -104,7 +132,6 @@
   --theme-bg-page: var(--raw-vanilla-100);
   --theme-bg-surface: var(--raw-vanilla-50);
   --theme-bg-subtle: var(--raw-vanilla);
-  --theme-bg-product: var(--raw-vanilla-50);
   --theme-text-primary: var(--raw-bistre);
   --theme-text-muted: var(--raw-bistre-600);
   --theme-text-inverse: var(--raw-vanilla);
@@ -128,6 +155,47 @@
   --accent-subtle: var(--raw-green-100);
   --on-accent: var(--raw-vanilla);
 
+  /* Brew scene: a sunny kitchen wall in light, an evening one in dark. The objects keep their colours. */
+  --illo-wall-top: var(--raw-illo-wall-top);
+  --illo-wall-bottom: var(--raw-illo-wall-bottom);
+  --illo-light: var(--raw-illo-light-day);
+  --illo-wood-top: var(--raw-illo-wood);
+  --illo-wood-bottom: var(--raw-bistre);
+  --illo-wood-edge: var(--raw-illo-wood-edge);
+  /* The table: top surface (far → near, lit by the window), front edge, shadow on the floor */
+  --illo-table-back: var(--raw-illo-wood-back);
+  --illo-table-front: var(--raw-illo-wood-edge);
+  --illo-table-grain: var(--raw-bistre);
+  --illo-table-bevel: var(--raw-illo-wood-bevel);
+  --illo-table-edge-top: var(--raw-illo-collar-dark);
+  --illo-table-edge-bottom: var(--raw-bistre);
+  --illo-table-shadow: var(--raw-illo-table-shadow-day);
+  --illo-shadow: var(--raw-bistre-950);
+  --illo-ceramic-light: var(--raw-illo-ceramic-light);
+  --illo-ceramic: var(--raw-flame);
+  --illo-ceramic-dark: var(--raw-flame-700);
+  --illo-rim-light: var(--raw-illo-rim-light);
+  --illo-rim-dark: var(--raw-illo-rim-dark);
+  --illo-paper: var(--raw-vanilla-50);
+  --illo-coffee-top: var(--raw-illo-coffee);
+  --illo-coffee-bottom: var(--raw-bistre-950);
+  --illo-crema: var(--raw-illo-crema);
+  --illo-ripple: var(--raw-illo-collar-light);
+  --illo-glass: var(--raw-vanilla-50);
+  --illo-glass-edge: var(--raw-bistre);
+  --illo-collar-light: var(--raw-illo-collar-light);
+  --illo-collar: var(--raw-illo-collar);
+  --illo-collar-dark: var(--raw-illo-collar-dark);
+  --illo-tie: var(--raw-bistre);
+  --illo-pot-light: var(--raw-illo-pot-light);
+  --illo-pot: var(--raw-illo-pot);
+  --illo-pot-rim: var(--raw-illo-pot-rim);
+  --illo-leaf-light: var(--raw-illo-leaf-light);
+  --illo-leaf: var(--raw-green);
+  --illo-drop-light: var(--raw-illo-drop-light);
+  --illo-drop-dark: var(--raw-illo-drop-dark);
+  --illo-steam: var(--raw-vanilla-50);
+
   /* Category colours for this theme (layer 3 picks them up). Defined per theme, not per
      category, so a category always takes the colours of its nearest data-theme. */
   --cat-coffee: var(--raw-bistre);       --cat-coffee-subtle: var(--raw-latte);      --cat-coffee-on: var(--raw-vanilla);
@@ -141,7 +209,6 @@
   --theme-bg-page: var(--raw-night-900);
   --theme-bg-surface: var(--raw-night-800);
   --theme-bg-subtle: var(--raw-night-700);
-  --theme-bg-product: var(--raw-vanilla-50); /* pack shots stay on cream in both themes */
   --theme-text-primary: var(--raw-vanilla);
   --theme-text-muted: var(--raw-oat-200);
   --theme-text-inverse: var(--raw-night-900);
@@ -164,6 +231,12 @@
   --accent: var(--raw-green-300);
   --accent-subtle: var(--raw-night-700);
   --on-accent: var(--raw-night-900);
+
+  --illo-wall-top: var(--raw-night-800);
+  --illo-wall-bottom: var(--raw-night-900);
+  --illo-light: var(--raw-illo-light-night);
+  --illo-steam: var(--raw-oat-200);
+  --illo-table-shadow: var(--raw-illo-table-shadow-night);
 
   --cat-coffee: var(--raw-coffee-light); --cat-coffee-subtle: var(--raw-night-700);  --cat-coffee-on: var(--raw-night-900);
   --cat-tea: var(--raw-columbia);        --cat-tea-subtle: var(--raw-night-700);     --cat-tea-on: var(--raw-night-900);
@@ -188,7 +261,6 @@
   --color-bg-page: var(--theme-bg-page);
   --color-bg-surface: var(--theme-bg-surface);
   --color-bg-subtle: var(--theme-bg-subtle);
-  --color-bg-product: var(--theme-bg-product);
   --color-text-primary: var(--theme-text-primary);
   --color-text-muted: var(--theme-text-muted);
   --color-text-inverse: var(--theme-text-inverse);
@@ -211,12 +283,28 @@
   --color-accent-subtle: var(--accent-subtle);
   --color-on-accent: var(--on-accent);
   --color-transparent: transparent;
+  --color-illo-wall-top: var(--illo-wall-top);
+  --color-illo-wall-bottom: var(--illo-wall-bottom);
+  --color-illo-light: var(--illo-light);
+  --color-illo-wood-top: var(--illo-wood-top);
+  --color-illo-wood-bottom: var(--illo-wood-bottom);
+  --color-illo-wood-edge: var(--illo-wood-edge);
+  --color-illo-table-back: var(--illo-table-back);
+  --color-illo-table-front: var(--illo-table-front);
+  --color-illo-table-bevel: var(--illo-table-bevel);
+  --color-illo-table-edge-top: var(--illo-table-edge-top);
+  --color-illo-table-edge-bottom: var(--illo-table-edge-bottom);
+  --color-illo-table-shadow: var(--illo-table-shadow);
 
   --text-*: initial;
   --text-display: var(--type-display-size);
   --text-display--line-height: var(--type-display-leading);
   --text-display--letter-spacing: -0.03em;
   --text-display--font-weight: 700;
+  --text-hero: var(--type-hero-size);
+  --text-hero--line-height: 1;
+  --text-hero--letter-spacing: -0.03em;
+  --text-hero--font-weight: 700;
   --text-heading: var(--type-heading-size);
   --text-heading--line-height: var(--type-heading-leading);
   --text-heading--letter-spacing: -0.02em;
@@ -277,7 +365,93 @@
 
   --container-frame: 402px;
   --container-column: 560px;
+  --container-scene: 460px;   /* the homepage brew scene's largest size */
   --container-content: 1200px;
 
   --ease-brew: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-drip: cubic-bezier(0.5, 0, 0.9, 0.6);
+
+  /* Brew scene loops: slow on purpose (calm), and off under prefers-reduced-motion.
+     `-late` versions start half a cycle later so two drops or wisps never move together. */
+  --animate-brew-light: brew-light 10s ease-in-out infinite;
+  --animate-brew-drop: brew-drop 3.2s var(--ease-drip) infinite;
+  --animate-brew-drop-late: brew-drop 3.2s var(--ease-drip) 1.6s infinite;
+  --animate-brew-ripple: brew-ripple 3.2s ease-out infinite;
+  --animate-brew-ripple-late: brew-ripple 3.2s ease-out 1.6s infinite;
+  --animate-brew-steam: brew-steam 7s ease-in-out infinite;
+  --animate-brew-steam-mid: brew-steam 7s ease-in-out 2.3s infinite;
+  --animate-brew-steam-late: brew-steam 7s ease-in-out 4.6s infinite;
+  --animate-brew-fill: brew-fill 12s ease-in-out infinite;
+  --animate-brew-sway: brew-sway 8s ease-in-out infinite;
+  --animate-brew-mote: brew-mote 11s ease-in-out infinite;
+  --animate-brew-mote-slow: brew-mote 14s ease-in-out 3s infinite reverse;
+  --animate-brew-rise: brew-rise 1.4s var(--ease-brew) both;
+  --animate-caret: caret-blink 1s steps(1) infinite;
+
+  /* Editorial reveal (How it works): one soft ease-out, long calm moves, no bounce. Each element
+     sets `--stagger` (0, 1, 2 …); words follow each other 120ms apart. Things that wait for their
+     entrance start at opacity-0; every keyframe sets opacity itself so the move is what you see. */
+  --ease-silk: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --animate-word-up: word-up 1050ms var(--ease-silk) calc(var(--stagger, 0) * 120ms) both;
+  --animate-soft-up: soft-up 1050ms var(--ease-silk) calc(var(--stagger, 0) * 120ms) both;
+  --animate-rule-draw: rule-draw 1200ms var(--ease-silk) both;
+  --animate-arch-open: arch-open 1400ms var(--ease-silk) both;
+  --animate-settle: settle 1800ms var(--ease-silk) both;
+  --animate-ticker: ticker 40s linear infinite;
+
+  /* Best sellers (scroll-in reveal). Each element sets `--stagger` (0, 1, 2 …) so siblings follow
+     one another: headline lines slide up out of a mask, arches appear, products rise into them,
+     then their words fade up. */
+  --animate-line-up: line-up 1050ms var(--ease-silk) calc(var(--stagger, 0) * 150ms) both;
+  --animate-arch-in: arch-in 1050ms var(--ease-silk) calc(var(--stagger, 0) * 120ms + 200ms) both;
+  --animate-rise: rise 1400ms var(--ease-silk) calc(var(--stagger, 0) * 150ms + 450ms) both;
+  --animate-fade-up: fade-up 1050ms var(--ease-silk) calc(var(--stagger, 0) * 150ms + 900ms) both;
+
+  /* Homepage preloader. Opening: the view zooms into the coffee while a circle opens from it to
+     reveal the page, which settles from a slight zoom. The failsafe hides the preloader by itself
+     after 10s, so it can never cover the page (e.g. with JavaScript off). */
+  --animate-preload-open: preload-open 3000ms var(--ease-brew) both;
+  --animate-preload-zoom: preload-zoom 3000ms var(--ease-brew) both;
+  --animate-page-in: page-in 3000ms var(--ease-brew) both;
+  --animate-preload-failsafe: preload-failsafe 400ms ease-out 10s both;
+
+  @keyframes brew-light { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.9; } }
+  @keyframes brew-drop {
+    0% { transform: translateY(0); opacity: 0; }
+    8%, 85% { opacity: 1; }
+    100% { transform: translateY(84px); opacity: 0; }
+  }
+  @keyframes brew-ripple {
+    0%, 78% { transform: scale(0.3); opacity: 0; }
+    84% { opacity: 0.8; }
+    100% { transform: scale(3); opacity: 0; }
+  }
+  @keyframes brew-steam {
+    0% { transform: translateY(12px) scaleX(1); opacity: 0; }
+    30% { opacity: 0.75; }
+    100% { transform: translateY(-90px) scaleX(1.6); opacity: 0; }
+  }
+  @keyframes brew-fill { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes brew-sway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2.5deg); } }
+  @keyframes brew-mote { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-14px, 18px); } }
+  @keyframes word-up { from { opacity: 1; transform: translateY(110%); } to { opacity: 1; transform: none; } }
+  @keyframes soft-up {
+    from { opacity: 0; transform: translateY(60px); }
+    45% { opacity: 1; }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes rule-draw { from { opacity: 1; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
+  @keyframes arch-open { from { opacity: 1; clip-path: inset(100% 0 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+  @keyframes settle { from { transform: scale(1.12); } to { transform: none; } }
+  @keyframes ticker { to { transform: translateX(-50%); } }
+  @keyframes line-up { from { opacity: 1; transform: translateY(110%); } to { opacity: 1; transform: none; } }
+  @keyframes arch-in { from { opacity: 0; transform: translateY(40px); } 45% { opacity: 1; } to { opacity: 1; transform: none; } }
+  @keyframes rise { from { opacity: 1; transform: translateY(80%); } to { opacity: 1; transform: none; } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(24px); } 45% { opacity: 1; } to { opacity: 1; transform: none; } }
+  @keyframes preload-open { from { --preload-hole: 0%; } to { --preload-hole: 150%; } }
+  @keyframes preload-zoom { from { transform: none; opacity: 1; } to { transform: scale(4); opacity: 0; } }
+  @keyframes page-in { from { transform: scale(1.08); } to { transform: none; } }
+  @keyframes preload-failsafe { to { opacity: 0; visibility: hidden; } }
+  @keyframes caret-blink { 50% { border-color: transparent; } }
+  @keyframes brew-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 }

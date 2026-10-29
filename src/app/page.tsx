@@ -1,5 +1,7 @@
-import { YourBoxPage } from '@/views/YourBoxPage';
+import { HomePage } from '@/views/HomePage';
+
+export const metadata = { title: 'Ondo' };
 
 export default function Page() {
-  return <YourBoxPage />;
+  return <HomePage />;
 }

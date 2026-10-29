@@ -22,6 +22,7 @@ import {
   useBox,
 } from '@/components';
 import { CHECKOUT_STEPS, STEP_PAYMENT } from '@/data/labels';
+import { boxHref } from '@/lib/routes';
 
 
 /** Last step: review the first box, confirm the delivery date, pay. Demo only: nothing is charged. */
@@ -68,7 +69,7 @@ export function CheckoutPage() {
         <main className="mx-auto flex max-w-column flex-col items-center gap-16 px-16 py-64 text-center">
           <h1 className="font-heading text-title">Your box is empty</h1>
           <p className="font-sans text-body text-text-muted">Add a drink or two before you check out.</p>
-          <Link href="/" className="flex min-h-48 items-center rounded-pill bg-action px-24 font-sans text-label font-bold text-action-text">
+          <Link href={boxHref} className="flex min-h-48 items-center rounded-pill bg-action px-24 font-sans text-label font-bold text-action-text">
             Back to your box
           </Link>
         </main>
@@ -94,7 +95,7 @@ export function CheckoutPage() {
             <p className="rounded-sm bg-bg-subtle px-12 py-8 font-sans text-body-sm text-text-muted">
               This is a demo: no payment was taken.
             </p>
-            <Link href="/" className="mt-8 flex min-h-48 items-center rounded-pill border border-brand px-24 font-sans text-label font-bold">
+            <Link href={boxHref} className="mt-8 flex min-h-48 items-center rounded-pill border border-brand px-24 font-sans text-label font-bold">
               Back to your box
             </Link>
           </div>

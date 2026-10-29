@@ -98,7 +98,6 @@ const semantic: { util: string; swatch: string; token: string; use: string }[] =
   { util: 'bg-bg-page', swatch: 'bg-bg-page', token: '--theme-bg-page', use: 'Page background' },
   { util: 'bg-bg-surface', swatch: 'bg-bg-surface', token: '--theme-bg-surface', use: 'Cards, sheets, the header' },
   { util: 'bg-bg-subtle', swatch: 'bg-bg-subtle', token: '--theme-bg-subtle', use: 'Quiet fills: tracks, chips, size pills' },
-  { util: 'bg-bg-product', swatch: 'bg-bg-product', token: '--theme-bg-product', use: 'Behind pack shots (cream in both themes)' },
   { util: 'text-text-primary', swatch: 'bg-text-primary', token: '--theme-text-primary', use: 'Body text, headings, icons' },
   { util: 'text-text-muted', swatch: 'bg-text-muted', token: '--theme-text-muted', use: 'Secondary text, hints, labels' },
   { util: 'text-text-inverse', swatch: 'bg-text-inverse', token: '--theme-text-inverse', use: 'Text on a text-coloured fill' },

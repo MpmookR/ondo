@@ -14,14 +14,14 @@ export interface ProductImageProps {
 }
 
 /**
- * Pack shot. Drinks with an `image` show the photo (transparent PNG art, on `bg-bg-product`);
+ * Pack shot. Drinks with an `image` show the photo (transparent PNG art, sitting straight on the card);
  * anything else falls back to a pack drawn in the category accent, and add-ons show their
  * category icon. Decorative (the name is always next to it), so it's hidden from screen readers.
  */
 export function ProductImage({ category, label, image, sizes = '(min-width: 1024px) 240px, 50vw', className = '' }: ProductImageProps) {
   if (image) {
     return (
-      <div aria-hidden="true" className={`relative overflow-hidden bg-bg-product ${className}`}>
+      <div aria-hidden="true" className={`relative overflow-hidden ${className}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`${image}-304.webp`}

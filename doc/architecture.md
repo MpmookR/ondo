@@ -12,7 +12,7 @@ components (src/components) + stories (Storybook)
         ↓
 Mock data (catalogue, customer)  →  recommend(customer, box, catalogue)   ← pure, one file
         ↓
-React state (box, goal, plan)  →  "Build your box" page
+React state (box, goal, plan)  →  homepage (/) and "Your box" (/box)
 ```
 
 ## Tech stack
@@ -31,7 +31,8 @@ React state (box, goal, plan)  →  "Build your box" page
 
 | Route | Screen | Built from |
 | --- | --- | --- |
-| `/` | Your box (order summary) | `PageHeader`, `PreferencesCard`, `DeliveryCard`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
+| `/` | Homepage | `Preloader` (first visit per session), `HomeHero` (`BrewScene`, `TypedHeadline`, `ButtonLink`), `HowItWorks`, `BestSellers` (both loaded separately) |
+| `/box` | Your box (order summary) | `PageHeader`, `PreferencesCard`, `DeliveryCard`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
 | `/shop?tab=for-you\|coffee\|tea\|matcha\|gear\|bites\|sweeteners` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `ViewBoxBar` |
 | `/checkout` | Checkout (demo, nothing is charged) | `PageHeader`, `Steps`, `OrderReview`, `DatePicker`, `WalletButtons`, `TextField`, `Checkbox`, `Divider` |
 | `/item/[id]` | Product page (pre-rendered for every item) | `PageHeader`, `ProductImage`, `BrewHighlights`, `DetailAccordion`, `BrewGuide`, `SuggestionRail`, `OrderBar` |
@@ -43,15 +44,15 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
 
 ```text
 /src
-  /app                    # Routes only: layout, /, /shop, /item/[id], globals.css
+  /app                    # Routes only: layout, /, /box, /shop, /checkout, /item/[id], globals.css
   /views                  # The three screens, composed from components (not part of the system)
-    YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx  CheckoutPage.tsx
+    HomePage.tsx  YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx  CheckoutPage.tsx
   /components             # The design system: one folder per component, each with stories
     Icon/ Button/ Chip/ CategoryBadge/ CaffeineMeter/ BrewGuide/ Stepper/ Price/ ProductImage/
-    PageHeader/ InfoCards/ OrderSummary/ SuggestionCard/ SuggestionRail/
+    PageHeader/ HomeHero/ HowItWorks/ BestSellers/ Preloader/ InfoCards/ OrderSummary/ SuggestionCard/ SuggestionRail/
     BoxTotal/ CategoryTabs/ CollapsibleSection/ ShopCard/ ViewBoxBar/ ItemDetail/
     BoxProvider/          # State shared by every page
-    shared/useRadioGroup.ts
+    shared/useRadioGroup.ts  shared/useInView.ts  shared/useParallax.ts  shared/Reveal.tsx
   /lib
     recommend.ts          # Filter + score rules (see prd.md)
     recommend.test.ts
@@ -61,7 +62,7 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
     delivery.ts           # Cups in the box and the suggested delivery frequency
     payment.ts            # Card formatting, brand, Luhn and expiry checks (demo checkout)
   /data
-    catalogue.ts  customer.ts  goals.ts  plans.ts  labels.ts
+    catalogue.ts  customer.ts  goals.ts  plans.ts  labels.ts  bestSellers.ts
   /styles
     tokens.css
   /stories                # Foundations pages, intro, shared fixtures

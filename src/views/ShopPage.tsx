@@ -16,7 +16,7 @@ import {
 } from '@/data/labels';
 import { qtyOf } from '@/lib/box';
 import { recommend } from '@/lib/recommend';
-import { shopHref } from '@/lib/routes';
+import { boxHref, shopHref } from '@/lib/routes';
 import { CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail } from '@/components';
 
 const GRID = 'grid grid-cols-2 gap-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-24';
@@ -127,7 +127,7 @@ export function ShopPage() {
   return (
     <>
       <div className="sticky top-0 z-20">
-        <PageHeader title="Shop" backHref="/" theme={theme} onThemeChange={setTheme} />
+        <PageHeader title="Shop" backHref={boxHref} theme={theme} onThemeChange={setTheme} />
         <CategoryTabs tabs={shopTabs} active={tab.id} onChange={setTab} panelId={PANEL_ID} />
       </div>
 

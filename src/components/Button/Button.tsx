@@ -1,4 +1,5 @@
-import type { ButtonHTMLAttributes, ComponentPropsWithRef } from 'react';
+import Link from 'next/link';
+import type { ButtonHTMLAttributes, ComponentProps, ComponentPropsWithRef } from 'react';
 import { Icon, type IconName } from '../Icon';
 
 export type ButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost';
@@ -64,6 +65,40 @@ export function Button({
       {children}
       {iconPosition === 'end' && iconEl}
     </button>
+  );
+}
+
+export interface ButtonLinkProps extends Omit<ComponentProps<typeof Link>, 'className'> {
+  /** Same looks as `Button`. */
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  icon?: IconName;
+  iconPosition?: 'start' | 'end';
+  fullWidth?: boolean;
+  className?: string;
+}
+
+/**
+ * A link that looks like a `Button`, for calls to action that go to another page
+ * (e.g. "Build your first box" on the homepage). Same variants, sizes and icon options.
+ */
+export function ButtonLink({
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconPosition = 'start',
+  fullWidth,
+  className = '',
+  children,
+  ...rest
+}: ButtonLinkProps) {
+  const iconEl = icon ? <Icon name={icon} size={20} /> : null;
+  return (
+    <Link className={`${base} ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''} ${className}`} {...rest}>
+      {iconPosition === 'start' && iconEl}
+      {children}
+      {iconPosition === 'end' && iconEl}
+    </Link>
   );
 }
 

@@ -78,7 +78,6 @@ its nearest `data-theme`, even a light section inside a dark page.
 | --- | --- | --- |
 | `bg-bg-page` / `bg-bg-surface` | vanilla-100 `#FFF6DC` / vanilla-50 `#FFFCF2` | night-900 / night-800 |
 | `bg-bg-subtle` | Vanilla | night-700 (Cal Poly Green) |
-| `bg-bg-product` | vanilla-50 | vanilla-50 (pack shots stay on cream) |
 | `text-text-primary` / `text-text-muted` | Bistre / bistre-600 `#7A5444` | Vanilla / oat-200 `#D8CCA5` |
 | `border-border` / `border-border-strong` | vanilla-300 `#F3E0A8` / bistre-400 `#9C7E62` | night-600 / green-500 |
 | `bg-action` + `text-action-text` | Flame + bistre-950 | Flame + night-900 |
@@ -126,6 +125,7 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 | Utility | Mobile | Desktop (≥1024px) | Usually |
 | --- | --- | --- | --- |
 | `text-display` | 56 / 56 | 96 / 92 | heading 700, -0.03em |
+| `text-hero` | 32–64, scales with the screen / 1 | 44–60, scales / 1 | heading 700, -0.03em (homepage headline, one phrase per line) |
 | `text-heading` | 28 / 32 | 40 / 44 | heading 700, -0.02em |
 | `text-title` | 20 / 24 | 22 / 28 | heading 700 (section titles) or sans (big prices) |
 | `text-body-lg` | 18 / 28 | 20 / 30 | sans 400 |
@@ -148,6 +148,7 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 | `--layout-gutter` (`gap-gutter`) | 16px | 24px |
 | `max-w-frame` | 402px | |
 | `max-w-column` | 560px (one column on tablets) | |
+| `max-w-scene` | 460px (homepage brew scene) | |
 | `max-w-content` | 1200px | |
 
 ## Radius, borders, elevation, motion
@@ -161,10 +162,41 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 | `shadow-card` | `0 1px 2px` + `0 4px 12px` at very low alpha | Cards (with a border) |
 | `shadow-raised` | `0 1px 2px` + `0 8px 24px` at low alpha | Hover, popovers |
 | `shadow-bar` | `0 -4px 16px` | Bars fixed to the bottom |
-| `duration-120` / `duration-200` | 120ms / 200ms | Hover, press, expand |
+| `duration-120` / `duration-200` / `duration-500` | 120ms / 200ms / 500ms | Hover, press, expand / slow editorial hovers (a best-seller pack lifting) |
+| `ease-silk` | `cubic-bezier(.215,.61,.355,1)` | Scroll-in reveals and slow hovers on the homepage |
 | `ease-brew` | `cubic-bezier(.2,.7,.2,1)` | All transitions |
 
 Motion turns off under `prefers-reduced-motion`.
+
+**Brew scene motion** (homepage hero only): slow loops, so the page feels calm. `animate-brew-light`
+(window light, 10s), `animate-brew-drop` (3.2s, `ease-drip`), `animate-brew-ripple`,
+`animate-brew-steam` (7s), `animate-brew-fill` (12s), `animate-brew-sway` (8s), `animate-brew-mote`,
+and `animate-brew-rise` (the words fade up once). `animate-caret` blinks the headline's typing caret.
+
+**Editorial motion** (How it works): restrained, after the brief's reference. One soft ease-out,
+`ease-silk` (`cubic-bezier(.215,.61,.355,1)`), long calm moves (about 1s) and nothing that bounces
+or tilts. `animate-word-up` slides each word up from behind its own mask (`WordReveal`, 120ms
+apart); `animate-soft-up` lifts copy in as it fades; `animate-rule-draw` draws a hairline from the
+left; `animate-arch-open` opens an arch upwards (`clip-path`) while `animate-settle` eases the photo
+inside out of a slight zoom; `animate-ticker` runs a slow band of text. `Reveal` (in
+`components/shared`) marks a block `data-seen` once it scrolls into view and `data-playing` while on
+screen; `useParallax` + the `parallax` utility drift photos a little slower than the page.
+
+**Scroll-in reveal** (Best sellers, same `ease-silk` curve as How it works): `animate-line-up` (a headline line slides up out of an
+`overflow-hidden` mask), `animate-arch-in`, `animate-rise` (a product rises into its arch), `animate-fade-up`. Each element sets `--stagger` (0, 1, 2 …) and the token
+multiplies its delay, so siblings follow one another without a token per position.
+
+**Preloader:** `animate-preload-open` grows a circular hole (`preload-mask`, driven by the
+registered `--preload-hole` property) from the carafe; `animate-preload-zoom` zooms the scene into
+the coffee as it fades; `animate-page-in` settles the page from a slight zoom. `animate-preload-failsafe`
+hides the preloader on its own after 10s, so it can never cover the page. `-mid` / `-late` versions start part-way through so
+two drops or wisps never move together. Each element also carries `motion-reduce:animate-none`.
+`origin-shape-center` / `origin-shape-bottom` make SVG shapes scale or turn around their own box.
+
+**Illustration colours:** the brew scene's wall, light, wood, ceramic, glass, coffee and plant are
+`--illo-*` tokens (raw values `--raw-illo-*`). In dark the wall turns into an evening green and the
+light dims; the objects keep their colours. The table is `--illo-table-*` (back, front, grain, bevel, edge, shadow). Only `HomeHero` and `BrewScene` use them; the wall and
+wood are also utilities (`from-illo-wall-top`, `bg-illo-light`, `border-illo-wood-edge` …).
 
 **Logo:** a kettle with the name across its handle, so it doubles as the wordmark. Source art
 (1093 × 1439, one per brand colour) is in `public/brand/logo`. The header uses 3× web copies,
@@ -191,20 +223,24 @@ at 402px, then `md:` / `lg:` add columns.
 | Component | Notes |
 | --- | --- |
 | `Icon` | Line icons on a 24px grid, `currentColor`. Decorative unless labelled. |
-| `Button`, `IconButton` | `primary`, `accent`, `secondary`, `ghost`. 44px minimum. |
+| `Button`, `IconButton`, `ButtonLink` | `primary`, `accent`, `secondary`, `ghost`. 44px minimum. `ButtonLink` is the same look on a link, for actions that go to another page. |
 | `Chip`, `Pill`, `ToggleChip` | Tasting notes (`note`), quiet labels (`outline`), label + value (`Pill`, e.g. "Size 250g"), on/off filters. A disabled `ToggleChip` fades to 40%. |
 | `CategoryBadge` | Coffee / Tea / Matcha / Gear / Bites / Sweeteners, each with its icon (bean, leaf, whisk, kettle, cookie, jar). Sets its own `data-category`. |
 | `CaffeineMeter` | 5 beans filled to the level + text. `compact` keeps the words for screen readers only. |
 | `BrewGuide` | Ratio, water, time in mono; tea adds steeps, matcha adds the whisk. |
 | `Stepper` | 0 → outlined "Add to box"; 1 → bin + plus; 2+ → minus + plus. 24px icons, 44px hit areas. Sizes `default`, `compact`, `bar`. |
 | `Price` | Display face, tabular figures; optional was-price and "each". |
-| `ProductImage` | Pack shot. Every product uses its photo (`item.image`: transparent 3:4 art from `public/brand/shop`, web copies at 304 and 684px in `public/brand/shop/web`) on `bg-bg-product`; pass `sizes` for its display width. An item without one falls back to a drawn pack or its category icon. |
+| `ProductImage` | Pack shot. Every product uses its photo (`item.image`: transparent 3:4 art from `public/brand/shop`, web copies at 304 and 684px in `public/brand/shop/web`), sitting straight on its card with no backing; pass `sizes` for its display width. An item without one falls back to a drawn pack or its category icon. |
 
 ### Patterns
 
 | Component | Used on | Notes |
 | --- | --- | --- |
 | `PageHeader`, `SavingsLine` | All pages | Back, wordmark or title, light/dark switch. |
+| `Preloader` | Homepage | The brew scene with an empty carafe that fills (`BrewScene level`, 0–1) as a counter climbs 0–100%. Waits at 90% until the page and fonts have loaded (at most 6s), takes at least 4.2s (eased in and out, like a pour), holds full for a moment, then slowly (3s) zooms into the coffee while a circle opens to reveal the page. Once per browser session. A progress bar for screen readers ("Loading Ondo"); page scrolling is locked until it opens. |
+| `BestSellers` | Homepage | Products standing in arches (`rounded-t-pill`, a 2px outline in the drink's accent): 2 columns on mobile, 4 from 1024px. Name, size and price, caffeine as words, tasting notes. Hover slowly lifts the pack; the whole arch opens the product page. Scroll-in: headline lines slide up, arches appear, products rise in left to right, then their words. Items come from `data/bestSellers.ts`. |
+| `HowItWorks` | Homepage | Editorial: a headline whose words slide up, then three steps in a zig-zag (photo arch on one side, a big step number, a hairline, the title and copy on the other), each arch tinted in a drink's accent with real pack shots that drift on scroll. The last step ends with "Start with step one" (Flame; never on screen with the hero's), then a slow ticker of the promises (runs only while on screen, decorative). Loaded as its own chunk. Without JavaScript or with reduced motion, everything simply shows. |
+| `HomeHero`, `BrewScene`, `TypedHeadline` | Homepage | "Sunday Drip": a pour-over dripping into a carafe that slowly fills, steam, a swaying plant and moving window light, drawn in SVG (no video). Its own nav (the ONDO name in type, Shop, Your box, theme switch), a `text-hero` headline that types its phrases in turn (`TypedHeadline`: Flame caret, screen readers hear every phrase once, still on the last one under reduced motion), Flame "Build your first box" and an outlined "Browse the shop". Mobile: headline on top, then the scene on its table, then the words and buttons. From 1024px: a 12-column grid, headline and words in 7 columns meeting at the middle of the scene, the scene in the last 5 (`max-w-scene`, 460px), standing on a full-width 3D table (a perspective top with planks and grain, a lit front edge, a shadow on the floor; the scene overlaps the top so things stand on it). Decorative scene is `aria-hidden`. |
 | `Steps` | Checkout | Progress, not clickable. Current step = bold + 3px brand underline (`aria-current="step"`); done steps get a tick. |
 | `OrderReview` | Checkout | "Your first box": count, cadence and total; expands to every line, subtotal, saving, delivery (£3.95 struck, FREE) and the first-box total, plus a discount-code field. |
 | `WalletButtons` | Checkout | Static demo buttons, no payment API: Apple Pay as button artwork (from the Apple Pay / Google Pay Buttons Figma file), Google Pay drawn by Google's script. "Pay with…" for subscriptions, "Buy with…" for one-off; black on light, white on dark; both full width, 44px tall (Apple artwork centred on Apple's black or white); Apple Pay first. Tapping goes to the order confirmation. |

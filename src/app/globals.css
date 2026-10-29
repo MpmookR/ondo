@@ -92,3 +92,31 @@
   }
 }
 
+
+/* SVG shapes scale and turn around their own box (the brew scene's ripples, steam and plant). */
+@utility origin-shape-center {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@utility origin-shape-bottom {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+/* Preloader: a hole that grows from the carafe (its size animates, so it's a registered property). */
+@property --preload-hole {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+@utility preload-mask {
+  -webkit-mask-image: radial-gradient(circle at 50% 42%, transparent var(--preload-hole), black calc(var(--preload-hole) + 1%));
+  mask-image: radial-gradient(circle at 50% 42%, transparent var(--preload-hole), black calc(var(--preload-hole) + 1%));
+}
+
+/* Scroll parallax: moves by --parallax (set from scroll by useParallax). Uses `translate`, so it
+   adds to any transform an entrance animation is running. */
+@utility parallax {
+  translate: 0 var(--parallax, 0px);
+  will-change: translate;
+}

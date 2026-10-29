@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Button, IconButton } from './Button';
+import { Button, ButtonLink, IconButton } from './Button';
 
 const meta = {
   title: 'Components/Button',
@@ -55,6 +55,16 @@ export const IconButtons: Story = {
       <IconButton icon="plus" label="Add" />
       <IconButton icon="minus" label="Remove" variant="ghost" />
       <IconButton icon="check" label="Done" variant="accent" />
+    </div>
+  ),
+};
+
+export const AsLink: Story = {
+  name: 'ButtonLink (goes to another page)',
+  render: () => (
+    <div className="flex flex-wrap items-center gap-12">
+      <ButtonLink href="/box" size="lg" icon="arrow-right" iconPosition="end">Build your first box</ButtonLink>
+      <ButtonLink href="/shop" variant="secondary" size="lg">Browse the shop</ButtonLink>
     </div>
   ),
 };

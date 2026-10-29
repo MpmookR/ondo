@@ -7,6 +7,7 @@ import { goalById } from '@/data/goals';
 import { brewMethodLabel, isDrinkCategory } from '@/data/labels';
 import { qtyOf } from '@/lib/box';
 import { recommendForItem, unavailableReason } from '@/lib/recommend';
+import { boxHref } from '@/lib/routes';
 import {
   BrewGuide,
   BrewHighlights,
@@ -53,7 +54,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
     [isDrink, item, state.customer, suggestions, goal.railLabel],
   );
 
-  const goBack = () => (window.history.length > 1 ? router.back() : router.push('/'));
+  const goBack = () => (window.history.length > 1 ? router.back() : router.push(boxHref));
 
   return (
     <>
