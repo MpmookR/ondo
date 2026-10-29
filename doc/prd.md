@@ -210,9 +210,10 @@ One Delivery card: **how often**, then **the first delivery date**.
 The suggestion is a hint, never a switch: the saving (and so the price) differs between options,
 so changing it silently would move the total. It sits above the options, which are one tap away.
 
-**Worked example** (covered by tests). Yirgacheffe Filter (16 cups) + Shizuoka Sencha (25 cups) =
-41 cups. One person, 2 cups a day: 20 days, so every 15 days. One cup a day: 41 days, so every 45
-days. Two people, 2 cups each: 10 days, so every 15 days, and the box may run short. Five
+**Worked example** (covered by tests). Two Yirgacheffe Filter (16 cups each) + Kyoto Ceremonial
+Matcha (15 cups) = 47 cups; the vanilla syrup adds none. One person, 2 cups a day: 23 days, so every
+30 days. One cup a day: 47 days, so every 45 days. Two people, 2 cups each: 11 days, so every 15
+days, and the box may run short. Five
 Yirgacheffe and one Sencha (105 cups) for two people at 2 cups each: 26 days, so every 30 days.
 
 **First delivery.** A date picker (earliest slot tomorrow, default a week ahead), then one line:
@@ -246,9 +247,10 @@ item from the rail turns its button into a stepper in place instead of reshuffli
 Changing a preference rebuilds the rail from the current box.
 
 **Worked example** (covered by tests). Goal: calm focus. Caffeine limit 4. Avoids dairy.
-Box: Yirgacheffe Filter, Shizuoka Sencha. Top 6: Matcha Taster Tin (4), Sesame Rice Crackers (3,
-"Goes with your Shizuoka Sencha"), Tieguanyin Oolong (3), Everyday Latte Matcha (3), Kyoto Ceremonial
-Matcha (3), Bamboo Whisk & Bowl Set (3). The espresso blends are over the caffeine limit, the chai and
+Box: 2 Yirgacheffe Filter, Kyoto Ceremonial Matcha, Vanilla Syrup. Top 6: Bamboo Whisk & Bowl Set
+(5, "Goes with your Kyoto Ceremonial Matcha"), Matcha Taster Tin (4), Dark Chocolate Thins (3, "Goes
+with your Kyoto Ceremonial Matcha"), Shizuoka Sencha (3), Tieguanyin Oolong (3), Everyday Latte
+Matcha (3); ties go to the lower price. The espresso blends are over the caffeine limit, the chai and
 the shortbread contain dairy and the grinder is out of stock, so none of them can appear.
 
 ## Add-ons

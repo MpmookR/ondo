@@ -5,17 +5,17 @@ import { defaultBox, defaultCustomer } from '../data/customer';
 import { cupsInBox, suggestDelivery } from './delivery';
 
 test('cups in the box count drinks only', () => {
-  // Yirgacheffe 16 + Sencha 25; the pour-over set makes none.
-  assert.equal(cupsInBox([...defaultBox, { itemId: 'g-pour-over', qty: 1 }], catalogue), 41);
+  // 2 Yirgacheffe (16 each) + Kyoto Ceremonial 15; the vanilla syrup and pour-over set make none.
+  assert.equal(cupsInBox([...defaultBox, { itemId: 'g-pour-over', qty: 1 }], catalogue), 47);
   assert.equal(cupsInBox([{ itemId: 't-sencha', qty: 2 }], catalogue), 50);
 });
 
 test('suggests the frequency closest to how long the box lasts', () => {
-  // 41 cups, 1 person, 2 a day: 20 days, so every 15 days.
+  // 47 cups, 1 person, 2 a day: 23 days, closer to 30 than 15.
   assert.deepEqual(suggestDelivery(defaultBox, catalogue, defaultCustomer), {
-    planId: 'every-15', cupsInBox: 41, cupsPerDay: 2, daysLasting: 20, runsShort: false,
+    planId: 'every-30', cupsInBox: 47, cupsPerDay: 2, daysLasting: 23, runsShort: false,
   });
-  // 1 a day: 41 days, closest to 45.
+  // 1 a day: 47 days, closest to 45.
   assert.equal(suggestDelivery(defaultBox, catalogue, { ...defaultCustomer, cupsPerDay: 1 })?.planId, 'every-45');
   // 5 Yirgacheffe + 1 Sencha = 105 cups, 2 people × 2 cups: 26 days, closest to 30.
   const big = [{ itemId: 'c-yirgacheffe', qty: 5 }, { itemId: 't-sencha', qty: 1 }];
@@ -25,10 +25,10 @@ test('suggests the frequency closest to how long the box lasts', () => {
 });
 
 test('people multiply the cups a day', () => {
-  // 2 people × 2 cups = 4 a day: 41 cups last 10 days, shorter than the most frequent delivery.
+  // 2 people × 2 cups = 4 a day: 47 cups last 11 days, shorter than the most frequent delivery.
   const s = suggestDelivery(defaultBox, catalogue, { ...defaultCustomer, drinkers: 2 });
   assert.equal(s?.cupsPerDay, 4);
-  assert.equal(s?.daysLasting, 10);
+  assert.equal(s?.daysLasting, 11);
   assert.equal(s?.planId, 'every-15');
   assert.equal(s?.runsShort, true);
 });

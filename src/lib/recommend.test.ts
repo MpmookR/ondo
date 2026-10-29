@@ -11,12 +11,13 @@ const ids = (goal = defaultCustomer.goal) =>
 const byId = (id: string) => catalogue.find((i) => i.id === id)!;
 
 test('worked example from prd.md (calm focus)', () => {
-  assert.deepEqual(ids(), ['m-taster', 'b-rice-crackers', 't-oolong', 'm-everyday', 'm-ceremonial', 'g-whisk-set']);
+  assert.deepEqual(ids(), ['g-whisk-set', 'm-taster', 'b-dark-chocolate', 't-sencha', 't-oolong', 'm-everyday']);
 });
 
 test('reason prefers an explicit pairing', () => {
   const rail = recommend(defaultCustomer, defaultBox, catalogue, { goalLabel: 'calm focus' });
-  assert.equal(rail.find((s) => s.item.id === 'b-rice-crackers')?.reason, 'Goes with your Shizuoka Sencha');
+  assert.equal(rail.find((s) => s.item.id === 'g-whisk-set')?.reason, 'Goes with your Kyoto Ceremonial Matcha');
+  assert.equal(rail.find((s) => s.item.id === 'b-dark-chocolate')?.reason, 'Goes with your Kyoto Ceremonial Matcha');
   assert.equal(rail.find((s) => s.item.id === 't-oolong')?.reason, 'Fits calm focus');
 });
 
@@ -27,7 +28,7 @@ test('hard filters: caffeine limit, avoids, stock, already in box', () => {
     assert.ok(!rail.includes('c-night-shift'), 'over caffeine limit');
     assert.ok(!rail.includes('t-chai'), 'contains dairy');
     assert.ok(!rail.includes('g-grinder'), 'out of stock');
-    assert.ok(!rail.includes('t-sencha'), 'already in box');
+    assert.ok(!rail.includes('m-ceremonial'), 'already in box');
   }
 });
 
@@ -70,10 +71,11 @@ test('unavailable reasons', () => {
 test('reducer: quantities, and the rail only refreshes on preference changes', () => {
   let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: defaultBox, deliveryDate: null };
   state = boxReducer(state, { type: 'setQty', itemId: 'g-infuser', qty: 1 });
-  state = boxReducer(state, { type: 'setQty', itemId: 't-sencha', qty: 2 });
+  state = boxReducer(state, { type: 'setQty', itemId: 'm-ceremonial', qty: 2 });
   state = boxReducer(state, { type: 'setQty', itemId: 'c-yirgacheffe', qty: 0 });
   assert.deepEqual(state.lines, [
-    { itemId: 't-sencha', qty: 2 },
+    { itemId: 'm-ceremonial', qty: 2 },
+    { itemId: 's-vanilla-syrup', qty: 1 },
     { itemId: 'g-infuser', qty: 1 },
   ]);
   assert.deepEqual(state.railLines, defaultBox, 'adding does not reshuffle the rail');
