@@ -9,8 +9,8 @@ bites and sweeteners to go with them).
 The product brief: **build your first subscription box**, raising AOV and items per order in a new
 customer's first box **without costing conversion**.
 
-**[❇️ Live demo](https://ondo-hazel.vercel.app/)**. 
-**[📑 Ondo Case Study](https://mooksportfolio.netlify.app/projects/ondo)**
+**[❇️ Live demo](https://ondo-hazel.vercel.app/)** · **[🎨 Design system (Storybook)](https://ondo-designsystem.vercel.app/)** · **[📑 Ondo Case Study](https://mooksportfolio.netlify.app/projects/ondo)**
+
 The shop is designed **mobile first**, so it's best viewed on a phone or in a narrow browser window.
 
 ## Background: why this project exists
@@ -46,7 +46,11 @@ what each change was and which principle it serves.
 
 - **Tokens** in one file, themed by two attributes: `data-theme` (light / dark) and
   `data-category` (coffee / tea / matcha). One component, every look.
-- **Components** documented in Storybook, every state in both themes, accessibility checks on.
+- **A live design system in [Storybook](https://ondo-designsystem.vercel.app/)**: [Foundations](https://ondo-designsystem.vercel.app/?path=/docs/foundations-tokens--docs) lists every token with its
+  hex, font and size in light and dark, the palette token behind it, what it's for and its
+  contrast ratio, all read from the tokens file so it can't drift. Every component has a Docs page
+  with a props table and every state in both themes, and every story passes axe accessibility
+  checks (WCAG 2.2 AA) in light and dark.
 - **Four mobile-first screens** built only from the system: *Your box* (order summary with a
   goal-based suggestion rail), *Shop* (tabs, unavailable items tucked away with a reason), an
   *item page* with brew highlights, and a demo *checkout*. Light and dark themes switch from the
@@ -67,6 +71,7 @@ npm run lint             # type-check
 
 | Doc | What's in it |
 | --- | --- |
+| [Storybook](https://ondo-designsystem.vercel.app/) | The live design system: Foundations, a Docs page per component, every story in light and dark |
 | [doc/design_system.md](doc/design_system.md) | Token layers, colour and contrast, type, components, states |
 | [doc/prd.md](doc/prd.md) | Product, goals, recommendation rules, wording rules |
 | [doc/architecture.md](doc/architecture.md) | Stack, structure, data model |
