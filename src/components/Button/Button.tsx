@@ -5,10 +5,18 @@ export type ButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost';
 export type ButtonSize = 'md' | 'lg';
 
 export interface ButtonProps extends ComponentPropsWithRef<'button'> {
+  /**
+   * `primary` (Flame): the one main call to action per screen. `accent`: the category colour, for
+   * adding a drink. `secondary` (outline) and `ghost` (text only): everything else.
+   */
   variant?: ButtonVariant;
+  /** `md` is 44px tall, the minimum tap target; `lg` (52px) for the main action on a page. */
   size?: ButtonSize;
+  /** Optional icon from the Ondo set, drawn at 20px next to the label. */
   icon?: IconName;
+  /** Which side of the label the icon sits on. Use `end` for arrows that move forward. */
   iconPosition?: 'start' | 'end';
+  /** Stretch to the width of the container, e.g. checkout on mobile. */
   fullWidth?: boolean;
 }
 
@@ -29,6 +37,11 @@ const sizes: Record<ButtonSize, string> = {
   lg: 'h-52 px-28',
 };
 
+/**
+ * Pill button with a visible text label. Use `primary` once per screen for the main call to action;
+ * buttons are at least 44px tall, and disabled ones fade and stop taking clicks. For icon-only
+ * buttons use `IconButton`, which needs a `label`.
+ */
 export function Button({
   variant = 'primary',
   size = 'md',

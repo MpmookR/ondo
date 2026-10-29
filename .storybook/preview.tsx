@@ -8,7 +8,8 @@ const withTheme: Decorator = (Story, context) => {
     <div
       data-theme={theme}
       data-category={category === 'none' ? undefined : category}
-      className="min-h-screen bg-bg-page p-24 text-text-primary"
+      // Full height in the canvas only: on a Docs page every story would otherwise be a screen tall.
+      className={`${context.viewMode === 'docs' ? '' : 'min-h-screen'} bg-bg-page p-24 text-text-primary`}
     >
       <Story />
     </div>
@@ -16,6 +17,7 @@ const withTheme: Decorator = (Story, context) => {
 };
 
 const preview: Preview = {
+  tags: ['autodocs'],
   decorators: [withTheme],
   globalTypes: {
     theme: {

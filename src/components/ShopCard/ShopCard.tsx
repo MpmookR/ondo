@@ -16,7 +16,7 @@ export interface ShopCardProps {
   onQtyChange: (qty: number) => void;
   /** Why it's suggested (For you tab). */
   reason?: string;
-  /** Why it can't be added. Faded, no price or stepper. */
+  /** Why it can't be added. The pack shot fades and the description turns muted; all text keeps AA contrast. No price or stepper. */
   unavailable?: string | null;
 }
 
@@ -30,10 +30,16 @@ export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCa
       data-category={item.category}
       className={`relative flex flex-col overflow-hidden rounded-card border bg-bg-surface ${
         qty > 0 ? 'border-spark ring-1 ring-spark' : 'border-border'
-      } ${blocked ? 'opacity-50' : ''}`}
+      }`}
     >
       <div className="relative">
-        <ProductImage category={item.category} label={item.size} image={item.image} className="h-120 w-full md:h-140 lg:h-160" />
+        {/* Only the picture fades when it can't be added: fading text would drop it below AA contrast. */}
+        <ProductImage
+          category={item.category}
+          label={item.size}
+          image={item.image}
+          className={`h-120 w-full md:h-140 lg:h-160 ${blocked ? 'opacity-50' : ''}`}
+        />
         <CategoryBadge category={item.category} className="absolute left-8 top-8" />
       </div>
 
@@ -58,7 +64,7 @@ export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCa
 
         {reason && <p className="w-full text-center font-sans text-caption font-bold text-accent">{reason}</p>}
 
-        <p className={`w-full text-center font-sans text-body-sm ${reason ? 'line-clamp-2' : 'line-clamp-3'}`}>
+        <p className={`w-full text-center font-sans text-body-sm ${reason ? 'line-clamp-2' : 'line-clamp-3'} ${blocked ? 'text-text-muted' : ''}`}>
           {item.description}
         </p>
 

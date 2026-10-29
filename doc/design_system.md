@@ -217,7 +217,7 @@ at 402px, then `md:` / `lg:` add columns.
 | `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. |
 | `CategoryTabs` | Shop | 44px tabs, active = bold + 3px underline, scroll sideways on mobile, centred on desktop. |
 | `CaffeineFilter` | Shop (drink tabs) | A row of `ToggleChip`s: All · Low · Medium · High, each with its count. Single choice; tapping the selected band returns to All; empty bands are disabled. |
-| `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (Flame ring), with reason, unavailable (faded, reason, no stepper). |
+| `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (Flame ring), with reason, unavailable (pack shot faded, muted description, reason, no stepper; text stays at AA). |
 | `CollapsibleSection` | Shop | "Above your caffeine limit (n)", "Contains things you avoid (n)", "Back soon (n)". |
 | `ViewBoxBar` | Shop | "View your box · n items · £total", always in view. |
 | `BrewHighlights`, `DetailAccordion`, `OrderBar` | Item page | Stats row + a "Contains" box that is never collapsed; accordions; a pinned order bar that becomes quantity + stepper once it's in the box. |
