@@ -36,7 +36,8 @@ look polished and read clearly. It is not production code.
   Bars fixed to the bottom use `pb-safe`; whole-card links use `stretched-link`.
 - Every interactive element: visible focus state, 44px tap target, accessible name.
 - Caffeine level always has a text label. No health claims on cards.
-- Check new colour pairs against the contrast table; AA minimum.
+- Check new colour pairs against the contrast table; AA minimum. Storybook's Foundations → Colour
+  page works the ratios out from `tokens.css`, so a new pair shows its result there.
 
 ## Code rules
 

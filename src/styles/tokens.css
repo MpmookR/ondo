@@ -127,6 +127,13 @@
   --accent: var(--raw-green);
   --accent-subtle: var(--raw-green-100);
   --on-accent: var(--raw-vanilla);
+
+  /* Category colours for this theme (layer 3 picks them up). Defined per theme, not per
+     category, so a category always takes the colours of its nearest data-theme. */
+  --cat-coffee: var(--raw-bistre);       --cat-coffee-subtle: var(--raw-latte);      --cat-coffee-on: var(--raw-vanilla);
+  --cat-tea: var(--raw-blue-700);        --cat-tea-subtle: var(--raw-columbia);      --cat-tea-on: var(--raw-vanilla-50);
+  --cat-matcha: var(--raw-green);        --cat-matcha-subtle: var(--raw-green-100);  --cat-matcha-on: var(--raw-vanilla);
+  --cat-addon: var(--theme-text-primary); --cat-addon-subtle: var(--raw-vanilla);    --cat-addon-on: var(--theme-text-inverse);
 }
 
 [data-theme='dark'] {
@@ -157,23 +164,22 @@
   --accent: var(--raw-green-300);
   --accent-subtle: var(--raw-night-700);
   --on-accent: var(--raw-night-900);
+
+  --cat-coffee: var(--raw-coffee-light); --cat-coffee-subtle: var(--raw-night-700);  --cat-coffee-on: var(--raw-night-900);
+  --cat-tea: var(--raw-columbia);        --cat-tea-subtle: var(--raw-night-700);     --cat-tea-on: var(--raw-night-900);
+  --cat-matcha: var(--raw-green-200);    --cat-matcha-subtle: var(--raw-night-700);  --cat-matcha-on: var(--raw-night-900);
+  --cat-addon: var(--theme-text-primary); --cat-addon-subtle: var(--raw-night-700);  --cat-addon-on: var(--theme-text-inverse);
 }
 
 /* ---------- 3. Category accents ---------- */
 /* Colour-blocked: coffee is Bistre on latte, tea is blue on Columbia Blue, matcha is green on
    green tint. Add-ons (gear, bites, sweeteners) sit on Vanilla in the text colour, so the
-   drinks keep the strongest colour. */
-[data-category='gear'], [data-category='bites'], [data-category='sweeteners'] { --accent: var(--theme-text-primary); --accent-subtle: var(--raw-vanilla); --on-accent: var(--theme-text-inverse); }
-[data-category='coffee'] { --accent: var(--raw-bistre);   --accent-subtle: var(--raw-latte);     --on-accent: var(--raw-vanilla); }
-[data-category='tea']    { --accent: var(--raw-blue-700); --accent-subtle: var(--raw-columbia);  --on-accent: var(--raw-vanilla-50); }
-[data-category='matcha'] { --accent: var(--raw-green);    --accent-subtle: var(--raw-green-100); --on-accent: var(--raw-vanilla); }
-
-[data-theme='dark'] [data-category='gear'],   [data-theme='dark'][data-category='gear'],
-[data-theme='dark'] [data-category='bites'],  [data-theme='dark'][data-category='bites'],
-[data-theme='dark'] [data-category='sweeteners'], [data-theme='dark'][data-category='sweeteners'] { --accent-subtle: var(--raw-night-700); }
-[data-theme='dark'] [data-category='coffee'], [data-theme='dark'][data-category='coffee'] { --accent: var(--raw-coffee-light); --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
-[data-theme='dark'] [data-category='tea'],    [data-theme='dark'][data-category='tea']    { --accent: var(--raw-columbia);     --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
-[data-theme='dark'] [data-category='matcha'], [data-theme='dark'][data-category='matcha'] { --accent: var(--raw-green-200);    --accent-subtle: var(--raw-night-700); --on-accent: var(--raw-night-900); }
+   drinks keep the strongest colour. The values live in each theme above (--cat-*), so a light
+   section inside a dark page (or the reverse) still gets the right ones. */
+[data-category='coffee'] { --accent: var(--cat-coffee); --accent-subtle: var(--cat-coffee-subtle); --on-accent: var(--cat-coffee-on); }
+[data-category='tea']    { --accent: var(--cat-tea);    --accent-subtle: var(--cat-tea-subtle);    --on-accent: var(--cat-tea-on); }
+[data-category='matcha'] { --accent: var(--cat-matcha); --accent-subtle: var(--cat-matcha-subtle); --on-accent: var(--cat-matcha-on); }
+[data-category='gear'], [data-category='bites'], [data-category='sweeteners'] { --accent: var(--cat-addon); --accent-subtle: var(--cat-addon-subtle); --on-accent: var(--cat-addon-on); }
 
 /* ---------- 4. Semantic tokens → Tailwind utilities ---------- */
 /* inline: utilities read the variables where they're used, so data-theme / data-category work on any element */

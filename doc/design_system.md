@@ -68,6 +68,10 @@ shape** (bean + bag, leaf + box, whisk + tin), so colour is never the only cue:
 | Matcha | Cal Poly Green `#26422A` | `#DCEAD3` | `#B9DBB2` |
 | Gear, Bites, Sweeteners (add-ons) | Text colour (neutral) | Vanilla `#FFEEBC` | Text colour |
 
+The values live in each theme block as `--cat-*` tokens, and `data-category` only points
+`--accent`, `--accent-subtle` and `--on-accent` at them. So a category always takes the colours of
+its nearest `data-theme`, even a light section inside a dark page.
+
 ### Semantic
 
 | Utility | Light | Dark |
