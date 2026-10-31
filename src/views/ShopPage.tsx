@@ -18,7 +18,7 @@ import {
 import { browsingLimits, qtyOf } from '@/lib/box';
 import { recommend } from '@/lib/recommend';
 import { boxHref, onboardingHref, shopHref } from '@/lib/routes';
-import { BuildBoxPrompt, CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail } from '@/components';
+import { BuildBoxPrompt, CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail, useReturnHere } from '@/components';
 
 /** The homepage's best sellers, shown on For you until the customer has told us anything. */
 const bestSellers = bestSellerIds.map(itemById).filter((item): item is Item => Boolean(item));
@@ -39,6 +39,7 @@ export function ShopPage() {
 
   const requested = params.get('tab');
   const tab = shopTabs.find((t) => t.id === requested) ?? shopTabs[0];
+  useReturnHere(shopHref(tab.id));
   const setTab = (id: ShopTabId) => router.replace(shopHref(id), { scroll: false });
 
   const card = (item: Item, extra: { reason?: string; unavailable?: string } = {}) => (

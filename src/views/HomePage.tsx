@@ -3,7 +3,8 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { HomeHero } from '@/components/HomeHero';
-import { useBox } from '@/components/BoxProvider';
+import { useBox, useReturnHere } from '@/components/BoxProvider';
+import { homeHref } from '@/lib/routes';
 import { Preloader, type PreloadPhase } from '@/components/Preloader';
 import { itemById } from '@/data/catalogue';
 import { bestSellerIds } from '@/data/bestSellers';
@@ -18,6 +19,7 @@ const bestSellers = bestSellerIds.map(itemById).filter((item): item is Item => B
 /** The homepage: preloader, then hero, how it works, best sellers. More sections to come. */
 export function HomePage() {
   const { theme, setTheme } = useBox();
+  useReturnHere(homeHref);
   // Only a real reveal plays the settle; a returning visitor (no preloader) just sees the page.
   const [opened, setOpened] = useState(false);
   const onPhaseChange = (phase: PreloadPhase) => {

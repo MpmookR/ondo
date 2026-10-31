@@ -7,7 +7,7 @@ import { goalById } from '@/data/goals';
 import { brewMethodLabel, isDrinkCategory } from '@/data/labels';
 import { browsingLimits, qtyOf } from '@/lib/box';
 import { recommendForItem, unavailableReason } from '@/lib/recommend';
-import { boxHref } from '@/lib/routes';
+import { shopHref } from '@/lib/routes';
 import {
   BrewGuide,
   BrewHighlights,
@@ -37,7 +37,7 @@ const caffeineCopy: Record<number, string> = {
 export function ItemPage({ itemId }: { itemId: string }) {
   useFreshRail();
   const router = useRouter();
-  const { state, suggestions, setQty, theme, setTheme } = useBox();
+  const { state, suggestions, setQty, theme, setTheme, returnTo } = useBox();
   const item = itemById(itemId)!;
   const isDrink = isDrinkCategory(item.category);
   // Bites and sweeteners don't brew anything; they list the drinks they go with instead.
@@ -54,7 +54,9 @@ export function ItemPage({ itemId }: { itemId: string }) {
     [isDrink, item, state.customer, suggestions, goal?.railLabel],
   );
 
-  const goBack = () => (window.history.length > 1 ? router.back() : router.push(boxHref));
+  // Back to the list they came from (a shop tab, Your box or home), however many products they hopped
+  // through on the way; the shop if they opened this page directly.
+  const goBack = () => router.push(returnTo ?? shopHref());
 
   return (
     <>

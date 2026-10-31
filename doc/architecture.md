@@ -38,6 +38,10 @@ React state (box, answers, plan; starts with an empty box and no answers)  →  
 | `/checkout` | Checkout (demo, nothing is charged) | `PageHeader`, `Steps`, `OrderReview`, `DatePicker`, `WalletButtons`, `TextField`, `Checkbox`, `Divider` |
 | `/item/[id]` | Product page (pre-rendered for every item) | `PageHeader`, `ProductImage`, `BrewHighlights`, `DetailAccordion`, `BrewGuide`, `SuggestionRail`, `OrderBar` |
 
+**Back on an item page** returns to the last list page the customer was on (home, a shop tab or
+Your box; each marks itself with `useReturnHere`), however many products they hopped through via
+"Goes well with this". Opened directly, it goes to the shop.
+
 The box, preferences, delivery plan and theme live in `BoxProvider` (React context in the root
 layout), so moving between pages loses nothing. The theme is remembered per browser.
 

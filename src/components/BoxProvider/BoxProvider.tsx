@@ -35,6 +35,12 @@ interface BoxContextValue {
   setQty: (itemId: string, qty: number) => void;
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  /**
+   * The last list page the customer was on (home, a shop tab or Your box). An item page's Back goes
+   * here, so hopping from product to product never makes Back walk through every product.
+   */
+  returnTo: string | null;
+  setReturnTo: (path: string) => void;
 }
 
 const BoxContext = createContext<BoxContextValue | null>(null);
@@ -44,6 +50,7 @@ const THEME_KEY = 'ondo-theme';
 export function BoxProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(boxReducer, INITIAL_BOX);
   const [theme, setThemeState] = useState<Theme>('light');
+  const [returnTo, setReturnTo] = useState<string | null>(null);
 
   // Set the default delivery date in the browser, so it's relative to the real today, not build day.
   useEffect(() => {
@@ -76,8 +83,10 @@ export function BoxProvider({ children }: { children: ReactNode }) {
       setQty: (itemId, qty) => dispatch({ type: 'setQty', itemId, qty }),
       theme,
       setTheme: setThemeState,
+      returnTo,
+      setReturnTo,
     }),
-    [state, theme],
+    [state, theme, returnTo],
   );
 
   return <BoxContext.Provider value={value}>{children}</BoxContext.Provider>;
@@ -87,6 +96,14 @@ export function useBox(): BoxContextValue {
   const ctx = useContext(BoxContext);
   if (!ctx) throw new Error('useBox must be used inside <BoxProvider>');
   return ctx;
+}
+
+/** Marks this page as where an item page's Back returns to. */
+export function useReturnHere(path: string) {
+  const { setReturnTo } = useBox();
+  useEffect(() => {
+    setReturnTo(path);
+  }, [path, setReturnTo]);
 }
 
 /** Rebuild the rail from the current box when a page opens (it then stays put while you add). */
