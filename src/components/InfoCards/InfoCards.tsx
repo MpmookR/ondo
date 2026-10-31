@@ -42,7 +42,8 @@ function PillGroup<T extends string | number>({
   labelledBy,
 }: {
   options: PillOption<T>[];
-  value: T;
+  /** Null: nothing chosen yet. */
+  value: T | null;
   onChange: (value: T) => void;
   labelledBy: string;
 }) {
@@ -88,7 +89,8 @@ const perDayText = (s: DeliverySuggestion, drinkers: Count) =>
   `${s.cupsPerDay} cup${s.cupsPerDay === 1 ? '' : 's'} a day${drinkers > 1 ? ' between you' : ''}`;
 
 export interface DeliveryCardProps {
-  plan: PlanId;
+  /** Null until the customer picks; nothing is chosen for them. */
+  plan: PlanId | null;
   onPlanChange: (plan: PlanId) => void;
   date: ISODate | null;
   onDateChange: (date: ISODate) => void;
@@ -97,6 +99,11 @@ export interface DeliveryCardProps {
   /** Used only to word the suggestion ("between you"). */
   drinkers: Count;
   defaultOpen?: boolean;
+  /**
+   * Goes up by one each time checkout is tapped with nothing chosen: the card opens, scrolls into
+   * view, moves focus to the options and shows why. The message goes once a choice is made.
+   */
+  attention?: number;
 }
 
 /**
@@ -105,13 +112,29 @@ export interface DeliveryCardProps {
  * link to #delivery. The suggestion never changes the choice by itself, because the saving (and
  * so the price) differs between frequencies; the options are one tap away.
  */
-export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestion, drinkers, defaultOpen = false }: DeliveryCardProps) {
+export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestion, drinkers, defaultOpen = false, attention = 0 }: DeliveryCardProps) {
   const [open, setOpen] = useState(defaultOpen);
   const panelId = useId();
   const freqId = useId();
-  const current = planById(plan);
+  const sectionRef = useRef<HTMLElement>(null);
+  const current = plan ? planById(plan) : null;
   const suggested = suggestion ? planById(suggestion.planId) : null;
-  const summary = `${current.days ? `Every ${current.label}` : 'One-off'}${date ? ` · ${formatShort(date)}` : ''}`;
+  const when = current ? (current.days ? `Every ${current.label}` : 'One-off') : 'Choose how often';
+  const summary = `${when}${date ? ` · ${formatShort(date)}` : ''}`;
+  const needsChoice = attention > 0 && plan === null;
+
+  // Checkout was tapped with nothing chosen: open up, bring the card into view, focus the options.
+  useEffect(() => {
+    if (attention === 0) return;
+    setOpen(true);
+    // Wait a tick so the panel has opened before scrolling to it and moving focus into it.
+    const t = setTimeout(() => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      sectionRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      sectionRef.current?.querySelector<HTMLElement>('[role="radio"][tabindex="0"]')?.focus({ preventScroll: true });
+    }, 0);
+    return () => clearTimeout(t);
+  }, [attention]);
 
   // "How it works" in the header links here: open the card so the link lands on something.
   useEffect(() => {
@@ -124,7 +147,12 @@ export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestio
   }, []);
 
   return (
-    <section id="delivery" aria-label="Delivery" className={`relative z-40 flex scroll-mt-16 flex-col gap-8 p-8 ${cardClass}`}>
+    <section
+      ref={sectionRef}
+      id="delivery"
+      aria-label="Delivery"
+      className={`relative z-40 flex scroll-mt-16 flex-col gap-8 p-8 ${cardClass} ${needsChoice ? 'border-danger' : ''}`}
+    >
       <button
         type="button"
         aria-expanded={open}
@@ -141,6 +169,15 @@ export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestio
           <Icon name={open ? 'chevron-up' : 'chevron-down'} size={20} className="text-text-primary" />
         </span>
       </button>
+
+      {needsChoice && (
+        <p role="alert" className="mx-4 flex items-start gap-8 rounded-sm bg-danger-subtle px-12 py-8 font-sans text-body-sm text-danger">
+          <Icon name="info" size={20} className="shrink-0" />
+          <span>
+            <span className="font-bold">Choose how often you&apos;d like your box</span>, or a one-off, to go to checkout.
+          </span>
+        </p>
+      )}
 
       <div id={panelId} hidden={!open} className="flex flex-col gap-16 px-4 pb-8">
         <div className="flex flex-col gap-8">
@@ -170,7 +207,9 @@ export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestio
             options={plans.map((p) => ({ value: p.id, label: p.label, sub: saving(p.discount) }))}
           />
 
-          <p className="px-4 font-sans text-body-sm text-text-muted">{planNote[plan]}</p>
+          <p className="px-4 font-sans text-body-sm text-text-muted">
+            {plan ? planNote[plan] : 'Pick one: subscribe to save, or just this box.'}
+          </p>
         </div>
 
         <div className="flex flex-col gap-4 border-t border-border pt-16">
@@ -178,7 +217,7 @@ export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestio
             <span className="font-sans text-label">First delivery</span>
             <DatePicker value={date} onChange={onDateChange} label="First delivery date" placeholder="Choose date" />
           </div>
-          {date && (
+          {date && current && (
             <p className="font-sans text-footnote text-text-muted">
               {current.days ? `Then every ${current.label}: next on ${formatShort(addDays(date, current.days))}.` : 'Just this delivery.'}
             </p>

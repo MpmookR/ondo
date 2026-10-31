@@ -6,7 +6,7 @@ import { catalogue } from '@/data/catalogue';
 import { SKIPPED } from '@/data/onboarding';
 import { goalById } from '@/data/goals';
 import { planById } from '@/data/plans';
-import { boxReducer, totals as computeTotals, type BoxAction, type BoxState, type Theme, type Totals } from '@/lib/box';
+import { boxReducer, isBoxState, totals as computeTotals, type BoxAction, type BoxState, type Theme, type Totals } from '@/lib/box';
 import { addDays, todayISO } from '@/lib/dates';
 import { recommend } from '@/lib/recommend';
 
@@ -16,7 +16,7 @@ import { recommend } from '@/lib/recommend';
  */
 export const INITIAL_BOX: BoxState = {
   lines: [],
-  plan: 'every-15',
+  plan: null,
   customer: SKIPPED,
   answered: false,
   railLines: [],
@@ -45,6 +45,8 @@ interface BoxContextValue {
 
 const BoxContext = createContext<BoxContextValue | null>(null);
 const THEME_KEY = 'ondo-theme';
+/** One tab's shopping session: the box, the answers and the delivery choice. Cleared when the tab closes. */
+const SESSION_KEY = 'ondo-session-v1';
 
 /** One box shared by every page, so nothing is lost moving between them. */
 export function BoxProvider({ children }: { children: ReactNode }) {
@@ -52,10 +54,29 @@ export function BoxProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light');
   const [returnTo, setReturnTo] = useState<string | null>(null);
 
-  // Set the default delivery date in the browser, so it's relative to the real today, not build day.
+  // Restore this tab's session (box, answers, delivery) so a reload or a typed address keeps it.
+  // Otherwise start fresh, with the default delivery date set in the browser (relative to the real
+  // today, not build day). sessionStorage can be missing or blocked: then it just starts fresh.
+  // Saving waits until the restore has landed (`restored` is set in the same render as the restored
+  // state), so the empty starting state never overwrites a saved session.
+  const [restored, setRestored] = useState(false);
   useEffect(() => {
-    dispatch({ type: 'setDeliveryDate', date: addDays(todayISO(), DEFAULT_LEAD_DAYS) });
+    let saved: unknown = null;
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      saved = raw ? JSON.parse(raw) : null;
+    } catch {}
+    if (isBoxState(saved)) dispatch({ type: 'restore', state: saved });
+    else dispatch({ type: 'setDeliveryDate', date: addDays(todayISO(), DEFAULT_LEAD_DAYS) });
+    setRestored(true);
   }, []);
+
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
+    } catch {}
+  }, [state, restored]);
 
   // Remember the viewer's theme (a per-viewer convenience; the page works without it).
   useEffect(() => {
@@ -76,7 +97,7 @@ export function BoxProvider({ children }: { children: ReactNode }) {
     () => ({
       state,
       dispatch,
-      totals: computeTotals(state.lines, catalogue, planById(state.plan).discount),
+      totals: computeTotals(state.lines, catalogue, state.plan ? planById(state.plan).discount : 0),
       suggestions: recommend(state.customer, state.railLines, catalogue, {
         goalLabel: goalById(state.customer.goal)?.railLabel,
       }),

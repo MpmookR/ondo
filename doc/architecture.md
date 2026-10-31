@@ -43,7 +43,9 @@ Your box; each marks itself with `useReturnHere`), however many products they ho
 "Goes well with this". Opened directly, it goes to the shop.
 
 The box, preferences, delivery plan and theme live in `BoxProvider` (React context in the root
-layout), so moving between pages loses nothing. The theme is remembered per browser.
+layout), so moving between pages loses nothing. The session (box, answers, delivery choice) is also
+saved to `sessionStorage` for the tab, so a reload or a typed address keeps it until the tab closes;
+a missing, blocked or old-shaped save just starts fresh. The theme is remembered per browser.
 
 ## Project structure
 

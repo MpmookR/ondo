@@ -28,7 +28,7 @@ import { boxHref } from '@/lib/routes';
 /** Last step: review the first box, confirm the delivery date, pay. Demo only: nothing is charged. */
 export function CheckoutPage() {
   const { state, dispatch, totals, theme, setTheme } = useBox();
-  const plan = planById(state.plan);
+  const plan = planById(state.plan ?? 'once');
   const subscription = plan.discount > 0;
 
   const [card, setCard] = useState<CardInput>({ number: '', expiry: '', cvc: '' });
@@ -61,6 +61,21 @@ export function CheckoutPage() {
       <Steps steps={CHECKOUT_STEPS} current={STEP_PAYMENT} />
     </PageHeader>
   );
+
+  if (state.plan === null && totals.count > 0 && !paid) {
+    return (
+      <>
+        {header}
+        <main className="mx-auto flex max-w-column flex-col items-center gap-16 px-16 py-64 text-center">
+          <h1 className="font-heading text-title">Choose your delivery first</h1>
+          <p className="font-sans text-body text-text-muted">Pick how often you&apos;d like your box, or a one-off, then come back.</p>
+          <Link href={`${boxHref}#delivery`} className="flex min-h-48 items-center rounded-pill bg-action px-24 font-sans text-label font-bold text-action-text">
+            Choose delivery
+          </Link>
+        </main>
+      </>
+    );
+  }
 
   if (totals.count === 0 && !paid) {
     return (

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { catalogue } from '../data/catalogue';
 import { SKIPPED } from '../data/onboarding';
 import type { Customer } from '../types';
-import { boxReducer, type BoxState } from './box';
+import { boxReducer, isBoxState, type BoxState } from './box';
 import { MAX_PACKS, starterBox } from './starterBox';
 
 const customer: Customer = {
@@ -80,19 +80,42 @@ test('every question skipped: one safe drink, no add-ons', () => {
   assert.ok(item.caffeineLevel <= SKIPPED.maxCaffeine);
 });
 
-test('startFirstBox replaces the sample box and refreshes the rail', () => {
+test('startFirstBox into an empty box gives the starter box and refreshes the rail', () => {
   const box = starterBox(customer, catalogue).lines;
-  const sample: BoxState = { lines: [{ itemId: 'c-moka', qty: 1 }], plan: 'every-15', customer: SKIPPED, railLines: [], deliveryDate: null, answered: true };
+  const sample: BoxState = { lines: [], plan: 'every-15', customer: SKIPPED, railLines: [], deliveryDate: null, answered: true };
   const next = boxReducer(sample, { type: 'startFirstBox', customer, lines: box });
   assert.deepEqual(next.lines, box);
   assert.deepEqual(next.railLines, box);
   assert.equal(next.customer, customer);
 });
 
-test('onboarding after shopping keeps the box and takes the answers', () => {
-  const shopped: BoxState = { lines: [{ itemId: 't-sencha', qty: 1 }], plan: 'every-15', customer: SKIPPED, railLines: [], deliveryDate: null, answered: false };
-  const next = boxReducer(shopped, { type: 'setAnswers', customer });
-  assert.deepEqual(next.lines, shopped.lines, 'nothing added or replaced');
-  assert.equal(next.customer, customer);
+test('onboarding after shopping keeps their box and adds the picks', () => {
+  // They'd picked a matcha and a whisk themselves; onboarding adds its picks around them.
+  const own = [
+    { itemId: 'm-ceremonial', qty: 2 },
+    { itemId: 'g-whisk-set', qty: 1 },
+  ];
+  const shopped: BoxState = { lines: own, plan: null, customer: SKIPPED, railLines: [], deliveryDate: null, answered: false };
+  const picks = starterBox(customer, catalogue).lines;
+  const next = boxReducer(shopped, { type: 'startFirstBox', customer, lines: picks });
+  assert.deepEqual(next.lines.slice(0, 2), own, 'their items first, quantities untouched');
+  assert.ok(picks.every((p) => next.lines.some((l) => l.itemId === p.itemId)), 'every pick is in the box');
+  assert.equal(next.lines.length, new Set(next.lines.map((l) => l.itemId)).size, 'nothing twice');
   assert.equal(next.answered, true);
+});
+
+test('a pick already in the box is not added twice, and their quantity stays', () => {
+  const picks = starterBox(customer, catalogue).lines;
+  const first = picks[0];
+  const shopped: BoxState = { lines: [{ itemId: first.itemId, qty: 5 }], plan: null, customer: SKIPPED, railLines: [], deliveryDate: null, answered: false };
+  const next = boxReducer(shopped, { type: 'startFirstBox', customer, lines: picks });
+  assert.deepEqual(next.lines[0], { itemId: first.itemId, qty: 5 });
+  assert.equal(next.lines.filter((l) => l.itemId === first.itemId).length, 1);
+});
+
+test('a saved session is restored only if it has the right shape', () => {
+  const good: BoxState = { lines: [], plan: null, customer: SKIPPED, railLines: [], deliveryDate: null, answered: false };
+  assert.ok(isBoxState(good));
+  assert.ok(!isBoxState({ lines: [] }));
+  assert.ok(!isBoxState(null));
 });

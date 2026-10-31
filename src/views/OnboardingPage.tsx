@@ -116,7 +116,7 @@ function isAnswered(id: StepId, d: Draft): boolean {
  */
 export function OnboardingPage() {
   const router = useRouter();
-  const { state, dispatch, theme, setTheme } = useBox();
+  const { dispatch, theme, setTheme } = useBox();
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [draft, setDraft] = useState<Draft>({});
@@ -151,12 +151,8 @@ export function OnboardingPage() {
   const finish = (skipOptional = false) => {
     const answers = skipOptional ? { ...draft, taste: undefined, extras: undefined } : draft;
     const customer = toCustomer(answers);
-    if (state.lines.length > 0) {
-      // They'd already started a box (from the shop): keep it exactly as it is, take the answers.
-      dispatch({ type: 'setAnswers', customer });
-    } else {
-      dispatch({ type: 'startFirstBox', customer, lines: starterBox(customer, catalogue).lines });
-    }
+    // Picks are added to anything they'd already put in the box; nothing of theirs changes.
+    dispatch({ type: 'startFirstBox', customer, lines: starterBox(customer, catalogue).lines });
     router.push(boxHref);
   };
 

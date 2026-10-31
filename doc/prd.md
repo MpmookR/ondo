@@ -105,9 +105,9 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
 - **Onboarding** (`/onboarding`) and the **starter box** are built: "Build your first box" on the
   Homepage opens it (see [Onboarding](#onboarding-build-your-first-box-next) and
   [Starter box](#starter-box)), and the "Want help building your box?" prompt for customers who
-  start in the shop. Still to come: opening a single question from "Edit preferences", the "Keep in
-  every delivery" toggle on first-box-only add-ons, the "left out" line, and Delivery starting
-  unselected. A new visitor starts with an empty box and no answers.
+  start in the shop, and Delivery with nothing chosen. Still to come: opening a single question from
+  "Edit preferences", the "Keep in every delivery" toggle on first-box-only add-ons and the "left
+  out" line. A new visitor starts with an empty box, no answers and no delivery choice.
 
 ## User flow
 
@@ -167,8 +167,9 @@ flowchart LR
 2. **Your box without preferences.** Until the customer has answered anything, the preferences card
    is replaced by a **prompt**: "Want help building your box?", with one button, "Help me build my
    box", to onboarding. It's an offer, not a gate: they can ignore it and keep building. Answering
-   comes back to Your box with the box kept exactly as it is (onboarding never replaces or adds to
-   items the customer chose); only the preferences and the rail change. The Shop "For you" tab has
+   comes back to Your box with everything they chose kept exactly as it is, plus the starter box's
+   picks (labelled "Picked for you"). Nothing of theirs is removed or changed, and a pick already
+   in the box isn't added twice. The Shop "For you" tab has
    nothing to rank by yet, so it shows a centred "Tell us a little about you" card ("Tell us how you
    like your cup, and we'll find your perfect match") with the same button, then the best sellers.
 3. **Rail before preferences.** Pairings with what's in the box and easy-to-try tasters, no goal
@@ -180,9 +181,11 @@ flowchart LR
 ### Shared: Your box → Checkout
 
 - **Delivery is a required choice.** No option is pre-selected; the suggested frequency is shown
-  as a hint above the options. Tapping "Checkout" before choosing scrolls to the Delivery card
-  and shows an inline message ("Choose how often, or one-off"); the button is never disabled
-  without a reason.
+  as a hint above the options, and the collapsed card says "Choose how often". Tapping "Go to
+  checkout" before choosing opens the Delivery card, scrolls to it, moves focus to the options and
+  shows an inline message ("Choose how often you'd like your box, or a one-off, to go to
+  checkout"); the message goes as soon as they pick. The button is never disabled without a
+  reason. Reaching `/checkout` without a choice shows "Choose your delivery first" with a link back.
 - **Edit preferences** reopens onboarding at the question tapped and returns to Your box; the rail
   rebuilds from the current box (see [Editing answers later](#editing-answers-later)).
 - **Add more** goes back to the Shop with the box kept.
@@ -267,8 +270,10 @@ roast suggestions, explore for how far the rail strays from what they drink now)
 1. "Build my box" shows a short "Picking your drinks…" state, only as long as the work takes
    (never a fake delay).
 2. Your box opens with the [starter box](#starter-box), the preferences card filled in and the rail.
-3. From Path B (the customer already had items), the box they built is kept as it is: onboarding
-   only fills the preferences and rebuilds the rail. It never replaces or adds to items they chose.
+3. From Path B (the customer already had items), the starter box's picks are **added** to the box
+   they built. Their own lines come first and are never removed or changed; a pick that's already
+   in the box isn't added twice (their quantity stands). It can mean two of a drink type (their
+   matcha and a picked one); they can remove either in one tap.
 
 ### Editing answers later
 

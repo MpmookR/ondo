@@ -24,8 +24,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function DeliveryDemo({ customer, lines, initialPlan = 'every-15', open = true }: { customer: Customer; lines: BoxLine[]; initialPlan?: PlanId; open?: boolean }) {
-  const [plan, setPlan] = useState<PlanId>(initialPlan);
+function DeliveryDemo({ customer, lines, initialPlan = 'every-15', open = true, attention = 0 }: { customer: Customer; lines: BoxLine[]; initialPlan?: PlanId | null; open?: boolean; attention?: number }) {
+  const [plan, setPlan] = useState<PlanId | null>(initialPlan);
   const [date, setDate] = useState<string | null>(addDays(todayISO(), 7));
   return (
     <DeliveryCard
@@ -36,6 +36,7 @@ function DeliveryDemo({ customer, lines, initialPlan = 'every-15', open = true }
       suggestion={suggestDelivery(lines, catalogue, customer)}
       drinkers={customer.drinkers}
       defaultOpen={open}
+      attention={attention}
     />
   );
 }
@@ -119,4 +120,14 @@ export const BuildBoxPromptCentered: Story = {
       body="Tell us how you like your cup, and we'll find your perfect match. It only takes a minute."
     />
   ),
+};
+
+/** Nothing chosen yet: the collapsed card asks for a choice. */
+export const DeliveryNothingChosen: Story = {
+  render: () => <DeliveryDemo customer={defaultCustomer} lines={defaultBox} initialPlan={null} open={false} />,
+};
+
+/** Checkout was tapped with nothing chosen: open, with the message until a choice is made. */
+export const DeliveryNeedsChoice: Story = {
+  render: () => <DeliveryDemo customer={defaultCustomer} lines={defaultBox} initialPlan={null} open={false} attention={1} />,
 };

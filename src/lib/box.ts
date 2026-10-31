@@ -6,7 +6,8 @@ export type Theme = 'light' | 'dark';
 
 export interface BoxState {
   lines: BoxLine[];
-  plan: PlanId;
+  /** Null until the customer picks how often (or one-off). Nothing is chosen for them. */
+  plan: PlanId | null;
   customer: Customer;
   /**
    * The box the suggestion rail is worked out from. It's refreshed when a page opens or a
@@ -30,10 +31,13 @@ export type BoxAction =
   | { type: 'toggleAvoid'; avoid: string }
   | { type: 'updateCustomer'; patch: Partial<Customer> }
   | { type: 'refreshRail' }
-  /** Onboarding finished with an empty box: its answers and the starter box. */
+  /**
+   * Onboarding finished: take the answers and add the starter box's picks to whatever is already in
+   * the box. Nothing they chose is removed or changed, and nothing already there is added twice.
+   */
   | { type: 'startFirstBox'; customer: Customer; lines: BoxLine[] }
-  /** Onboarding finished with things already in the box: keep the box, take the answers. */
-  | { type: 'setAnswers'; customer: Customer }
+  /** Restore a saved session (sessionStorage), so a reload keeps the box, answers and choices. */
+  | { type: 'restore'; state: BoxState }
   | { type: 'setDeliveryDate'; date: ISODate };
 
 export const MAX_QTY = 9;
@@ -45,6 +49,26 @@ export const MAX_QTY = 9;
  */
 export function browsingLimits(state: BoxState): Customer {
   return state.answered ? state.customer : { ...state.customer, maxCaffeine: 5, avoids: [] };
+}
+
+/** The customer's own lines first, untouched; then each pick that isn't in the box yet. */
+export function mergeLines(own: BoxLine[], picks: BoxLine[]): BoxLine[] {
+  const have = new Set(own.map((l) => l.itemId));
+  return [...own, ...picks.filter((p) => !have.has(p.itemId))];
+}
+
+/** A saved session is only restored if it still has this shape (an older or broken one is ignored). */
+export function isBoxState(value: unknown): value is BoxState {
+  const s = value as Partial<BoxState> | null;
+  return Boolean(
+    s &&
+      Array.isArray(s.lines) &&
+      Array.isArray(s.railLines) &&
+      typeof s.answered === 'boolean' &&
+      s.customer &&
+      typeof s.customer === 'object' &&
+      (s.plan === null || typeof s.plan === 'string'),
+  );
 }
 
 export function qtyOf(lines: BoxLine[], itemId: string): number {
@@ -79,10 +103,12 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
       return { ...state, customer: { ...state.customer, ...action.patch }, railLines: state.lines, answered: true };
     case 'refreshRail':
       return { ...state, railLines: state.lines };
-    case 'startFirstBox':
-      return { ...state, customer: action.customer, lines: action.lines, railLines: action.lines, answered: true };
-    case 'setAnswers':
-      return { ...state, customer: action.customer, railLines: state.lines, answered: true };
+    case 'startFirstBox': {
+      const lines = mergeLines(state.lines, action.lines);
+      return { ...state, customer: action.customer, lines, railLines: lines, answered: true };
+    }
+    case 'restore':
+      return action.state;
     case 'setDeliveryDate':
       return { ...state, deliveryDate: action.date };
   }

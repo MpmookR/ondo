@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { catalogue } from '@/data/catalogue';
 import { railTitle } from '@/data/goals';
@@ -31,7 +32,10 @@ export function YourBoxPage() {
   useReturnHere(boxHref);
   const router = useRouter();
   const { state, dispatch, totals, suggestions, setQty, theme, setTheme } = useBox();
-  const plan = planById(state.plan);
+  const plan = state.plan ? planById(state.plan) : null;
+  // Counts taps on checkout with no delivery chosen; each one opens and points at the Delivery card.
+  const [deliveryAttention, setDeliveryAttention] = useState(0);
+  const checkout = () => (plan ? router.push('/checkout') : setDeliveryAttention((n) => n + 1));
   const deliverySuggestion = suggestDelivery(state.lines, catalogue, state.customer);
 
   return (
@@ -57,6 +61,7 @@ export function YourBoxPage() {
             onDateChange={(date) => dispatch({ type: 'setDeliveryDate', date })}
             suggestion={deliverySuggestion}
             drinkers={state.customer.drinkers}
+            attention={deliveryAttention}
           />
           <OrderSummary
             lines={state.lines}
@@ -74,7 +79,7 @@ export function YourBoxPage() {
             lines={state.lines}
             onQtyChange={setQty}
           />
-          <BoxTotal totals={totals} cadence={plan.cadence} discountRate={plan.discount} onCheckout={() => router.push('/checkout')} />
+          <BoxTotal totals={totals} cadence={plan?.cadence ?? ''} discountRate={plan?.discount ?? 0} onCheckout={checkout} />
         </div>
       </main>
     </>
