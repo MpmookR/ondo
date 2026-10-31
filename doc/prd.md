@@ -43,7 +43,7 @@ make the box feel pushy or expensive. So each part of the design either **grows 
 | Goal-based rail: up to 6 suggestions, each with a one-line reason | Total, saving and cadence always visible (sticky bar on mobile, sidebar on desktop) |
 | Pairings and "brews your…" gear, plus bites and sweeteners that go with a drink in the box: adds a second category | Hard filters: nothing above the caffeine limit or containing an avoid is ever suggested |
 | "Easy to try" tasters (≤ £6) as a low-risk first add | Rail is hidden when nothing qualifies (no filler); it never reshuffles while you add |
-| Shop "For you" tab uses the same rules | One tap to add, one tap to undo; the rail never pre-adds, and add-ons are never auto-added |
+| Shop "For you" tab uses the same rules | One tap to add, one tap to undo; the rail never pre-adds, and an add-on is only pre-added when the customer asked for one in onboarding |
 | Subscription saving shown up front (10% every 15 days, 5% every 30 or 45) | One-off is always an option; nothing is pre-selected; "skip, swap or pause any time" next to the choice |
 | Delivery suggestion says plainly when the box won't last as long as the most frequent delivery | The suggested frequency never switches the choice (and so the price) by itself |
 | | Checkout shows the full breakdown, the delivery date and the terms in plain English before "Pay" |
@@ -117,7 +117,7 @@ flowchart LR
     Q1["Core questions 1-7"] --> Q2["Optional screen"]
   end
   Q1 -.->|"I'd rather browse"| S
-  Q2 --> SB["Starter box: drinks only, Picked for you"]
+  Q2 --> SB["Starter box: drinks, plus an add-on only if asked"]
   SB --> BOX
   S["Shop /shop"] --> I["Item page /item/id"]
   I -->|"Add to box"| S
@@ -144,12 +144,14 @@ flowchart LR
 1. **Homepage → Onboarding.** Core questions, then the optional screen (see
    [Onboarding](#onboarding-build-your-first-box-next)). "I'd rather browse" on any screen goes to
    the Shop with whatever was answered so far kept.
-2. **Starter box.** Onboarding fills the box with **drinks only**, picked by the same filter and
-   score as the rail and sized to last about 30 days (see [Starter box](#starter-box)). They're
-   labelled "Picked for you", and each can be removed or swapped in one tap.
-3. **Add-ons are suggested, never auto-added.** Bites, sweeteners and gear go in the rail with a
-   reason ("Goes with your Shizuoka Sencha"). Auto-adding them would raise AOV on paper but breaks
-   the guard rail: a box that arrives fuller than asked feels pushy and costs conversion.
+2. **Starter box.** Onboarding fills the box with drinks, picked by the same filter and score as
+   the rail and sized to last about 30 days (see [Starter box](#starter-box)). They're labelled
+   "Picked for you", and each can be removed or swapped in one tap.
+3. **Add-ons only when asked.** If the customer said yes to "Add something to try with your cup?",
+   the starter box also gets one bite and/or one sweetener that goes with their drinks, for the
+   first box only. Otherwise add-ons reach the box only through the rail. The answer is the
+   consent: pre-adding without it would raise AOV on paper, but a box that arrives fuller than
+   asked feels pushy, repeats on every delivery and costs conversion.
 4. **Your box** opens with preferences filled in and the goal rail.
 
 ### Path B: Browse the shop (self-serve)
@@ -244,7 +246,7 @@ One screen, skippable as a whole.
 | Milk or black? | Black · Dairy milk · Oat · Soya · Almond | Roast suggestions (darker roasts suit milk). Choosing a plant milk doesn't add to `avoids`; only screen 7 does | `milk` |
 | What do you like the taste of? | Bright and fruity · Chocolatey and nutty · Smooth and mellow · Not sure | Picks the first coffee or tea when several fit; matched against `notes` | `taste` |
 | Stick or explore? | My usual · Surprise me | How far rail suggestions go from what they drink now (never the starter box) | `explore` |
-| Anything with your cup? | Something to eat · Something sweet · Neither (pick any) | Puts bites or sweeteners higher in the rail (+1); never adds them to the box | `extras` |
+| Add something to try with your cup? | A bite · Something sweet · No thanks (pick any; "No thanks" clears the rest) | Adds one matching item per pick to the starter box, first box only (see [Starter box](#starter-box)); also +1 for that category in the rail | `extras` |
 
 ### After the last screen
 
@@ -273,6 +275,8 @@ Proposed additions to the recommendation rules once onboarding ships:
   their current drink types are preferred.
 - **Score:** an add-on in a category they picked in `extras` gets +1. It still needs a pairing or
   the easy-to-try signal to reach the rail, so `extras` reorders add-ons but never sells one alone.
+- **Consent:** `extras` is the only answer that can put an add-on in the box. Skipped or "No thanks"
+  means `extras` is empty and nothing is added.
 - **Defaults when skipped:** goal none (no goal score), 1 drinker, 2 cups, all drink types,
   no brew kit (so ground, never whole bean), caffeine limit 3, no avoids.
 
@@ -293,6 +297,11 @@ interface Customer {
   explore?: boolean;
   extras?: ('bites' | 'sweeteners')[];
 }
+
+interface BoxLine {
+  // …existing fields
+  firstBoxOnly?: boolean; // true for add-ons pre-added from `extras`
+}
 ```
 
 ### Ask later, not in onboarding
@@ -304,7 +313,8 @@ interface Customer {
 ## Starter box
 
 What onboarding puts in the box (Path A only). It reuses the rail's rules so there is one
-recommendation system, not two, and it holds **drinks only**.
+recommendation system, not two. It holds drinks, plus at most one bite and one sweetener **only
+when the customer asked for them**.
 
 **Step 1: Filter**
 - The same hard rules as the rail: nothing above `maxCaffeine`, nothing containing an avoid,
@@ -334,8 +344,21 @@ agrees with the box:
 focus", "Brews with your cafetière"), a quantity stepper and "Swap", which opens that drink's Shop
 tab with the customer's filters applied.
 
-**Never in the starter box:** gear, bites and sweeteners. They reach the box only through the rail,
-one tap at a time.
+**Step 6: Add-ons, only with consent.** For each category picked in `extras` (bites, sweeteners):
+
+1. Filter: the rail's hard rules (avoids matter here, since bites carry allergens), and it must
+   **pair** with a drink in the starter box.
+2. Keep only easy-to-try items (≤ £6). If nothing qualifies, add nothing for that category; never
+   add filler.
+3. Pick the best pairing (ties to the lower price) and add **one**, quantity 1.
+4. Mark it **first box only** (`firstBoxOnly`): it is not part of later deliveries unless the
+   customer turns on "Keep in every delivery" on that line.
+5. Show it in the add-ons group with its reason, never folded into a drink line: "Added because
+   you asked for a bite · Goes with your Kyoto Ceremonial Matcha", a "First box only" label, the
+   toggle and one-tap "Remove". The total includes it like any other line.
+
+**Never in the starter box:** gear (pricier, and they may already own it), more than one item per
+add-on category, or any add-on without a yes in `extras`.
 
 **Fallbacks**
 - `drinks` skipped: the single top-scoring drink across all types.
@@ -348,7 +371,9 @@ one tap at a time.
 calm focus. 60 cups needed, 30 per drink: Yirgacheffe Filter (16 cups) × 2 = 32 cups and Kyoto
 Ceremonial Matcha (15 cups) × 2 = 30 cups. 62 cups ÷ 2 a day = 31 days, so the suggestion is every
 30 days. Four people at 4 cups each would need 480 cups; the cap holds it at 3 packs per drink and
-the suggestion becomes every 15 days.
+the suggestion becomes every 15 days. If the first customer also picked "A bite" and avoids dairy,
+the box gets one Dark Chocolate Thins (pairs with the matcha, under £6), marked first box only; the
+butter shortbread can't be picked because it contains dairy.
 
 ## Onboarding and starter box metrics
 
@@ -358,6 +383,11 @@ the suggestion becomes every 15 days.
 - Share of first boxes kept without changes (the starter box matched what they wanted).
 - Swap rate and quantity changes per starter line: many reductions mean the 30-day sizing is too
   generous.
+- Pre-added add-ons: share of customers saying yes to the extras question, removal rate before
+  checkout (a high rate means the question isn't working as consent), and how many turn on "Keep in
+  every delivery".
+- Run pre-added add-ons as an A/B test against rail-only add-ons, with checkout conversion as the
+  guard rail; ship only if AOV rises without conversion dropping past the agreed threshold.
 
 ## Delivery frequency (Your box)
 
