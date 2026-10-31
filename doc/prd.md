@@ -43,8 +43,8 @@ make the box feel pushy or expensive. So each part of the design either **grows 
 | Goal-based rail: up to 6 suggestions, each with a one-line reason | Total, saving and cadence always visible (sticky bar on mobile, sidebar on desktop) |
 | Pairings and "brews your…" gear, plus bites and sweeteners that go with a drink in the box: adds a second category | Hard filters: nothing above the caffeine limit or containing an avoid is ever suggested |
 | "Easy to try" tasters (≤ £6) as a low-risk first add | Rail is hidden when nothing qualifies (no filler); it never reshuffles while you add |
-| Shop "For you" tab uses the same rules | One tap to add, one tap to undo; nothing is pre-added to the box |
-| Subscription saving shown up front (10% every 15 days, 5% every 30 or 45) | One-off is always an option; "skip, swap or pause any time" next to the choice |
+| Shop "For you" tab uses the same rules | One tap to add, one tap to undo; the rail never pre-adds, and add-ons are never auto-added |
+| Subscription saving shown up front (10% every 15 days, 5% every 30 or 45) | One-off is always an option; nothing is pre-selected; "skip, swap or pause any time" next to the choice |
 | Delivery suggestion says plainly when the box won't last as long as the most frequent delivery | The suggested frequency never switches the choice (and so the price) by itself |
 | | Checkout shows the full breakdown, the delivery date and the terms in plain English before "Pay" |
 | | No health claims on cards; goal language only in rail titles |
@@ -68,37 +68,122 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
 ### In (v1)
 1. **Design system:** tokens (light and dark theme, three category accents), core components,
    all documented in Storybook.
-2. **Your box** (`/`): "Your preferences" (the core onboarding answers, as a summary with "Edit
+2. **Homepage** (`/`): the hero with two ways in, "Build your first box" (onboarding) and
+   "Browse the shop". See [User flow](#user-flow).
+3. **Your box** (`/box`): "Your preferences" (the core onboarding answers, as a summary with "Edit
    preferences"), one **Delivery** card (how often, with a suggestion worked out from the box, then
    the first delivery date), the box grouped into drinks and add-ons (gear, bites, sweeteners), each
    sub-grouped by category, a "For {goal}" rail of up to 6
    suggestions with a one-line reason each, and the box total always in view.
-3. **Shop** (`/shop`): tabs For you · Coffee · Tea · Matcha · Gear · Bites · Sweeteners. "For you" runs
+4. **Shop** (`/shop`): tabs For you · Coffee · Tea · Matcha · Gear · Bites · Sweeteners. "For you" runs
    the same rules as
    the rail. Coffee, Tea and Matcha have a one-tap caffeine filter (All · Low 0–2 · Medium 3 ·
    High 4–5; a band with nothing in it is disabled). The choice carries across the drink tabs; on a
    tab where that band is empty, everything shows. Items the customer can't have are tucked into
    collapsed sections with the reason.
-4. **Item page** (`/item/[id]`): pack, description, caffeine, brew highlights, a "Contains" box that
+5. **Item page** (`/item/[id]`): pack, description, caffeine, brew highlights, a "Contains" box that
    is never collapsed, brew guide, a "Goes well with this" rail and a pinned order bar.
-5. **Checkout** (`/checkout`): progress steps (Sign up · Delivery · Payment), "Your first box"
+6. **Checkout** (`/checkout`): progress steps (Sign up · Delivery · Payment), "Your first box"
    summary that expands to every line, subtotal, saving, free delivery and the total; first delivery
    date with a "Change" calendar (earliest slot tomorrow); Apple Pay / Google Pay; card form with
    inline validation; billing address; "Pay £…" button; plain-English subscription terms and
    reassurance. **Demo only: no payment is taken**, and the page says so.
-6. **Light and dark themes**, switchable from the header on every page.
-7. **AI guide:** `CLAUDE.md` + `doc/agent.md` so Claude Code (or any AI coding tool) builds
+7. **Light and dark themes**, switchable from the header on every page.
+8. **AI guide:** `CLAUDE.md` + `doc/agent.md` so Claude Code (or any AI coding tool) builds
    on-brand by default.
-8. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
+9. **States:** empty rail, item over the customer's caffeine limit, out of stock, long names.
 
 ### Out
 - Real payments (the checkout is a demo), accounts, a backend.
 - Real product data or real caffeine figures (all values are illustrative).
 
 ### Next
-- **Onboarding** to build the first box from the customer's answers (see below). Until it ships,
+- **Onboarding** and the **starter box** it builds from the customer's answers (see
+  [Onboarding](#onboarding-build-your-first-box-next) and [Starter box](#starter-box)). Until it ships,
   the demo starts from a sample customer's answers in `src/data/customer.ts`. The core answers
   are already shown and editable in Your preferences.
+
+## User flow
+
+Two ways in, **one Your box page**. The paths differ only in how the box gets filled and whether
+we know the customer's preferences yet. Preferences and Delivery are **cards on Your box**, not
+separate steps, so neither path repeats a page and every route ends at the same checkout.
+
+```mermaid
+flowchart LR
+  H["Homepage /"] -->|"Build your first box"| Q1
+  H -->|"Browse shop"| S
+  subgraph OB["Onboarding: one question per screen, every one skippable"]
+    Q1["Core questions 1-7"] --> Q2["Optional screen"]
+  end
+  Q1 -.->|"I'd rather browse"| S
+  Q2 --> SB["Starter box: drinks only, Picked for you"]
+  SB --> BOX
+  S["Shop /shop"] --> I["Item page /item/id"]
+  I -->|"Add to box"| S
+  S -->|"View box bar"| BOX
+  I -->|"View box bar"| BOX
+  BOX["Your box /box"] --> HP{"Preferences set?"}
+  HP -->|"No, came from Shop"| PR["Prompt card: tell us your goal"]
+  PR -->|"Answer"| Q1
+  PR -->|"Not now"| RD["Rail: pairings and easy to try only"]
+  HP -->|"Yes"| RG["Goal rail: up to 6 picks"]
+  RD --> DL
+  RG --> DL
+  DL{"Delivery chosen?"}
+  DL -->|"No"| NG["Scroll to Delivery, inline message"]
+  NG --> DL
+  DL -->|"Yes"| CO["Checkout: Sign up, Delivery, Payment"]
+  CO --> CF["Order confirmed"]
+  BOX -->|"Add more"| S
+  BOX -->|"Edit preferences"| Q1
+```
+
+### Path A: Build your first box (guided)
+
+1. **Homepage → Onboarding.** Core questions, then the optional screen (see
+   [Onboarding](#onboarding-build-your-first-box-next)). "I'd rather browse" on any screen goes to
+   the Shop with whatever was answered so far kept.
+2. **Starter box.** Onboarding fills the box with **drinks only**, picked by the same filter and
+   score as the rail and sized to last about 30 days (see [Starter box](#starter-box)). They're
+   labelled "Picked for you", and each can be removed or swapped in one tap.
+3. **Add-ons are suggested, never auto-added.** Bites, sweeteners and gear go in the rail with a
+   reason ("Goes with your Shizuoka Sencha"). Auto-adding them would raise AOV on paper but breaks
+   the guard rail: a box that arrives fuller than asked feels pushy and costs conversion.
+4. **Your box** opens with preferences filled in and the goal rail.
+
+### Path B: Browse the shop (self-serve)
+
+1. **Homepage → Shop → Item page.** Add from the shop card or the item page; the "View box" bar
+   shows the count and total and takes them to Your box.
+2. **Your box without preferences.** The preferences card becomes a **prompt**: "Tell us your goal
+   and caffeine limit for better picks". Answering opens onboarding and comes back to Your box with
+   the box kept as it is (onboarding never replaces items the customer chose). "Not now" dismisses
+   it for the session.
+3. **Rail before preferences.** Only pairings with what's in the box and easy-to-try tasters, no
+   goal score and no goal title ("Goes with your box"). The safe defaults still apply as hard
+   filters (caffeine limit 3, no whole bean), but they only filter **suggestions**, never items the
+   customer added. The Shop "For you" tab shows the same prompt instead of a ranking.
+
+### Shared: Your box → Checkout
+
+- **Delivery is a required choice.** No option is pre-selected; the suggested frequency is shown
+  as a hint above the options. Tapping "Checkout" before choosing scrolls to the Delivery card
+  and shows an inline message ("Choose how often, or one-off"); the button is never disabled
+  without a reason.
+- **Edit preferences** reopens onboarding at the question tapped and returns to Your box; the rail
+  rebuilds from the current box (see [Editing answers later](#editing-answers-later)).
+- **Add more** goes back to the Shop with the box kept.
+- **Empty box** (every item removed): the rail is replaced by "Start with a drink" linking to the
+  Shop, and Checkout is hidden.
+- **Checkout:** Sign up · Delivery · Payment, then an order confirmation that repeats the first
+  delivery date and the terms.
+
+### Flow metrics
+
+- Split of new customers by path (guided vs browse) and conversion of each to checkout.
+- Path B: prompt answer rate, and AOV with vs without preferences.
+- Checkout taps that hit the Delivery message (a sign the choice isn't clear enough).
 
 ## Onboarding: build your first box (next)
 
@@ -106,42 +191,74 @@ A short set of questions before the first box, so the box and the suggestions st
 customer told us. **A question earns its place only if the answer changes the box.** Anything that
 doesn't is asked later or not at all, because every extra screen is a chance to drop off.
 
+Onboarding starts from "Build your first box" on the Homepage (Path A in
+[User flow](#user-flow)), or from the preferences prompt on Your box (Path B). There is no welcome
+screen: the Homepage is the intro.
+
 ### Rules
 
-- One question per screen, each with a one-line reason ("So we send beans you can brew").
+- One question per screen (the optional screen is the only exception), each with a one-line
+  reason under the question.
 - Every question can be skipped. A skipped answer falls back to a safe default, never a guess
   that could break a hard filter.
-- A progress indicator throughout, and back works on every screen.
-- The answers are replayed on Your box in the preferences card, where they can be edited.
+- A progress bar throughout, and back works on every screen.
+- "I'd rather browse" sits in the top bar on every screen: it goes to the Shop and keeps whatever
+  was answered so far.
+- Single-choice questions move on with one tap; multi-choice ones need "Next".
 - No budget question: the plan prices cover it, and asking up front feels like a sales question.
+- Delivery frequency (or one-off) is chosen on Your box, not here. Questions 2 and 3 drive its
+  suggestion (see [Delivery frequency](#delivery-frequency-your-box)).
 
-### Core questions
+### Screens
 
-| # | Question | Example answers | What it changes | Field |
-| --- | --- | --- | --- | --- |
-| 1 | How do you want your day to feel? | Strong morning start · Calm focus · Afternoon without the crash · Cutting down | Goal match in the ranking (+3) and the rail title | `goal` |
-| 2 | How many people drink it? | Just me · 2 · 3 · 4+ | Quantities and pack sizes | `drinkers` |
-| 3 | How many cups a day, each? | 1 · 2 · 3 · 4+ | Box size and suggested delivery frequency | `cupsPerDay` |
-| 4 | What do you drink now? | Coffee · Tea · Matcha (pick any) | Where the first box starts, and what counts as trying something new | `drinks` |
-| 5 | What do you brew with? | Espresso machine · Filter · Moka pot · Cafetière · Teapot or infuser · Matcha whisk · Grinder (pick any, or nothing yet) | Ground or whole bean, and which gear to suggest | `brewKit` |
-| 6 | What's your caffeine limit? | 1 Very low · 2 Low · 3 Medium · 4 High · 5 Very high | Hard filter | `maxCaffeine` |
-| 7 | Anything to avoid? | Dairy · Nuts · Soya · None | Hard filter | `avoids` |
+Eight screens: seven core questions, then one optional screen, then Your box.
 
-Questions 2 and 3 are one person or several on purpose: cups are asked **per person**, and the
-card shows the total ("That's 4 cups a day between you"). Delivery frequency (or one-off) is
-chosen on Your box, not here; questions 2 and 3 drive its suggestion (see
-[Delivery frequency](#delivery-frequency-your-box)).
+| # | Question | Reason line | Answers | Input | If skipped | Field |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | How do you want your day to feel? | "So we suggest things that fit your day." | Strong morning start · Calm focus · Afternoon without the crash · Cutting down | Four large cards, one choice | No goal: no goal score, rail title "Goes with your box" | `goal` |
+| 2 | How many people drink it? | "So the box is the right size." | Just me · 2 · 3 · 4+ | One choice | 1 | `drinkers` |
+| 3 | How many cups a day, each? | "So you don't run out between deliveries." | 1 · 2 · 3 · 4+ | One choice, with the live total | 2 | `cupsPerDay` |
+| 4 | What do you drink now? | "So your first box starts with what you know." | Coffee · Tea · Matcha | Cards in the category accents, pick any | All types (the starter box then picks one drink) | `drinks` |
+| 5 | What do you brew with? | "So we send beans and leaves you can brew." | Espresso machine · Filter · Moka pot · Cafetière · Teapot or infuser · Matcha whisk · Grinder · Nothing yet | Chips, pick any; "Nothing yet" clears the rest | No kit: ground, never whole bean | `brewKit` |
+| 6 | What's your caffeine limit? | "We'll never suggest anything stronger." | 1 Very low · 2 Low · 3 Medium · 4 High · 5 Very high | The 1–5 caffeine meter from the product cards, with an example drink per level | 3 | `maxCaffeine` |
+| 7 | Anything to avoid? | "We'll leave these out of everything we suggest." | Dairy · Nuts · Gluten · Soya · Sesame · None | Chips, pick any; "None" clears the rest | None | `avoids` |
+| 8 | A few extras (optional) | "Optional, for better picks." | See [Optional screen](#optional-screen) | Chip rows; "Skip these" skips the whole screen; main button "Build my box" | All empty | `milk`, `taste`, `explore`, `extras` |
 
-The caffeine question stays a 1–5 limit. A cut-off time ("nothing after 2pm") says *when* someone
-drinks caffeine, not *how much*, so it can't set a fair limit on its own.
+Screen notes:
 
-### Optional questions (one screen, skippable as a whole)
+- **Screens 2 and 3** are one person or several on purpose: cups are asked **per person**, and the
+  screen shows the total ("That's 4 cups a day between you").
+- **Screen 5** only shows kit for the drink types picked on screen 4 (a tea-only drinker doesn't see
+  the espresso machine). "Nothing yet" is shown to everyone.
+- **Screen 6** stays a 1–5 limit. A cut-off time ("nothing after 2pm") says *when* someone drinks
+  caffeine, not *how much*, so it can't set a fair limit on its own.
+- **Screen 7** offers every allergen the "Contains" box tracks (dairy, nuts, gluten, soya,
+  sesame), so the avoid list can always filter bites and sweeteners as well as drinks.
+
+### Optional screen
+
+One screen, skippable as a whole.
 
 | Question | Example answers | What it changes | Field |
 | --- | --- | --- | --- |
-| Milk or black? | Black · Dairy milk · Oat · Soya · Almond | Roast suggestions (darker roasts suit milk). Choosing a plant milk doesn't add to `avoids`; only question 7 does | `milk` |
+| Milk or black? | Black · Dairy milk · Oat · Soya · Almond | Roast suggestions (darker roasts suit milk). Choosing a plant milk doesn't add to `avoids`; only screen 7 does | `milk` |
 | What do you like the taste of? | Bright and fruity · Chocolatey and nutty · Smooth and mellow · Not sure | Picks the first coffee or tea when several fit; matched against `notes` | `taste` |
-| Stick or explore? | My usual · Surprise me | How far suggestions go from what they drink now | `explore` |
+| Stick or explore? | My usual · Surprise me | How far rail suggestions go from what they drink now (never the starter box) | `explore` |
+| Anything with your cup? | Something to eat · Something sweet · Neither (pick any) | Puts bites or sweeteners higher in the rail (+1); never adds them to the box | `extras` |
+
+### After the last screen
+
+1. "Build my box" shows a short "Picking your drinks…" state, only as long as the work takes
+   (never a fake delay).
+2. Your box opens with the [starter box](#starter-box), the preferences card filled in and the rail.
+3. From Path B (the customer already had items), the box they built is kept as it is: onboarding
+   only fills the preferences and rebuilds the rail. It never replaces or adds to items they chose.
+
+### Editing answers later
+
+"Edit preferences" on Your box opens the screen for the answer tapped. "Done" goes back to Your
+box instead of walking through the remaining screens. The rail rebuilds from the current box;
+the starter box is never rebuilt, so edits don't swap items out from under the customer.
 
 ### How the answers feed the rules
 
@@ -151,8 +268,11 @@ Proposed additions to the recommendation rules once onboarding ships:
 - **Hard filter:** whole-bean coffee only if `brewKit` includes a grinder; otherwise send ground
   for their brew method. A grinder can be suggested on its own merits.
 - **Score:** a drink that suits a brew method they own scores as "Brews with your …" (+1).
-- **Score:** with `explore`, a drink type they don't drink yet gets +1; without it, their current
-  drink types are preferred.
+- **Score:** a coffee or tea whose `notes` match `taste` gets +1.
+- **Score:** with `explore`, a drink type they don't drink yet gets +1 in the rail; without it,
+  their current drink types are preferred.
+- **Score:** an add-on in a category they picked in `extras` gets +1. It still needs a pairing or
+  the easy-to-try signal to reach the rail, so `extras` reorders add-ons but never sells one alone.
 - **Defaults when skipped:** goal none (no goal score), 1 drinker, 2 cups, all drink types,
   no brew kit (so ground, never whole bean), caffeine limit 3, no avoids.
 
@@ -161,8 +281,9 @@ suggestions yet.
 
 ### Data model
 
-The core answers are in the `Customer` type already (see [architecture.md](architecture.md)). The
-optional ones are added when onboarding is built:
+The core answers are in the `Customer` type already (see [architecture.md](architecture.md));
+`avoids` is a string list, so gluten and sesame need no type change. The optional ones are added
+when onboarding is built:
 
 ```ts
 interface Customer {
@@ -170,6 +291,7 @@ interface Customer {
   milk?: 'black' | 'dairy' | 'oat' | 'soya' | 'almond';
   taste?: 'fruity' | 'chocolatey' | 'mellow';
   explore?: boolean;
+  extras?: ('bites' | 'sweeteners')[];
 }
 ```
 
@@ -179,12 +301,63 @@ interface Customer {
 - Ratings of what they drank: after the first box arrives. The best data for tuning suggestions,
   but it only exists once they've tasted something.
 
-### Onboarding metrics
+## Starter box
 
-- Onboarding completion rate, and drop-off by question (any question losing more than a few
-  percent is a candidate to move or cut).
-- Skip rate per question.
-- Share of first boxes kept without changes (the box matched what they wanted).
+What onboarding puts in the box (Path A only). It reuses the rail's rules so there is one
+recommendation system, not two, and it holds **drinks only**.
+
+**Step 1: Filter**
+- The same hard rules as the rail: nothing above `maxCaffeine`, nothing containing an avoid,
+  nothing out of stock.
+- Only the drink types in `drinks`.
+- The form suits their kit: ground for their brew method; whole bean only if `brewKit` includes a
+  grinder.
+- `explore` doesn't apply here. "Surprise me" belongs in the rail, where it's a suggestion rather
+  than something already in the box.
+
+**Step 2: Score**, with the rail's signals: goal match +3, "Brews with your …" +1, taste match +1.
+Ties go to the lower price (protects conversion).
+
+**Step 3: Pick** the top-scoring drink **per drink type** in `drinks`, at most three. Three is the
+most before the box stops feeling picked and starts feeling like a catalogue.
+
+**Step 4: Size** to last about **30 days**, the middle cadence, so the delivery suggestion usually
+agrees with the box:
+
+1. Cups needed: drinkers × cups a day × 30, split evenly across the picked drinks.
+2. Packs per drink: cups needed ÷ the drink's `cups`, rounded to the nearest whole pack, at least 1
+   and at most 3.
+3. The cap stops a large household getting a very expensive first box. Their delivery suggestion
+   then says every 15 days (and that the box may run short), which is the honest answer.
+
+**Step 5: Show** each line labelled "Picked for you" with the rail's reason wording ("For calm
+focus", "Brews with your cafetière"), a quantity stepper and "Swap", which opens that drink's Shop
+tab with the customer's filters applied.
+
+**Never in the starter box:** gear, bites and sweeteners. They reach the box only through the rail,
+one tap at a time.
+
+**Fallbacks**
+- `drinks` skipped: the single top-scoring drink across all types.
+- A drink type with nothing that passes the filters is left out, with one line saying why ("No
+  matcha under your caffeine limit").
+- Nothing passes at all: the box is empty with "Start with a drink" linking to the Shop. A hard
+  filter is never relaxed to fill the box.
+
+**Worked example** (to cover in tests). One person, 2 cups a day, drinks coffee and matcha, goal
+calm focus. 60 cups needed, 30 per drink: Yirgacheffe Filter (16 cups) × 2 = 32 cups and Kyoto
+Ceremonial Matcha (15 cups) × 2 = 30 cups. 62 cups ÷ 2 a day = 31 days, so the suggestion is every
+30 days. Four people at 4 cups each would need 480 cups; the cap holds it at 3 packs per drink and
+the suggestion becomes every 15 days.
+
+## Onboarding and starter box metrics
+
+- Onboarding completion rate, and drop-off by screen (any screen losing more than a few percent is
+  a candidate to move or cut).
+- Skip rate per question, and how often "I'd rather browse" is used (and from which screen).
+- Share of first boxes kept without changes (the starter box matched what they wanted).
+- Swap rate and quantity changes per starter line: many reductions mean the 30-day sizing is too
+  generous.
 
 ## Delivery frequency (Your box)
 
@@ -215,6 +388,9 @@ Matcha (15 cups) = 47 cups; the vanilla syrup adds none. One person, 2 cups a da
 30 days. One cup a day: 47 days, so every 45 days. Two people, 2 cups each: 11 days, so every 15
 days, and the box may run short. Five
 Yirgacheffe and one Sencha (105 cups) for two people at 2 cups each: 26 days, so every 30 days.
+
+**No default.** No option is selected when Your box first opens; the customer picks one before
+checkout (see [User flow](#shared-your-box--checkout)).
 
 **First delivery.** A date picker (earliest slot tomorrow, default a week ahead), then one line:
 "Then every 15 days: next on Thu 19 Nov", or "Just this delivery" for a one-off.
