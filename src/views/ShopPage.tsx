@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { Item } from '@/types';
-import { catalogue } from '@/data/catalogue';
+import { catalogue, itemById } from '@/data/catalogue';
+import { bestSellerIds } from '@/data/bestSellers';
 import { goalById } from '@/data/goals';
 import {
   avoidLabel,
@@ -14,10 +15,13 @@ import {
   type CaffeineBand,
   type ShopTabId,
 } from '@/data/labels';
-import { qtyOf } from '@/lib/box';
+import { browsingLimits, qtyOf } from '@/lib/box';
 import { recommend } from '@/lib/recommend';
-import { boxHref, shopHref } from '@/lib/routes';
-import { CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail } from '@/components';
+import { boxHref, onboardingHref, shopHref } from '@/lib/routes';
+import { BuildBoxPrompt, CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail } from '@/components';
+
+/** The homepage's best sellers, shown on For you until the customer has told us anything. */
+const bestSellers = bestSellerIds.map(itemById).filter((item): item is Item => Boolean(item));
 
 const GRID = 'grid grid-cols-2 gap-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-24';
 const PANEL_ID = 'shop-panel';
@@ -28,6 +32,7 @@ export function ShopPage() {
   const params = useSearchParams();
   const { state, totals, setQty, theme, setTheme } = useBox();
   const { customer } = state;
+  const limits = browsingLimits(state);
   const goal = goalById(customer.goal);
   // Kept when switching between Coffee, Tea and Matcha, so "Low" stays low across drinks.
   const [band, setBand] = useState<CaffeineBand>('all');
@@ -40,7 +45,25 @@ export function ShopPage() {
     <ShopCard key={item.id} item={item} qty={qtyOf(state.lines, item.id)} onQtyChange={(q) => setQty(item.id, q)} {...extra} />
   );
 
+  // Nothing to go on yet: ask for a little about them, and show what other people buy meanwhile.
+  const renderNoAnswers = () => (
+    <>
+      <BuildBoxPrompt
+        href={onboardingHref}
+        align="centered"
+        title="Tell us a little about you"
+        body="Tell us how you like your cup, and we'll find your perfect match. It only takes a minute."
+        className="mx-auto w-full max-w-column"
+      />
+      <section aria-labelledby="fy-best" className="flex flex-col gap-12">
+        <h2 id="fy-best" className="font-heading text-title">Best sellers</h2>
+        <div className={GRID}>{bestSellers.map((item) => card(item))}</div>
+      </section>
+    </>
+  );
+
   const renderForYou = () => {
+    if (!state.answered) return renderNoAnswers();
     const picks = recommend(customer, state.railLines, catalogue, { limit: 20, goalLabel: goal?.railLabel });
     const drinks = picks.filter((s) => isDrinkCategory(s.item.category));
     const gear = picks.filter((s) => s.item.category === 'gear');
@@ -95,8 +118,8 @@ export function ShopPage() {
     for (const item of inTab) {
       if (qtyOf(state.lines, item.id) > 0) available.push(item);
       else if (!item.inStock) backSoon.push(item);
-      else if (item.contains.some((c) => customer.avoids.includes(c))) avoided.push(item);
-      else if (item.caffeineLevel > customer.maxCaffeine) overLimit.push(item);
+      else if (item.contains.some((c) => limits.avoids.includes(c))) avoided.push(item);
+      else if (item.caffeineLevel > limits.maxCaffeine) overLimit.push(item);
       else available.push(item);
     }
     return (
@@ -111,7 +134,7 @@ export function ShopPage() {
         {avoided.length > 0 && (
           <CollapsibleSection title={`Contains things you avoid (${avoided.length})`}>
             <div className={GRID}>
-              {avoided.map((item) => card(item, { unavailable: `Contains ${item.contains.filter((c) => customer.avoids.includes(c)).join(', ')}` }))}
+              {avoided.map((item) => card(item, { unavailable: `Contains ${item.contains.filter((c) => limits.avoids.includes(c)).join(', ')}` }))}
             </div>
           </CollapsibleSection>
         )}

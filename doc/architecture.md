@@ -12,7 +12,7 @@ components (src/components) + stories (Storybook)
         ↓
 Mock data (catalogue, customer)  →  recommend(customer, box, catalogue)   ← pure, one file
         ↓
-React state (box, goal, plan)  →  homepage (/) and "Your box" (/box)
+React state (box, answers, plan; starts with an empty box and no answers)  →  homepage (/) and "Your box" (/box)
 ```
 
 ## Tech stack
@@ -141,9 +141,11 @@ recommend(customer, box, catalogue, limit = 6): Suggestion[]
 // Suggestion = { item, score, reason }
 ```
 
-1. **Filter:** over caffeine limit, contains an avoid, out of stock, already in the box.
+1. **Filter:** over caffeine limit, contains an avoid, out of stock, already in the box, gear they own.
 2. **Score:** +3 goal match; +2 explicit pairing with a drink in the box; +1 gear that can brew a
-   drink in the box (only without a pairing); +1 if price ≤ £6 or a sample. Zero scores dropped.
+   drink in the box (only without a pairing); +1 a drink their own kit can brew; +1 a drink whose
+   notes match their taste; +1 a bite or sweetener they asked for; +1 if price ≤ £6 or a sample.
+   Zero scores dropped. Gear they already own is filtered out with the other hard rules.
 3. **Sort:** score descending, then price ascending. Take `limit`.
 4. **Reason:** pairing ("Goes with your Shizuoka Sencha"), else brewing ("Brews your Shizuoka
    Sencha"), else goal ("Fits calm focus"), else "A small size to try" / "Easy to try".

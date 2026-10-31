@@ -32,14 +32,22 @@ test('each drink line carries its reason, most specific first', () => {
   assert.equal(lines.find((l) => l.itemId === 'c-decaf')?.pickedReason, 'Brews with your filter');
 });
 
-test('add-ons only with a yes in extras: one per category, pairs with a drink, easy to try, first box only', () => {
+test('add-ons only with a yes in extras: one per category, easy to try, first box only', () => {
   assert.ok(starterBox(customer, catalogue).lines.every((l) => !l.firstBoxOnly), 'no extras, no add-ons');
   const { lines } = starterBox({ ...customer, extras: ['bites', 'sweeteners'] }, catalogue);
   const addOns = lines.filter((l) => l.firstBoxOnly);
-  // Rice crackers pair with the Everyday matcha. The vanilla syrup pairs too, but costs more than £6: no filler.
+  // Rice crackers pair with the Everyday matcha. No sweetener £6 or under pairs, so they get the
+  // cheapest that fits instead: they asked for one.
   assert.deepEqual(addOns, [
     { itemId: 'b-rice-crackers', qty: 1, firstBoxOnly: true, pickedReason: 'Goes with your Everyday Latte Matcha' },
+    { itemId: 's-demerara', qty: 1, firstBoxOnly: true, pickedReason: 'Easy to try' },
   ]);
+});
+
+test('a requested snack is added even when nothing pairs with the drinks', () => {
+  // Honeybush pairs only with honey: the snack is the cheapest that fits instead.
+  const { lines } = starterBox({ ...customer, goal: 'no-crash', drinks: ['tea'], extras: ['bites'] }, catalogue);
+  assert.deepEqual(lines.find((l) => l.firstBoxOnly), { itemId: 'b-dark-chocolate', qty: 1, firstBoxOnly: true, pickedReason: 'Easy to try' });
 });
 
 test('add-ons respect avoids', () => {
@@ -74,9 +82,17 @@ test('every question skipped: one safe drink, no add-ons', () => {
 
 test('startFirstBox replaces the sample box and refreshes the rail', () => {
   const box = starterBox(customer, catalogue).lines;
-  const sample: BoxState = { lines: [{ itemId: 'c-moka', qty: 1 }], plan: 'every-15', customer: SKIPPED, railLines: [], deliveryDate: null };
+  const sample: BoxState = { lines: [{ itemId: 'c-moka', qty: 1 }], plan: 'every-15', customer: SKIPPED, railLines: [], deliveryDate: null, answered: true };
   const next = boxReducer(sample, { type: 'startFirstBox', customer, lines: box });
   assert.deepEqual(next.lines, box);
   assert.deepEqual(next.railLines, box);
   assert.equal(next.customer, customer);
+});
+
+test('onboarding after shopping keeps the box and takes the answers', () => {
+  const shopped: BoxState = { lines: [{ itemId: 't-sencha', qty: 1 }], plan: 'every-15', customer: SKIPPED, railLines: [], deliveryDate: null, answered: false };
+  const next = boxReducer(shopped, { type: 'setAnswers', customer });
+  assert.deepEqual(next.lines, shopped.lines, 'nothing added or replaced');
+  assert.equal(next.customer, customer);
+  assert.equal(next.answered, true);
 });

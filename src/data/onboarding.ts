@@ -59,6 +59,15 @@ export const kitMethods: Record<BrewKit, BrewMethod[]> = {
   whisk: ['whisk'],
 };
 
+/** The gear in the catalogue that is each piece of kit, so we never suggest what they already own. */
+export const kitGearId: Partial<Record<BrewKit, string>> = {
+  filter: 'g-pour-over',
+  'moka-pot': 'g-moka-pot',
+  whisk: 'g-whisk-set',
+  teapot: 'g-infuser',
+  grinder: 'g-grinder',
+};
+
 /** An example drink per caffeine level, so the 1–5 scale means something. */
 export const caffeineExample: Record<1 | 2 | 3 | 4 | 5, string> = {
   1: 'About a cup of decaf',

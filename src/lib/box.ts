@@ -15,6 +15,11 @@ export interface BoxState {
   railLines: BoxLine[];
   /** First delivery, as 'YYYY-MM-DD'. Null until the browser sets a default (today + 7 days). */
   deliveryDate: ISODate | null;
+  /**
+   * Whether the customer has told us anything (onboarding, or answers kept from "I'd rather browse").
+   * Until then `customer` holds the safe defaults, and Your box and the shop ask instead of showing them.
+   */
+  answered: boolean;
 }
 
 export type BoxAction =
@@ -25,11 +30,22 @@ export type BoxAction =
   | { type: 'toggleAvoid'; avoid: string }
   | { type: 'updateCustomer'; patch: Partial<Customer> }
   | { type: 'refreshRail' }
-  /** Onboarding finished: its answers and the starter box replace the sample box. */
+  /** Onboarding finished with an empty box: its answers and the starter box. */
   | { type: 'startFirstBox'; customer: Customer; lines: BoxLine[] }
+  /** Onboarding finished with things already in the box: keep the box, take the answers. */
+  | { type: 'setAnswers'; customer: Customer }
   | { type: 'setDeliveryDate'; date: ISODate };
 
 export const MAX_QTY = 9;
+
+/**
+ * The limits that apply while browsing (shop tabs, item pages, warnings on Your box). Until the
+ * customer has told us anything, there are none: the safe defaults only steer suggestions, so
+ * nothing is hidden behind a caffeine limit or an allergy they never set.
+ */
+export function browsingLimits(state: BoxState): Customer {
+  return state.answered ? state.customer : { ...state.customer, maxCaffeine: 5, avoids: [] };
+}
 
 export function qtyOf(lines: BoxLine[], itemId: string): number {
   return lines.find((l) => l.itemId === itemId)?.qty ?? 0;
@@ -60,11 +76,13 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
       return { ...state, customer: { ...state.customer, avoids: next }, railLines: state.lines };
     }
     case 'updateCustomer':
-      return { ...state, customer: { ...state.customer, ...action.patch }, railLines: state.lines };
+      return { ...state, customer: { ...state.customer, ...action.patch }, railLines: state.lines, answered: true };
     case 'refreshRail':
       return { ...state, railLines: state.lines };
     case 'startFirstBox':
-      return { ...state, customer: action.customer, lines: action.lines, railLines: action.lines };
+      return { ...state, customer: action.customer, lines: action.lines, railLines: action.lines, answered: true };
+    case 'setAnswers':
+      return { ...state, customer: action.customer, railLines: state.lines, answered: true };
     case 'setDeliveryDate':
       return { ...state, deliveryDate: action.date };
   }

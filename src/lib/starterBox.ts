@@ -110,20 +110,22 @@ export function packsFor(item: Item, customer: Customer, drinkCount: number): nu
 const pairs = (a: Item, b: Item) => Boolean(a.pairsWith?.includes(b.id) || b.pairsWith?.includes(a.id));
 
 /**
- * Step 6: one add-on per category the customer said yes to, and only then. It must pair with a drink
- * in the box, pass the hard filters and be easy to try. Nothing qualifies: nothing is added (no filler).
+ * Step 6: one add-on per category the customer said yes to, and only then. It must pass the hard
+ * filters and be easy to try (£6 or less). A pairing with a drink in the box wins; when nothing in
+ * the category pairs, they still get the one they asked for: the cheapest that fits. Nothing in the
+ * category passes the filters: nothing is added.
  */
 function pickAddOns(extras: Extra[], drinks: Item[], customer: Customer, catalogue: Item[]): BoxLine[] {
   const lines: BoxLine[] = [];
   for (const category of extras) {
-    const best = catalogue
+    const fits = catalogue
       .filter((i) => i.category === category && i.price <= EASY_PRICE && passesFilters(i, customer, []))
-      .map((item) => ({ item, drink: drinks.find((d) => pairs(item, d)) }))
-      .filter((c): c is { item: Item; drink: Item } => Boolean(c.drink))
-      .sort((a, b) => a.item.price - b.item.price)[0];
-    if (best) {
-      lines.push({ itemId: best.item.id, qty: 1, firstBoxOnly: true, pickedReason: `Goes with your ${best.drink.name}` });
-    }
+      .sort((a, b) => a.price - b.price);
+    const paired = fits.map((item) => ({ item, drink: drinks.find((d) => pairs(item, d)) })).find((c) => c.drink);
+    const item = paired?.item ?? fits[0];
+    if (!item) continue;
+    const pickedReason = paired?.drink ? `Goes with your ${paired.drink.name}` : 'Easy to try';
+    lines.push({ itemId: item.id, qty: 1, firstBoxOnly: true, pickedReason });
   }
   return lines;
 }

@@ -11,7 +11,7 @@ export const defaultCustomer: Customer = {
   avoids: ['dairy'],
 };
 
-/** First box, pre-filled from the quiz. */
+/** A sample first box, for tests and stories. The app itself starts with an empty box. */
 export const defaultBox: BoxLine[] = [
   { itemId: 'c-yirgacheffe', qty: 2 },
   { itemId: 'm-ceremonial', qty: 1 },

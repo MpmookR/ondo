@@ -7,7 +7,7 @@ import { avoidLabel, avoidOptions, brewKitOptions, countLabel, counts, drinkOpti
 import { planById, plans } from '@/data/plans';
 import { addDays, formatShort, type ISODate } from '@/lib/dates';
 import type { DeliverySuggestion } from '@/lib/delivery';
-import { Button } from '../Button';
+import { Button, ButtonLink } from '../Button';
 import { caffeineLabel } from '../CaffeineMeter';
 import { ToggleChip } from '../Chip';
 import { DatePicker } from '../DatePicker';
@@ -401,5 +401,47 @@ export function PreferencesCard({ customer, onChange, defaultOpen = false, defau
         )}
       </div>
     </div>
+  );
+}
+
+// ---------- BuildBoxPrompt ----------
+
+export interface BuildBoxPromptProps {
+  /** Where "Help me build my box" goes (onboarding). */
+  href: string;
+  title?: string;
+  body?: string;
+  /** `centered`: icon on top and everything centred (the shop's For you tab). */
+  align?: 'start' | 'centered';
+  className?: string;
+}
+
+/**
+ * Shown instead of Your preferences until the customer has answered anything: an offer, never a
+ * gate. They can ignore it and keep building their box; suggestions run on safe defaults meanwhile.
+ */
+export function BuildBoxPrompt({
+  href,
+  title = 'Want help building your box?',
+  body = "Answer a few quick questions and we'll pick drinks that fit your day. Or keep browsing.",
+  align = 'start',
+  className = '',
+}: BuildBoxPromptProps) {
+  const centered = align === 'centered';
+  return (
+    <section aria-labelledby="build-box-prompt" className={`flex flex-col gap-12 p-16 ${centered ? 'items-center px-24 py-24 text-center' : ''} ${cardClass} ${className}`}>
+      <div className={`flex gap-12 ${centered ? 'flex-col items-center' : 'items-start'}`}>
+        <Badge icon="sliders" />
+        <div className="flex flex-col gap-4">
+          <h2 id="build-box-prompt" className="font-heading text-title">
+            {title}
+          </h2>
+          <p className="font-sans text-body-sm text-text-muted">{body}</p>
+        </div>
+      </div>
+      <ButtonLink href={href} variant="secondary" icon="arrow-right" iconPosition="end" fullWidth={!centered}>
+        Help me build my box
+      </ButtonLink>
+    </section>
   );
 }

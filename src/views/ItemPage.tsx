@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { catalogue, itemById } from '@/data/catalogue';
 import { goalById } from '@/data/goals';
 import { brewMethodLabel, isDrinkCategory } from '@/data/labels';
-import { qtyOf } from '@/lib/box';
+import { browsingLimits, qtyOf } from '@/lib/box';
 import { recommendForItem, unavailableReason } from '@/lib/recommend';
 import { boxHref } from '@/lib/routes';
 import {
@@ -84,7 +84,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
             {isDrink && <CaffeineMeter level={item.caffeineLevel} />}
           </div>
 
-          <BrewHighlights item={item} customer={state.customer} />
+          <BrewHighlights item={item} customer={browsingLimits(state)} />
 
           <div className="flex flex-col">
             {item.brew && (
@@ -142,7 +142,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
         </div>
       </main>
 
-      <OrderBar item={item} qty={qty} onQtyChange={(n) => setQty(item.id, n)} blockedReason={unavailableReason(item, state.customer)} />
+      <OrderBar item={item} qty={qty} onQtyChange={(n) => setQty(item.id, n)} blockedReason={unavailableReason(item, browsingLimits(state))} />
     </>
   );
 }

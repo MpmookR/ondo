@@ -1,11 +1,18 @@
-import type { BoxLine, BrewMethod, Customer, Item, Suggestion } from '../types';
-import { isDrinkCategory } from '../data/labels';
+import type { BoxLine, BrewKit, BrewMethod, Customer, Item, Suggestion } from '../types';
+import { brewKitOptions, isDrinkCategory } from '../data/labels';
+import { kitGearId, kitMethods, tasteNotes } from '../data/onboarding';
 
 /** Points per signal. Documented in doc/prd.md; change both together. */
 export const POINTS = {
   goalMatch: 3,
   pairsWithBox: 2,
   brewsYourBox: 1,
+  /** A drink they can brew with kit they own (onboarding: "What do you brew with?"). */
+  brewsWithYourKit: 1,
+  /** A coffee or tea whose notes match the taste they picked. */
+  tasteMatch: 1,
+  /** A bite or sweetener in a category they said yes to ("Add something to try with your cup?"). */
+  askedFor: 1,
   easyToTry: 1,
 } as const;
 
@@ -36,7 +43,13 @@ export function passesFilters(item: Item, customer: Customer, box: BoxLine[]): b
   if (item.contains.some((c) => customer.avoids.includes(c))) return false;
   if (!item.inStock) return false;
   if (box.some((line) => line.itemId === item.id && line.qty > 0)) return false;
+  if (ownsIt(item, customer)) return false;
   return true;
+}
+
+/** Gear they told us they already have. */
+function ownsIt(item: Item, customer: Customer): boolean {
+  return customer.brewKit.some((kit) => kitGearId[kit] === item.id);
 }
 
 // ---------- Step 2: signals ----------
@@ -51,26 +64,53 @@ function drinkThisGearBrews(item: Item, drinks: Item[]): Item | undefined {
   return drinks.find((d) => d.brewMethods.some((m: BrewMethod) => item.brewMethods.includes(m)));
 }
 
+/** The kit they own that can brew this drink, if any. */
+function theirKitFor(item: Item, customer: Customer): BrewKit | undefined {
+  if (!isDrink(item)) return undefined;
+  return customer.brewKit.find((kit) => kitMethods[kit].some((m) => item.brewMethods.includes(m)));
+}
+
+const kitLabel = (kit: BrewKit) => (brewKitOptions.find((k) => k.id === kit)?.label ?? kit).toLowerCase();
+
+function matchesTaste(item: Item, customer: Customer): boolean {
+  return Boolean(isDrink(item) && customer.taste && item.notes.some((n) => tasteNotes[customer.taste!].includes(n)));
+}
+
 interface Scored {
   item: Item;
   score: number;
   signals: Signal[];
   pairedWith?: Item;
   brews?: Item;
+  kit?: BrewKit;
 }
 
 function score(item: Item, customer: Customer, ctx: Context): Scored {
   const signals: Signal[] = [];
   const pairedWith = pairedDrink(item, ctx.drinks);
   const brews = pairedWith ? undefined : drinkThisGearBrews(item, ctx.drinks);
+  const kit = theirKitFor(item, customer);
 
   if (customer.goal && item.goalTags.includes(customer.goal)) signals.push('goalMatch');
   if (pairedWith) signals.push('pairsWithBox');
   if (brews) signals.push('brewsYourBox');
+  if (kit) signals.push('brewsWithYourKit');
+  if (matchesTaste(item, customer)) signals.push('tasteMatch');
+  if ((customer.extras as string[] | undefined)?.includes(item.category)) signals.push('askedFor');
   if (item.price <= EASY_PRICE || item.isSample) signals.push('easyToTry');
 
   const total = signals.reduce((sum, s) => sum + POINTS[s], 0);
-  return { item, score: total, signals, pairedWith, brews };
+  return { item, score: total, signals, pairedWith, brews, kit };
+}
+
+/**
+ * A bite or sweetener goes with a drink, so with no drink in the box there's nothing to go with:
+ * it isn't suggested, unless they asked for one in onboarding.
+ */
+function needsADrink(item: Item, customer: Customer, ctx: Context): boolean {
+  const foodAddOn = item.category === 'bites' || item.category === 'sweeteners';
+  const askedFor = (customer.extras as string[] | undefined)?.includes(item.category);
+  return foodAddOn && ctx.drinks.length === 0 && !askedFor;
 }
 
 // ---------- Step 4: reason line ----------
@@ -79,6 +119,8 @@ export function reasonFor(s: Scored, goalLabel: string): string {
   if (s.pairedWith) return `Goes with your ${s.pairedWith.name}`;
   if (s.brews) return `Brews your ${s.brews.name}`;
   if (s.signals.includes('goalMatch')) return `Fits ${goalLabel}`;
+  if (s.kit) return `Brews with your ${kitLabel(s.kit)}`;
+  if (s.signals.includes('tasteMatch')) return 'Suits your taste';
   return s.item.isSample ? 'A small size to try' : 'Easy to try';
 }
 
@@ -95,6 +137,7 @@ export function recommend(
 
   return catalogue
     .filter((item) => passesFilters(item, customer, box))
+    .filter((item) => !needsADrink(item, customer, ctx))
     .map((item) => score(item, customer, ctx))
     .filter((s) => s.score > 0)
     .sort((a, b) => b.score - a.score || a.item.price - b.item.price)

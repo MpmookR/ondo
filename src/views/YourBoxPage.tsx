@@ -5,9 +5,11 @@ import { catalogue } from '@/data/catalogue';
 import { railTitle } from '@/data/goals';
 import { planById } from '@/data/plans';
 import { suggestDelivery } from '@/lib/delivery';
+import { browsingLimits } from '@/lib/box';
 import { unavailableReason } from '@/lib/recommend';
 import {
   BoxTotal,
+  BuildBoxPrompt,
   DeliveryCard,
   OrderSummary,
   PageHeader,
@@ -20,7 +22,7 @@ import {
 } from '@/components';
 import { CHECKOUT_STEPS, STEP_DELIVERY } from '@/data/labels';
 import { formatPrice } from '@/lib/format';
-import { homeHref } from '@/lib/routes';
+import { homeHref, onboardingHref } from '@/lib/routes';
 
 /** Your box: the order summary. Mobile first; two columns from 1024px. */
 export function YourBoxPage() {
@@ -40,7 +42,12 @@ export function YourBoxPage() {
 
       <main className="mx-auto w-full max-w-content px-16 pb-240 pt-16 lg:grid lg:grid-cols-12 lg:items-start lg:gap-24 lg:px-24 lg:pb-48 lg:pt-24">
         <div className="mx-auto flex max-w-column flex-col gap-16 lg:col-span-7 lg:mx-0 lg:max-w-none">
-          <PreferencesCard customer={state.customer} onChange={(patch) => dispatch({ type: 'updateCustomer', patch })} />
+          {/* No answers yet: offer help instead of showing defaults they never chose. */}
+          {state.answered ? (
+            <PreferencesCard customer={state.customer} onChange={(patch) => dispatch({ type: 'updateCustomer', patch })} />
+          ) : (
+            <BuildBoxPrompt href={onboardingHref} />
+          )}
           <DeliveryCard
             plan={state.plan}
             onPlanChange={(p) => dispatch({ type: 'setPlan', plan: p })}
@@ -54,7 +61,7 @@ export function YourBoxPage() {
             catalogue={catalogue}
             totals={totals}
             onQtyChange={setQty}
-            warningFor={(item) => unavailableReason(item, state.customer)}
+            warningFor={(item) => unavailableReason(item, browsingLimits(state))}
           />
         </div>
 

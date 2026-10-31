@@ -100,10 +100,10 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
 ### Next
 - **Onboarding** (`/onboarding`) and the **starter box** are built: "Build your first box" on the
   Homepage opens it (see [Onboarding](#onboarding-build-your-first-box-next) and
-  [Starter box](#starter-box)). Still to come: the preferences prompt on Your box (Path B), opening
-  a single question from "Edit preferences", the "Keep in every delivery" toggle on first-box-only
-  add-ons, the "left out" line, and Delivery starting unselected. Visiting Your box directly still
-  starts from the sample customer in `src/data/customer.ts`.
+  [Starter box](#starter-box)), and the "Want help building your box?" prompt for customers who
+  start in the shop. Still to come: opening a single question from "Edit preferences", the "Keep in
+  every delivery" toggle on first-box-only add-ons, the "left out" line, and Delivery starting
+  unselected. A new visitor starts with an empty box and no answers.
 
 ## User flow
 
@@ -160,14 +160,18 @@ flowchart LR
 
 1. **Homepage → Shop → Item page.** Add from the shop card or the item page; the "View box" bar
    shows the count and total and takes them to Your box.
-2. **Your box without preferences.** The preferences card becomes a **prompt**: "Tell us your goal
-   and caffeine limit for better picks". Answering opens onboarding and comes back to Your box with
-   the box kept as it is (onboarding never replaces items the customer chose). "Not now" dismisses
-   it for the session.
-3. **Rail before preferences.** Only pairings with what's in the box and easy-to-try tasters, no
-   goal score and no goal title ("Goes with your box"). The safe defaults still apply as hard
-   filters (caffeine limit 3, no whole bean), but they only filter **suggestions**, never items the
-   customer added. The Shop "For you" tab shows the same prompt instead of a ranking.
+2. **Your box without preferences.** Until the customer has answered anything, the preferences card
+   is replaced by a **prompt**: "Want help building your box?", with one button, "Help me build my
+   box", to onboarding. It's an offer, not a gate: they can ignore it and keep building. Answering
+   comes back to Your box with the box kept exactly as it is (onboarding never replaces or adds to
+   items the customer chose); only the preferences and the rail change. The Shop "For you" tab has
+   nothing to rank by yet, so it shows a centred "Tell us a little about you" card ("Tell us how you
+   like your cup, and we'll find your perfect match") with the same button, then the best sellers.
+3. **Rail before preferences.** Pairings with what's in the box and easy-to-try tasters, no goal
+   score and no goal title ("Goes with your box"). With no drink in the box, no bites or
+   sweeteners (nothing to go with). The safe defaults still apply as hard filters (caffeine limit
+   3), but they only filter **suggestions**: the shop tabs, item pages and Your box show and allow
+   everything until the customer sets a limit or an avoid themselves.
 
 ### Shared: Your box → Checkout
 
@@ -270,11 +274,10 @@ the starter box is never rebuilt, so edits don't swap items out from under the c
 
 ### How the answers feed the rules
 
-Proposed additions to the recommendation rules once onboarding ships:
+Built into the rail, the shop's "For you" tab and the starter box (`recommend.ts`,
+`starterBox.ts`):
 
 - **Hard filter:** never suggest gear the customer already owns (from `brewKit`).
-- **Hard filter:** whole-bean coffee only if `brewKit` includes a grinder; otherwise send ground
-  for their brew method. A grinder can be suggested on its own merits.
 - **Score:** a drink that suits a brew method they own scores as "Brews with your …" (+1).
 - **Score:** a coffee or tea whose `notes` match `taste` gets +1.
 - **Score:** an add-on in a category they picked in `extras` gets +1. It still needs a pairing or
@@ -282,10 +285,10 @@ Proposed additions to the recommendation rules once onboarding ships:
 - **Consent:** `extras` is the only answer that can put an add-on in the box. Skipped, or neither
   card picked, means `extras` is empty and nothing is added.
 - **Defaults when skipped:** goal none (no goal score), 1 drinker, 2 cups, all drink types,
-  no brew kit (so ground, never whole bean), caffeine limit 3, no avoids.
+  no brew kit, caffeine limit 3, no avoids.
 
-Until then, drinks and brew kit are saved and shown in Your preferences but don't change the
-suggestions yet.
+Still to do: whole-bean coffee only if `brewKit` includes a grinder, otherwise ground for their brew
+method. The catalogue doesn't record ground or whole bean yet.
 
 ### Data model
 
@@ -347,11 +350,12 @@ tab with the customer's filters applied.
 
 **Step 6: Add-ons, only with consent.** For each category picked in `extras` (bites, sweeteners):
 
-1. Filter: the rail's hard rules (avoids matter here, since bites carry allergens), and it must
-   **pair** with a drink in the starter box.
-2. Keep only easy-to-try items (≤ £6). If nothing qualifies, add nothing for that category; never
-   add filler.
-3. Pick the best pairing (ties to the lower price) and add **one**, quantity 1.
+1. Filter: the rail's hard rules (avoids matter here, since bites carry allergens), and easy to
+   try (≤ £6).
+2. Pick one that **pairs** with a drink in the starter box (ties to the lower price). If none
+   pairs, the customer still asked for one, so pick the cheapest that passes, with the reason "Easy
+   to try". Only if nothing in the category passes the filters is nothing added.
+3. Add **one**, quantity 1.
 4. Mark it **first box only** (`firstBoxOnly`): it is not part of later deliveries unless the
    customer turns on "Keep in every delivery" on that line.
 5. Show it in the add-ons group with its reason, never folded into a drink line: "Added because
@@ -381,9 +385,11 @@ coffee and matcha, brews with a filter, goal calm focus, caffeine limit 4, avoid
   so the suggestion is every 30 days.
 - Four people at 4 cups each would need 480 cups; the cap holds it at 3 packs per drink and the
   suggestion becomes every 15 days.
-- With "A snack" and "A sweetener": Sesame Rice Crackers (pair with the Everyday matcha, £4),
-  marked first box only. The vanilla syrup pairs too but costs more than £6, so no sweetener is
-  added. With sesame also avoided, no bite is added either.
+- With "Bites" and "Sweetener": Sesame Rice Crackers (pair with the Everyday matcha, £4) and
+  Demerara Sugar (£3, "Easy to try": the vanilla syrup pairs but costs more than £6), both marked
+  first box only. With sesame also avoided, the bite becomes the cheapest one that fits instead.
+- A tea drinker with goal "afternoon without the crash" gets Honeybush, which no bite pairs with;
+  asking for a bite still adds one: Dark Chocolate Thins (£4, "Easy to try").
 
 The lowest-price tie-break means a coffee drinker with no goal match can be given decaf. That
 follows the rule as written (it protects conversion), but is worth revisiting with real data,
@@ -449,6 +455,9 @@ tea/coffee specialist would own them; the code only reads them.
 - Remove anything containing something the customer avoids (e.g. dairy, nuts).
 - Remove anything out of stock.
 - Remove anything already in the box.
+- Remove gear they already own (onboarding: "What do you brew with?").
+- With no drink in the box, remove bites and sweeteners (there's nothing for them to go with),
+  unless the customer asked for them in onboarding.
 
 **Step 2: Score**
 
@@ -457,10 +466,14 @@ tea/coffee specialist would own them; the code only reads them.
 | Matches the goal | +3 | Ceremonial matcha → calm focus |
 | Pairs with something in the box | +2 | Infuser mug next to sencha (an explicit pairing) |
 | Brews something in the box | +1 | Cold-brew bottle for a tea that can be cold-brewed (gear only, when there's no explicit pairing) |
+| Brews with your kit | +1 | A filter coffee for someone with a filter (drinks only) |
+| Suits your taste | +1 | Honeybush (orange) for "Bright and fruity" (drinks only) |
+| You asked for one | +1 | Any bite, if they said yes to "Bites" in onboarding (add-ons only) |
 | Easy to try | +1 | Price ≤ £6 or a sample size |
 
 Tie-break: lower price first. Show the top 6; zero scores are never shown. The reason line is the
-pairing if there is one (most specific), otherwise the highest-scoring signal.
+most specific signal: the pairing, then "Brews your …" (gear), the goal, "Brews with your …" (their
+kit), "Suits your taste", then "Easy to try".
 
 **Stable rail:** the rail is worked out from the box as it was when the page opened. Adding an
 item from the rail turns its button into a stepper in place instead of reshuffling the cards.

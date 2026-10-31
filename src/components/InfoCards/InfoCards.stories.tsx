@@ -5,7 +5,7 @@ import { catalogue } from '@/data/catalogue';
 import { defaultBox, defaultCustomer } from '@/data/customer';
 import { addDays, todayISO } from '@/lib/dates';
 import { suggestDelivery } from '@/lib/delivery';
-import { DeliveryCard, PreferencesCard } from './InfoCards';
+import { BuildBoxPrompt, DeliveryCard, PreferencesCard } from './InfoCards';
 import { Phone } from '@/stories/fixtures';
 
 const meta = {
@@ -102,4 +102,21 @@ export const PreferencesCollapsed: Story = {
     const [c, setC] = useState<Customer>(defaultCustomer);
     return <PreferencesCard customer={c} onChange={(patch) => setC({ ...c, ...patch })} />;
   },
+};
+
+/** Instead of Your preferences until the customer has answered anything. */
+export const BuildBoxPromptCard: Story = {
+  render: () => <BuildBoxPrompt href="/onboarding" />,
+};
+
+/** The shop's For you tab, before any answers: centred, with its own copy. */
+export const BuildBoxPromptCentered: Story = {
+  render: () => (
+    <BuildBoxPrompt
+      href="/onboarding"
+      align="centered"
+      title="Tell us a little about you"
+      body="Tell us how you like your cup, and we'll find your perfect match. It only takes a minute."
+    />
+  ),
 };

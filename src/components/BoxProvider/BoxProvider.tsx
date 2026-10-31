@@ -3,18 +3,23 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react';
 import type { Suggestion } from '@/types';
 import { catalogue } from '@/data/catalogue';
-import { defaultBox, defaultCustomer } from '@/data/customer';
+import { SKIPPED } from '@/data/onboarding';
 import { goalById } from '@/data/goals';
 import { planById } from '@/data/plans';
 import { boxReducer, totals as computeTotals, type BoxAction, type BoxState, type Theme, type Totals } from '@/lib/box';
 import { addDays, todayISO } from '@/lib/dates';
 import { recommend } from '@/lib/recommend';
 
+/**
+ * A new customer: an empty box and no answers yet. Suggestions run on the safe defaults until they
+ * do onboarding (or keep some answers from "I'd rather browse").
+ */
 export const INITIAL_BOX: BoxState = {
-  lines: defaultBox,
+  lines: [],
   plan: 'every-15',
-  customer: defaultCustomer,
-  railLines: defaultBox,
+  customer: SKIPPED,
+  answered: false,
+  railLines: [],
   deliveryDate: null,
 };
 

@@ -69,7 +69,7 @@ test('unavailable reasons', () => {
 });
 
 test('reducer: quantities, and the rail only refreshes on preference changes', () => {
-  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: defaultBox, deliveryDate: null };
+  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: defaultBox, deliveryDate: null, answered: true };
   state = boxReducer(state, { type: 'setQty', itemId: 'g-infuser', qty: 1 });
   state = boxReducer(state, { type: 'setQty', itemId: 'm-ceremonial', qty: 2 });
   state = boxReducer(state, { type: 'setQty', itemId: 'c-yirgacheffe', qty: 0 });
@@ -86,7 +86,7 @@ test('reducer: quantities, and the rail only refreshes on preference changes', (
 });
 
 test('reducer: onboarding answers update the customer and refresh the rail', () => {
-  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: [], deliveryDate: null };
+  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: [], deliveryDate: null, answered: true };
   state = boxReducer(state, { type: 'updateCustomer', patch: { drinkers: 3, brewKit: [] } });
   assert.equal(state.customer.drinkers, 3);
   assert.deepEqual(state.customer.brewKit, []);
@@ -107,4 +107,31 @@ test('totals split drinks and gear', () => {
     discount: 3.4,
     total: 30.6,
   });
+});
+
+test('onboarding answers: owned gear is never suggested', () => {
+  const owner = { ...defaultCustomer, brewKit: ['whisk' as const] };
+  const rail = recommend(owner, defaultBox, catalogue, { goalLabel: 'calm focus' }).map((s) => s.item.id);
+  assert.ok(!rail.includes('g-whisk-set'), 'they already have a whisk');
+});
+
+test('onboarding answers: a drink their kit can brew scores, with the kit as its reason', () => {
+  const c = { ...defaultCustomer, goal: null, brewKit: ['moka-pot' as const], maxCaffeine: 5 as const, avoids: [] };
+  const moka = recommend(c, [], catalogue, { limit: 30 }).find((s) => s.item.id === 'c-half-half');
+  assert.equal(moka?.reason, 'Brews with your moka pot');
+});
+
+test('onboarding answers: taste and asked-for add-ons lift the score', () => {
+  const base = { ...defaultCustomer, goal: null, brewKit: [], avoids: [] };
+  const score = (c: typeof base, id: string) => recommend(c, [], catalogue, { limit: 30 }).find((s) => s.item.id === id)?.score ?? 0;
+  assert.equal(score({ ...base, taste: 'fruity' }, 't-honeybush') - score(base, 't-honeybush'), 1, 'orange is fruity');
+  // With a drink in the box, so bites can be suggested either way.
+  const withDrink = (c: typeof base) => recommend(c, [{ itemId: 't-sencha', qty: 1 }], catalogue, { limit: 30 }).find((s) => s.item.id === 'b-oat-cookies')?.score ?? 0;
+  assert.equal(withDrink({ ...base, extras: ['bites'] }) - withDrink(base), 1);
+});
+
+test('no drinks in the box: no bites or sweeteners, unless asked for', () => {
+  const ids = (c: typeof defaultCustomer) => recommend(c, [], catalogue, { limit: 30 }).map((s) => s.item.category);
+  assert.ok(!ids(defaultCustomer).some((c) => c === 'bites' || c === 'sweeteners'));
+  assert.ok(ids({ ...defaultCustomer, extras: ['bites'] }).includes('bites'));
 });
