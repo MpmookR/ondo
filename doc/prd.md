@@ -82,7 +82,11 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
    tab where that band is empty, everything shows. Items the customer can't have are tucked into
    collapsed sections with the reason.
 5. **Item page** (`/item/[id]`): pack, description, caffeine, brew highlights, a "Contains" box that
-   is never collapsed, brew guide, a "Goes well with this" rail and a pinned order bar.
+   is never collapsed, brew guide, a "Goes well with this" rail and a pinned order bar. Add-ons
+   (gear, bites, sweeteners) show one "Size:" line instead of brew highlights, and their rail is the
+   drinks that belong with them: gear shows the drinks it can brew (shared brew method, "Brew it in
+   this"), bites and sweeteners the drinks they pair with ("Pairs with this"). Fewer than three: best
+   sellers top it up ("Best seller"). The customer's limits still apply.
 6. **Checkout** (`/checkout`): progress steps (Sign up · Delivery · Payment), "Your first box"
    summary that expands to every line, subtotal, saving, free delivery and the total; first delivery
    date with a "Change" calendar (earliest slot tomorrow); Apple Pay / Google Pay; card form with

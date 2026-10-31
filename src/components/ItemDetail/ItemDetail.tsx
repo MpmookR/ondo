@@ -42,8 +42,8 @@ export interface BrewHighlightsProps {
 }
 
 /**
- * Always-visible stats row plus the "Contains" box (never collapsed, like an allergens box).
- * Rows with no data are skipped.
+ * Drinks: a brew-highlights stats row (rows with no data are skipped). Add-ons: one "Size:" line.
+ * Then the "Contains" box, never collapsed, like an allergens box.
  */
 export function BrewHighlights({ item, customer }: BrewHighlightsProps) {
   const isDrink = isDrinkCategory(item.category);
@@ -60,17 +60,27 @@ export function BrewHighlights({ item, customer }: BrewHighlightsProps) {
 
   return (
     <section aria-labelledby="highlights-title" className="flex flex-col gap-16 px-16 py-8">
-      <h2 id="highlights-title" className="font-sans text-label font-bold">
-        {isDrink ? 'Brew highlights' : 'At a glance'}
-      </h2>
-      <dl className="flex">
-        {stats.map((stat) => (
-          <div key={stat.label} className="flex min-w-0 flex-1 flex-col-reverse items-center gap-2 border-r border-border px-2 py-4 last:border-r-0">
-            <dd className="whitespace-nowrap font-mono text-caption font-bold">{stat.value}</dd>
-            <dt className="font-sans text-footnote text-text-muted">{stat.label}</dt>
-          </div>
-        ))}
-      </dl>
+      {isDrink ? (
+        <>
+          <h2 id="highlights-title" className="font-sans text-label font-bold">
+            Brew highlights
+          </h2>
+          <dl className="flex">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex min-w-0 flex-1 flex-col-reverse items-center gap-2 border-r border-border px-2 py-4 last:border-r-0">
+                <dd className="whitespace-nowrap font-mono text-caption font-bold">{stat.value}</dd>
+                <dt className="font-sans text-footnote text-text-muted">{stat.label}</dt>
+              </div>
+            ))}
+          </dl>
+        </>
+      ) : (
+        // An add-on has one fact worth a glance: its size. One plain line, not a stats row of one.
+        <dl id="highlights-title" className="flex gap-4 font-sans text-body">
+          <dt className="text-text-muted">Size:</dt>
+          <dd className="font-semibold">{item.size}</dd>
+        </dl>
+      )}
 
       <div className={`flex flex-col rounded-sm border px-16 py-8 font-sans text-label ${clashes.length > 0 || overLimit ? 'border-danger bg-danger-subtle' : 'border-primary bg-primary-subtle'}`}>
         <h3 className="font-bold">Contains</h3>

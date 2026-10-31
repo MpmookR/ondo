@@ -155,6 +155,41 @@ export function recommendForItem(
   return recommend(customer, [{ itemId: item.id, qty: 1 }], catalogue, options);
 }
 
+/** How many cards an add-on's "Goes well with this" rail should have before best sellers top it up. */
+export const MIN_ADD_ON_RAIL = 3;
+
+/**
+ * "Goes well with this" on an add-on's page: the drinks that belong with it. Gear: the drinks it can
+ * brew (shared brew method). Bites and sweeteners: the drinks they pair with. The customer's limits
+ * still apply. Fewer than MIN_ADD_ON_RAIL: best sellers top it up.
+ */
+export function recommendForAddOn(
+  item: Item,
+  customer: Customer,
+  catalogue: Item[],
+  bestSellerIds: string[],
+  limit = DEFAULT_LIMIT,
+): Suggestion[] {
+  const fits = (i: Item) => i.id !== item.id && passesFilters(i, customer, []);
+  const isGear = item.category === 'gear';
+  const goesWith = (d: Item) =>
+    isGear ? d.brewMethods.some((m) => item.brewMethods.includes(m)) : Boolean(d.pairsWith?.includes(item.id) || item.pairsWith?.includes(d.id));
+
+  const partners: Suggestion[] = catalogue
+    .filter((d) => isDrink(d) && fits(d) && goesWith(d))
+    .sort((a, b) => a.price - b.price)
+    .slice(0, limit)
+    .map((d) => ({ item: d, score: 0, reason: isGear ? 'Brew it in this' : 'Pairs with this' }));
+
+  if (partners.length >= MIN_ADD_ON_RAIL) return partners;
+  const topUp: Suggestion[] = bestSellerIds
+    .map((id) => catalogue.find((i) => i.id === id))
+    .filter((i): i is Item => Boolean(i) && fits(i!) && !partners.some((p) => p.item.id === i!.id))
+    .slice(0, MIN_ADD_ON_RAIL - partners.length)
+    .map((i) => ({ item: i, score: 0, reason: 'Best seller' }));
+  return [...partners, ...topUp];
+}
+
 /** Why an item can't be added on the shop grid (null if it can). */
 export function unavailableReason(item: Item, customer: Customer): string | null {
   if (!item.inStock) return 'Back soon';

@@ -4,9 +4,10 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { catalogue, itemById } from '@/data/catalogue';
 import { goalById } from '@/data/goals';
-import { brewMethodLabel, isDrinkCategory } from '@/data/labels';
+import { isDrinkCategory } from '@/data/labels';
+import { bestSellerIds } from '@/data/bestSellers';
 import { browsingLimits, qtyOf } from '@/lib/box';
-import { recommendForItem, unavailableReason } from '@/lib/recommend';
+import { recommendForAddOn, recommendForItem, unavailableReason } from '@/lib/recommend';
 import { shopHref } from '@/lib/routes';
 import {
   BrewGuide,
@@ -37,21 +38,22 @@ const caffeineCopy: Record<number, string> = {
 export function ItemPage({ itemId }: { itemId: string }) {
   useFreshRail();
   const router = useRouter();
-  const { state, suggestions, setQty, theme, setTheme, returnTo } = useBox();
+  const { state, setQty, theme, setTheme, returnTo } = useBox();
   const item = itemById(itemId)!;
   const isDrink = isDrinkCategory(item.category);
-  // Bites and sweeteners don't brew anything; they list the drinks they go with instead.
-  const pairsWith = (item.pairsWith ?? []).map(itemById).filter((i) => i !== undefined);
   const qty = qtyOf(state.lines, item.id);
   const goal = goalById(state.customer.goal);
 
-  // Drinks: the same rules with this drink as the context. Add-ons: the box's own rail, minus this item.
+  // Drinks: the same rules with this drink as the context. Add-ons: the drinks that belong with
+  // them (gear: what it brews; bites and sweeteners: what they pair with), topped up with best sellers.
+  const limits = browsingLimits(state);
   const pairings = useMemo(
     () =>
       isDrink
         ? recommendForItem(item, state.customer, catalogue, { goalLabel: goal?.railLabel })
-        : suggestions.filter((s) => s.item.id !== item.id),
-    [isDrink, item, state.customer, suggestions, goal?.railLabel],
+        : recommendForAddOn(item, limits, catalogue, bestSellerIds),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- limits is derived from state
+    [isDrink, item, state.customer, state.answered, goal?.railLabel],
   );
 
   // Back to the list they came from (a shop tab, Your box or home), however many products they hopped
@@ -86,7 +88,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
             {isDrink && <CaffeineMeter level={item.caffeineLevel} />}
           </div>
 
-          <BrewHighlights item={item} customer={browsingLimits(state)} />
+          <BrewHighlights item={item} customer={limits} />
 
           <div className="flex flex-col">
             {item.brew && (
@@ -101,29 +103,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
                   Levels are relative, for comparing Ondo products. Caffeine varies with how you brew.
                 </p>
               </DetailAccordion>
-            ) : item.brewMethods.length > 0 ? (
-              <DetailAccordion title="Brews">
-                <ul className="flex flex-wrap gap-8">
-                  {item.brewMethods.map((m) => (
-                    <li key={m}>
-                      <Chip tone="outline">{brewMethodLabel[m]}</Chip>
-                    </li>
-                  ))}
-                </ul>
-              </DetailAccordion>
-            ) : (
-              pairsWith.length > 0 && (
-                <DetailAccordion title="Pairs with">
-                  <ul className="flex flex-wrap gap-8">
-                    {pairsWith.map((p) => (
-                      <li key={p.id}>
-                        <Chip tone="outline">{p.name}</Chip>
-                      </li>
-                    ))}
-                  </ul>
-                </DetailAccordion>
-              )
-            )}
+            ) : null}
             <DetailAccordion title="Delivery & storage">
               <p className="font-sans text-body">
                 Free delivery, letterbox friendly. Keep sealed, away from light and heat, and use within a month of opening.
@@ -134,7 +114,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
           {pairings.length > 0 && (
             <div className="px-8 pb-24 pt-16 lg:pb-8">
               <SuggestionRail
-                title={isDrink ? 'Goes well with this' : 'Goes well with your box'}
+                title="Goes well with this"
                 suggestions={pairings}
                 lines={state.lines}
                 onQtyChange={setQty}
@@ -144,7 +124,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
         </div>
       </main>
 
-      <OrderBar item={item} qty={qty} onQtyChange={(n) => setQty(item.id, n)} blockedReason={unavailableReason(item, browsingLimits(state))} />
+      <OrderBar item={item} qty={qty} onQtyChange={(n) => setQty(item.id, n)} blockedReason={unavailableReason(item, limits)} />
     </>
   );
 }

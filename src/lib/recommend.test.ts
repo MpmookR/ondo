@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { catalogue } from '../data/catalogue';
 import { defaultBox, defaultCustomer } from '../data/customer';
-import { recommend, recommendForItem, unavailableReason } from './recommend';
+import { recommend, recommendForAddOn, recommendForItem, unavailableReason } from './recommend';
 import { boxReducer, totals, type BoxState } from './box';
 
 const ids = (goal = defaultCustomer.goal) =>
@@ -134,4 +134,23 @@ test('no drinks in the box: no bites or sweeteners, unless asked for', () => {
   const ids = (c: typeof defaultCustomer) => recommend(c, [], catalogue, { limit: 30 }).map((s) => s.item.category);
   assert.ok(!ids(defaultCustomer).some((c) => c === 'bites' || c === 'sweeteners'));
   assert.ok(ids({ ...defaultCustomer, extras: ['bites'] }).includes('bites'));
+});
+
+test('add-on page: gear shows the drinks it brews; bites the drinks they pair with; best sellers top up', () => {
+  const open = { ...defaultCustomer, maxCaffeine: 5 as const, avoids: [] };
+  const best = ['c-moka', 't-sencha', 'm-everyday', 'c-night-shift'];
+  const moka = recommendForAddOn(byId('g-moka-pot'), open, catalogue, best);
+  // Two drinks brew in a moka pot, so one best seller (not already shown) tops it up to three.
+  assert.deepEqual(moka.map((s) => [s.item.id, s.reason]), [
+    ['c-half-half', 'Brew it in this'],
+    ['c-moka', 'Brew it in this'],
+    ['t-sencha', 'Best seller'],
+  ]);
+  // Oat cookies pair with Half & Half and the decaf: two, so one best seller tops it up to three.
+  const cookies = recommendForAddOn(byId('b-oat-cookies'), open, catalogue, best);
+  assert.deepEqual(cookies.map((s) => [s.item.id, s.reason]), [
+    ['c-decaf', 'Pairs with this'],
+    ['c-half-half', 'Pairs with this'],
+    ['c-moka', 'Best seller'],
+  ]);
 });
