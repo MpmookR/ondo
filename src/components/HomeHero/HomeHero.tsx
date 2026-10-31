@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import type { Theme } from '@/lib/box';
-import { boxHref, homeHref, shopHref } from '@/lib/routes';
+import { boxHref, homeHref, onboardingHref, shopHref } from '@/lib/routes';
 import { ButtonLink, IconButton } from '../Button';
 import { BrewScene } from './BrewScene';
 import { TypedHeadline } from './TypedHeadline';
+import { WindowLight } from './WindowLight';
 
 export interface HomeHeroProps {
   theme?: Theme;
@@ -72,14 +73,7 @@ function Table({ className = '' }: { className?: string }) {
 export function HomeHero({ theme, onThemeChange }: HomeHeroProps) {
   return (
     <section className="relative overflow-hidden bg-linear-to-b from-illo-wall-top to-illo-wall-bottom">
-      {/* Sunlight through a window on the right: the far wall in soft shade, a broad warm glow and
-          two brighter shafts, each drifting and brightening on its own slow cycle. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-r from-illo-shade to-transparent" />
-        <div className="absolute inset-y-0 right-0 w-1/2 -skew-x-12 bg-illo-glow blur-3xl animate-brew-ray-slow motion-reduce:animate-none" />
-        <div className="absolute inset-y-0 right-64 w-1/4 -skew-x-12 bg-illo-light blur-2xl animate-brew-ray motion-reduce:animate-none" />
-        <div className="absolute inset-y-0 right-1/3 w-1/12 -skew-x-12 bg-illo-light blur-xl animate-brew-ray-late motion-reduce:animate-none" />
-      </div>
+      <WindowLight />
 
       <header className="relative mx-auto flex max-w-content items-center justify-between gap-16 px-margin py-12">
         <Link
@@ -129,7 +123,7 @@ export function HomeHero({ theme, onThemeChange }: HomeHeroProps) {
             or swap any time.
           </p>
           <div className="mt-8 flex flex-col gap-12 sm:flex-row sm:flex-wrap sm:items-center">
-            <ButtonLink href={boxHref} size="lg" icon="arrow-right" iconPosition="end">
+            <ButtonLink href={onboardingHref} size="lg" icon="arrow-right" iconPosition="end">
               Build your first box
             </ButtonLink>
             <ButtonLink href={shopHref()} variant="secondary" size="lg">

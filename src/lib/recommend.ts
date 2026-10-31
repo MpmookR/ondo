@@ -64,7 +64,7 @@ function score(item: Item, customer: Customer, ctx: Context): Scored {
   const pairedWith = pairedDrink(item, ctx.drinks);
   const brews = pairedWith ? undefined : drinkThisGearBrews(item, ctx.drinks);
 
-  if (item.goalTags.includes(customer.goal)) signals.push('goalMatch');
+  if (customer.goal && item.goalTags.includes(customer.goal)) signals.push('goalMatch');
   if (pairedWith) signals.push('pairsWithBox');
   if (brews) signals.push('brewsYourBox');
   if (item.price <= EASY_PRICE || item.isSample) signals.push('easyToTry');

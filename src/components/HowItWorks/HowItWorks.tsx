@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import type { Category } from '@/types';
-import { boxHref } from '@/lib/routes';
+import { onboardingHref } from '@/lib/routes';
 import { ButtonLink } from '../Button';
 import { ProductImage } from '../ProductImage';
 import { Reveal, WordReveal, beat } from '../shared/Reveal';
@@ -115,7 +115,7 @@ function StepRow({ step, index }: { step: Step; index: number }) {
         {/* After the last step, the next move: it arrives with that step's words. */}
         {index === steps.length - 1 && (
           <span className="mt-12 self-start group-data-ready:opacity-0 group-data-seen:animate-soft-up" style={beat(6)}>
-            <ButtonLink href={boxHref} size="lg" icon="arrow-right" iconPosition="end">
+            <ButtonLink href={onboardingHref} size="lg" icon="arrow-right" iconPosition="end">
               Start with step one
             </ButtonLink>
           </span>

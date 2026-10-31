@@ -25,6 +25,8 @@ export type BoxAction =
   | { type: 'toggleAvoid'; avoid: string }
   | { type: 'updateCustomer'; patch: Partial<Customer> }
   | { type: 'refreshRail' }
+  /** Onboarding finished: its answers and the starter box replace the sample box. */
+  | { type: 'startFirstBox'; customer: Customer; lines: BoxLine[] }
   | { type: 'setDeliveryDate'; date: ISODate };
 
 export const MAX_QTY = 9;
@@ -61,6 +63,8 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
       return { ...state, customer: { ...state.customer, ...action.patch }, railLines: state.lines };
     case 'refreshRail':
       return { ...state, railLines: state.lines };
+    case 'startFirstBox':
+      return { ...state, customer: action.customer, lines: action.lines, railLines: action.lines };
     case 'setDeliveryDate':
       return { ...state, deliveryDate: action.date };
   }

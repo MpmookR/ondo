@@ -149,6 +149,7 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 | `max-w-frame` | 402px | |
 | `max-w-column` | 560px (one column on tablets) | |
 | `max-w-scene` | 460px (homepage brew scene) | |
+| `max-w-form` | 800px | Onboarding from 1024px: one column, question above answers |
 | `max-w-content` | 1200px | |
 
 ## Radius, borders, elevation, motion
@@ -167,6 +168,16 @@ layout preloads the two most used files. Source Sans Pro is now published as **S
 | `ease-brew` | `cubic-bezier(.2,.7,.2,1)` | All transitions |
 
 Motion turns off under `prefers-reduced-motion`.
+
+**Onboarding motion:** livelier than the editorial reveal, so answering feels quick. `animate-step-in`
+(520ms, `ease-silk`) slides a question in from the side you're heading (`--step-dir`: 1 forward,
+-1 back); `animate-word-up-quick` raises its words 60ms apart; `animate-option-in` lifts the answers
+in one after another (set `--stagger` with `beat()`); `animate-pop` pops a tick in;
+`animate-cup-in` (600ms, 120ms apart) adds the cup tally's cups one by one, slowly enough to count.
+The progress cup's coffee rises with `duration-500 ease-brew`.
+`animate-draw` (900ms, `ease-silk`) draws a line drawing stroke by stroke: each path sets
+`pathLength="1"` and `--stagger`, strokes follow 110ms apart; under reduced motion they show fully
+drawn.
 
 **Brew scene motion** (homepage hero only): slow loops, so the page feels calm. `animate-brew-ray` (`-slow`, `-late`: three sun rays
 that each drift sideways and brighten, 12–18s), `animate-brew-drop` (3.2s, `ease-drip`), `animate-brew-ripple`,
@@ -200,10 +211,12 @@ an evening green and the light dims; the objects keep their colours. The table i
 wood are also utilities (`from-illo-wall-top`, `bg-illo-light`, `border-illo-wood-edge` …).
 
 **Logo:** a kettle with the name across its handle, so it doubles as the wordmark. Source art
-(1093 × 1439, one per brand colour) is in `public/brand/logo`. The header uses 3× web copies,
-`public/brand/ondo-logo-green.webp` and `ondo-logo-vanilla.webp` (109 × 144, about 6KB), shown at
-36 × 48. Keep the 3:4 shape: never force it into a square. Green on light pages, Vanilla on dark,
-swapped by the `logo-light` / `logo-dark` utilities. The favicon and sharing image still use the
+(1093 × 1439, one per brand colour) is in `public/brand/logo`, with 3× web copies
+`public/brand/ondo-logo-green.webp` and `ondo-logo-vanilla.webp` (109 × 144). Keep the 3:4 shape:
+never force it into a square. Green on light pages, Vanilla on dark, swapped by the `logo-light` /
+`logo-dark` utilities. Page headers don't use it: every header shows the name in type instead
+("ONDO": `font-heading text-title font-heavy uppercase tracking-wide text-brand`), linked to the
+homepage. The favicon and sharing image still use the
 old emblem.
 
 **Utilities:** `highlight` (Flame-tint pill behind a word), `pb-safe` (clears the iPhone home bar),
@@ -237,11 +250,17 @@ at 402px, then `md:` / `lg:` add columns.
 
 | Component | Used on | Notes |
 | --- | --- | --- |
-| `PageHeader`, `SavingsLine` | All pages | Back, wordmark or title, light/dark switch. |
+| `PageHeader`, `SavingsLine` | All pages | Back, the ONDO wordmark (links to the homepage) or a title, light/dark switch. |
 | `Preloader` | Homepage | The brew scene with an empty carafe that fills (`BrewScene level`, 0–1) as a counter climbs 0–100%. Waits at 90% until the page and fonts have loaded (at most 6s), takes at least 4.2s (eased in and out, like a pour), holds full for a moment, then slowly (3s) zooms into the coffee while a circle opens to reveal the page. Once per browser session. A progress bar for screen readers ("Loading Ondo"); page scrolling is locked until it opens. |
 | `BestSellers` | Homepage | Products standing in arches (`rounded-t-pill`, a 2px outline in the drink's accent): 2 columns on mobile, 4 from 1024px. Name, size and price, caffeine as words, tasting notes. Hover slowly lifts the pack; the whole arch opens the product page. Scroll-in: headline lines slide up, arches appear, products rise in left to right, then their words. Items come from `data/bestSellers.ts`. |
 | `HowItWorks` | Homepage | Editorial: a headline whose words slide up, then three steps in a zig-zag (photo arch on one side, a big step number, a hairline, the title and copy on the other), each arch tinted in a drink's accent with real pack shots that drift on scroll. The last step ends with "Start with step one" (Flame; never on screen with the hero's), then a slow ticker of the promises (runs only while on screen, decorative). Loaded as its own chunk. Without JavaScript or with reduced motion, everything simply shows. |
 | `HomeHero`, `BrewScene`, `TypedHeadline` | Homepage | "Sunday Drip": a pour-over dripping into a carafe that slowly fills, steam, a swaying plant and moving window light, drawn in SVG (no video). Its own nav (the ONDO name in type, Shop, Your box, theme switch), a "A box for" eyebrow over a `text-hero` headline that types early birds, tea people, matcha mornings, slow sippers in turn (`TypedHeadline`; Flame caret, screen readers hear every phrase once, still on the last one under reduced motion), Flame "Build your first box" and an outlined "Browse the shop". Mobile: headline on top, then the scene on its table, then the words and buttons. From 1024px: a 12-column grid, headline and words in 7 columns meeting at the middle of the scene, the scene in the last 5 (`max-w-scene`, 460px), standing on a full-width 3D table (a perspective top with planks and grain, a lit front edge, a shadow on the floor; the scene overlaps the top so things stand on it). Decorative scene is `aria-hidden`. |
+| `WindowLight` | Homepage, onboarding | The hero's sunlight through a window (shade, glow and two drifting shafts), shared so onboarding feels like the same room. Decorative. |
+| `OnboardingProgress` | Onboarding | "Step 3 of 8" and "5 to go" (or "Last one, and it's optional"), a segmented bar (done in brand green, the current step stretched in spark) with `role="progressbar"`, and a cup whose coffee rises each step and steams on the last. |
+| `ChoiceCard` | Onboarding | One answer as a big tap target: `card` (eyebrow, a Fira `text-title` label, blurb, optional icon in a drink's accent; content top-aligned so a row lines up; a card with only an icon and a label is centred) or `tile` (a big number, for 1 · 2 · 3 · 4+). `radio` or `checkbox`. Selected = blue (`primary`) with a tick that pops in; cards lift on hover. The card stays neutral so blue only ever means selected. |
+| `QuestionHeading`, `CupTally`, `ChipGroup` | Onboarding | The question (`text-heading`, `text-hero` from 1024px like the homepage; words rise one by one, focusable so screen readers hear each new question) and its reason line. Always one column, question above answers: `max-w-column` on phones and tablets, `max-w-form` (800px) from 1024px; "That's 4 cups a day between you" with a cup per cup; `ToggleChip` groups with an exclusive "None" / "Nothing yet". |
+| `KitDrawings`, `KitDrawing` | Onboarding | The brew kit ticked so far, as line drawings that draw themselves in (green lines, then a spark detail: crema, steam, the coffee level). Two to a line; one sits in the middle and glides left when a second arrives (and back when one goes), via a FLIP glide with `duration-500 ease-silk`. Seven drawings, one per `BrewKit`. Decorative (`aria-hidden`); the chips carry the answer. |
+| `CaffeinePicker` | Onboarding | The caffeine limit as five rising glasses, the big sibling of `CaffeineMeter`: a radio group (arrow keys move). Coffee (`bg-illo-coffee`) pours into every glass up to the choice, one after another (`--pour-duration` 900ms, `--pour-stagger` 160ms apart), stopping short of the rim so its crema surface keeps rippling (`animate-liquid-wave`); a lower choice drains from the top down. The chosen glass has a blue rim. Below, a card in the same style as `CupTally`: a spark marker per level pops in, then the label and an example drink. Under reduced motion the glasses simply show full or empty. |
 | `Steps` | Checkout | Progress, not clickable. Current step = bold + 3px brand underline (`aria-current="step"`); done steps get a tick. |
 | `OrderReview` | Checkout | "Your first box": count, cadence and total; expands to every line, subtotal, saving, delivery (£3.95 struck, FREE) and the first-box total, plus a discount-code field. |
 | `WalletButtons` | Checkout | Static demo buttons, no payment API: Apple Pay as button artwork (from the Apple Pay / Google Pay Buttons Figma file), Google Pay drawn by Google's script. "Pay with…" for subscriptions, "Buy with…" for one-off; black on light, white on dark; both full width, 44px tall (Apple artwork centred on Apple's black or white); Apple Pay first. Tapping goes to the order confirmation. |

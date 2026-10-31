@@ -44,9 +44,15 @@ export interface Item {
   cups?: number;
 }
 
+/** Optional onboarding answers (the "A few extras" screen). */
+export type Taste = 'fruity' | 'chocolatey' | 'mellow';
+/** Add-on categories a customer said yes to in onboarding ("Add something to try with your cup?"). */
+export type Extra = 'bites' | 'sweeteners';
+
 /** The onboarding answers, replayed and editable in Your preferences. */
 export interface Customer {
-  goal: Goal;
+  /** Null when the question was skipped: no goal score, and the rail gets a neutral title. */
+  goal: Goal | null;
   /** How many people drink it. */
   drinkers: Count;
   /** Cups a day, per person. */
@@ -57,11 +63,19 @@ export interface Customer {
   brewKit: BrewKit[];
   maxCaffeine: 1 | 2 | 3 | 4 | 5;
   avoids: string[];
+  /** Unset, or "not sure". */
+  taste?: Taste;
+  /** The only answer that can put an add-on in the starter box. Empty or unset means none. */
+  extras?: Extra[];
 }
 
 export interface BoxLine {
   itemId: string;
   qty: number;
+  /** Set on lines the starter box picked: why it's there ("For calm focus"). */
+  pickedReason?: string;
+  /** An add-on pre-added from `extras`: sent in the first box only, unless the customer keeps it. */
+  firstBoxOnly?: boolean;
 }
 
 export interface Plan {

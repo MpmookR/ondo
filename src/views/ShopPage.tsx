@@ -41,7 +41,7 @@ export function ShopPage() {
   );
 
   const renderForYou = () => {
-    const picks = recommend(customer, state.railLines, catalogue, { limit: 20, goalLabel: goal.railLabel });
+    const picks = recommend(customer, state.railLines, catalogue, { limit: 20, goalLabel: goal?.railLabel });
     const drinks = picks.filter((s) => isDrinkCategory(s.item.category));
     const gear = picks.filter((s) => s.item.category === 'gear');
     const onTheSide = picks.filter((s) => s.item.category === 'bites' || s.item.category === 'sweeteners');
@@ -49,11 +49,11 @@ export function ShopPage() {
     return (
       <>
         <p className="font-sans text-body-sm text-text-muted">
-          Picked from your answers: {goal.label.toLowerCase()}, caffeine up to {customer.maxCaffeine} of 5{avoiding}.
+          Picked from your answers: {goal ? `${goal.label.toLowerCase()}, ` : ''}caffeine up to {customer.maxCaffeine} of 5{avoiding}.
         </p>
         {drinks.length > 0 && (
           <section aria-labelledby="fy-drinks" className="flex flex-col gap-12">
-            <h2 id="fy-drinks" className="font-heading text-title">Drinks for {goal.railLabel}</h2>
+            <h2 id="fy-drinks" className="font-heading text-title">{goal ? `Drinks for ${goal.railLabel}` : 'Drinks for you'}</h2>
             <div className={GRID}>{drinks.map((s) => card(s.item, { reason: s.reason }))}</div>
           </section>
         )}

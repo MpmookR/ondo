@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { catalogue } from '@/data/catalogue';
-import { goalById } from '@/data/goals';
+import { railTitle } from '@/data/goals';
 import { planById } from '@/data/plans';
 import { suggestDelivery } from '@/lib/delivery';
 import { unavailableReason } from '@/lib/recommend';
@@ -27,7 +27,6 @@ export function YourBoxPage() {
   useFreshRail();
   const router = useRouter();
   const { state, dispatch, totals, suggestions, setQty, theme, setTheme } = useBox();
-  const goal = goalById(state.customer.goal);
   const plan = planById(state.plan);
   const deliverySuggestion = suggestDelivery(state.lines, catalogue, state.customer);
 
@@ -61,7 +60,7 @@ export function YourBoxPage() {
 
         <div className="mx-auto mt-16 flex max-w-column flex-col gap-16 lg:sticky lg:top-24 lg:col-span-5 lg:mx-0 lg:mt-0 lg:max-w-none">
           <SuggestionRail
-            title={`For ${goal.railLabel}`}
+            title={railTitle(state.customer.goal)}
             suggestions={suggestions}
             lines={state.lines}
             onQtyChange={setQty}

@@ -66,7 +66,7 @@ export function BoxProvider({ children }: { children: ReactNode }) {
       dispatch,
       totals: computeTotals(state.lines, catalogue, planById(state.plan).discount),
       suggestions: recommend(state.customer, state.railLines, catalogue, {
-        goalLabel: goalById(state.customer.goal).railLabel,
+        goalLabel: goalById(state.customer.goal)?.railLabel,
       }),
       setQty: (itemId, qty) => dispatch({ type: 'setQty', itemId, qty }),
       theme,

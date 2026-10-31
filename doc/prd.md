@@ -98,10 +98,12 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
 - Real product data or real caffeine figures (all values are illustrative).
 
 ### Next
-- **Onboarding** and the **starter box** it builds from the customer's answers (see
-  [Onboarding](#onboarding-build-your-first-box-next) and [Starter box](#starter-box)). Until it ships,
-  the demo starts from a sample customer's answers in `src/data/customer.ts`. The core answers
-  are already shown and editable in Your preferences.
+- **Onboarding** (`/onboarding`) and the **starter box** are built: "Build your first box" on the
+  Homepage opens it (see [Onboarding](#onboarding-build-your-first-box-next) and
+  [Starter box](#starter-box)). Still to come: the preferences prompt on Your box (Path B), opening
+  a single question from "Edit preferences", the "Keep in every delivery" toggle on first-box-only
+  add-ons, the "left out" line, and Delivery starting unselected. Visiting Your box directly still
+  starts from the sample customer in `src/data/customer.ts`.
 
 ## User flow
 
@@ -206,7 +208,8 @@ screen: the Homepage is the intro.
 - A progress bar throughout, and back works on every screen.
 - "I'd rather browse" sits in the top bar on every screen: it goes to the Shop and keeps whatever
   was answered so far.
-- Single-choice questions move on with one tap; multi-choice ones need "Next".
+- Nothing moves on by itself: an answered screen shows "Next", an unanswered one "Skip". Auto-advancing
+  hides the choice before it can be checked and makes a mis-tap cost a "Back".
 - No budget question: the plan prices cover it, and asking up front feels like a sales question.
 - Delivery frequency (or one-off) is chosen on Your box, not here. Questions 2 and 3 drive its
   suggestion (see [Delivery frequency](#delivery-frequency-your-box)).
@@ -224,7 +227,7 @@ Eight screens: seven core questions, then one optional screen, then Your box.
 | 5 | What do you brew with? | "So we send beans and leaves you can brew." | Espresso machine · Filter · Moka pot · Cafetière · Teapot or infuser · Matcha whisk · Grinder · Nothing yet | Chips, pick any; "Nothing yet" clears the rest | No kit: ground, never whole bean | `brewKit` |
 | 6 | What's your caffeine limit? | "We'll never suggest anything stronger." | 1 Very low · 2 Low · 3 Medium · 4 High · 5 Very high | The 1–5 caffeine meter from the product cards, with an example drink per level | 3 | `maxCaffeine` |
 | 7 | Anything to avoid? | "We'll leave these out of everything we suggest." | Dairy · Nuts · Gluten · Soya · Sesame · None | Chips, pick any; "None" clears the rest | None | `avoids` |
-| 8 | A few extras (optional) | "Optional, for better picks." | See [Optional screen](#optional-screen) | Chip rows; "Skip these" skips the whole screen; main button "Build my box" | All empty | `milk`, `taste`, `explore`, `extras` |
+| 8 | A few extras (optional) | "Optional, for better picks." | See [Optional screen](#optional-screen) | Two picture cards, then one row of chips; "Skip these" skips the whole screen; main button "Build my box" | All empty | `extras`, `taste` |
 
 Screen notes:
 
@@ -239,14 +242,17 @@ Screen notes:
 
 ### Optional screen
 
-One screen, skippable as a whole.
+One screen, skippable as a whole, and kept short: it's the last screen, and a wall of questions
+there makes "Skip these" the easy answer.
 
-| Question | Example answers | What it changes | Field |
+| Question | Answers | What it changes | Field |
 | --- | --- | --- | --- |
-| Milk or black? | Black · Dairy milk · Oat · Soya · Almond | Roast suggestions (darker roasts suit milk). Choosing a plant milk doesn't add to `avoids`; only screen 7 does | `milk` |
+| Add something to try with your cup? | A snack · A sweetener (picture cards, pick any; picking neither means no) and one line: "First box only. Remove it any time." | Adds one matching item per pick to the starter box, first box only (see [Starter box](#starter-box)); also +1 for that category in the rail | `extras` |
 | What do you like the taste of? | Bright and fruity · Chocolatey and nutty · Smooth and mellow · Not sure | Picks the first coffee or tea when several fit; matched against `notes` | `taste` |
-| Stick or explore? | My usual · Surprise me | How far rail suggestions go from what they drink now (never the starter box) | `explore` |
-| Add something to try with your cup? | A bite · Something sweet · No thanks (pick any; "No thanks" clears the rest) | Adds one matching item per pick to the starter box, first box only (see [Starter box](#starter-box)); also +1 for that category in the rail | `extras` |
+
+**Dropped (Oct 2026):** "Milk or black?" and "Stick or explore?". Nothing in the rules used them
+yet, so they added reading without changing the box. Bring one back when a rule needs it (milk for
+roast suggestions, explore for how far the rail strays from what they drink now).
 
 ### After the last screen
 
@@ -271,12 +277,10 @@ Proposed additions to the recommendation rules once onboarding ships:
   for their brew method. A grinder can be suggested on its own merits.
 - **Score:** a drink that suits a brew method they own scores as "Brews with your …" (+1).
 - **Score:** a coffee or tea whose `notes` match `taste` gets +1.
-- **Score:** with `explore`, a drink type they don't drink yet gets +1 in the rail; without it,
-  their current drink types are preferred.
 - **Score:** an add-on in a category they picked in `extras` gets +1. It still needs a pairing or
   the easy-to-try signal to reach the rail, so `extras` reorders add-ons but never sells one alone.
-- **Consent:** `extras` is the only answer that can put an add-on in the box. Skipped or "No thanks"
-  means `extras` is empty and nothing is added.
+- **Consent:** `extras` is the only answer that can put an add-on in the box. Skipped, or neither
+  card picked, means `extras` is empty and nothing is added.
 - **Defaults when skipped:** goal none (no goal score), 1 drinker, 2 cups, all drink types,
   no brew kit (so ground, never whole bean), caffeine limit 3, no avoids.
 
@@ -285,21 +289,20 @@ suggestions yet.
 
 ### Data model
 
-The core answers are in the `Customer` type already (see [architecture.md](architecture.md));
-`avoids` is a string list, so gluten and sesame need no type change. The optional ones are added
-when onboarding is built:
+The answers are the `Customer` type (see [architecture.md](architecture.md)); a skipped goal is
+`null`. `avoids` is a string list, so gluten and sesame need no type change. The optional answers
+and the starter box's line fields:
 
 ```ts
 interface Customer {
   // …core answers
-  milk?: 'black' | 'dairy' | 'oat' | 'soya' | 'almond';
   taste?: 'fruity' | 'chocolatey' | 'mellow';
-  explore?: boolean;
   extras?: ('bites' | 'sweeteners')[];
 }
 
 interface BoxLine {
   // …existing fields
+  pickedReason?: string;  // why the starter box picked it ("For calm focus")
   firstBoxOnly?: boolean; // true for add-ons pre-added from `extras`
 }
 ```
@@ -322,8 +325,6 @@ when the customer asked for them**.
 - Only the drink types in `drinks`.
 - The form suits their kit: ground for their brew method; whole bean only if `brewKit` includes a
   grinder.
-- `explore` doesn't apply here. "Surprise me" belongs in the rail, where it's a suggestion rather
-  than something already in the box.
 
 **Step 2: Score**, with the rail's signals: goal match +3, "Brews with your …" +1, taste match +1.
 Ties go to the lower price (protects conversion).
@@ -354,7 +355,7 @@ tab with the customer's filters applied.
 4. Mark it **first box only** (`firstBoxOnly`): it is not part of later deliveries unless the
    customer turns on "Keep in every delivery" on that line.
 5. Show it in the add-ons group with its reason, never folded into a drink line: "Added because
-   you asked for a bite · Goes with your Kyoto Ceremonial Matcha", a "First box only" label, the
+   you asked for a snack · Goes with your Kyoto Ceremonial Matcha", a "First box only" label, the
    toggle and one-tap "Remove". The total includes it like any other line.
 
 **Never in the starter box:** gear (pricier, and they may already own it), more than one item per
@@ -367,13 +368,26 @@ add-on category, or any add-on without a yes in `extras`.
 - Nothing passes at all: the box is empty with "Start with a drink" linking to the Shop. A hard
   filter is never relaxed to fill the box.
 
-**Worked example** (to cover in tests). One person, 2 cups a day, drinks coffee and matcha, goal
-calm focus. 60 cups needed, 30 per drink: Yirgacheffe Filter (16 cups) × 2 = 32 cups and Kyoto
-Ceremonial Matcha (15 cups) × 2 = 30 cups. 62 cups ÷ 2 a day = 31 days, so the suggestion is every
-30 days. Four people at 4 cups each would need 480 cups; the cap holds it at 3 packs per drink and
-the suggestion becomes every 15 days. If the first customer also picked "A bite" and avoids dairy,
-the box gets one Dark Chocolate Thins (pairs with the matcha, under £6), marked first box only; the
-butter shortbread can't be picked because it contains dairy.
+**Taster packs** (`isSample`) never go in the starter box: they're the rail's easy first add, and
+their few cups would make sizing meaningless.
+
+**Worked example** (covered by tests in `starterBox.test.ts`). One person, 2 cups a day, drinks
+coffee and matcha, brews with a filter, goal calm focus, caffeine limit 4, avoids dairy.
+
+- Coffee: no coffee matches calm focus, and three brew with a filter (+1 each); the tie goes to the
+  lowest price, Swiss Water Decaf. Matcha: Everyday Latte Matcha and Kyoto Ceremonial both match
+  the goal (+3); the tie goes to Everyday, the cheaper.
+- 60 cups needed, 30 per drink: Decaf (16 cups) × 2 and Everyday (25 cups) × 1 = 57 cups, 28 days,
+  so the suggestion is every 30 days.
+- Four people at 4 cups each would need 480 cups; the cap holds it at 3 packs per drink and the
+  suggestion becomes every 15 days.
+- With "A snack" and "A sweetener": Sesame Rice Crackers (pair with the Everyday matcha, £4),
+  marked first box only. The vanilla syrup pairs too but costs more than £6, so no sweetener is
+  added. With sesame also avoided, no bite is added either.
+
+The lowest-price tie-break means a coffee drinker with no goal match can be given decaf. That
+follows the rule as written (it protects conversion), but is worth revisiting with real data,
+for example by breaking ties on caffeine closest to the customer's limit.
 
 ## Onboarding and starter box metrics
 

@@ -99,6 +99,11 @@
   --raw-illo-drop-light: #c98a5e;
   --raw-illo-drop-dark: #3e2219;
 
+  /* The caffeine picker's coffee pour (question 6): how long one glass takes to fill, and how far
+     behind the one before it the next starts. */
+  --pour-duration: 900ms;
+  --pour-stagger: 160ms;
+
   /* Responsive type and layout scales (mobile values) */
   --type-display-size: 56px;
   --type-display-leading: 56px;
@@ -307,6 +312,8 @@
   --color-illo-table-edge-top: var(--illo-table-edge-top);
   --color-illo-table-edge-bottom: var(--illo-table-edge-bottom);
   --color-illo-table-shadow: var(--illo-table-shadow);
+  --color-illo-coffee: var(--illo-coffee-top);
+  --color-illo-crema: var(--illo-crema);
 
   --text-*: initial;
   --text-display: var(--type-display-size);
@@ -377,6 +384,7 @@
 
   --container-frame: 402px;
   --container-column: 560px;
+  --container-form: 800px;    /* onboarding on wide screens: one column, roomier than a phone's */
   --container-scene: 460px;   /* the homepage brew scene's largest size */
   --container-content: 1200px;
 
@@ -430,6 +438,21 @@
   --animate-page-in: page-in 3000ms var(--ease-brew) both;
   --animate-preload-failsafe: preload-failsafe 400ms ease-out 10s both;
 
+  /* Onboarding: quicker than the editorial reveal, so answering feels lively. A question slides in
+     from the side you're heading (`--step-dir`: 1 forward, -1 back), its words rise 60ms apart,
+     options follow; a ticked option's badge pops. All off under prefers-reduced-motion. */
+  --animate-step-in: step-in 520ms var(--ease-silk) both;
+  --animate-word-up-quick: word-up 650ms var(--ease-silk) calc(var(--stagger, 0) * 60ms) both;
+  --animate-option-in: option-in 560ms var(--ease-silk) calc(var(--stagger, 0) * 60ms + 240ms) both;
+  --animate-pop: pop 360ms var(--ease-brew) both;
+  /* The cup tally (question 3): slower and one after another, so you can watch the cups add up. */
+  /* The coffee's surface in the caffeine picker, rippling sideways. */
+  --animate-liquid-wave: liquid-wave 2.4s linear infinite;
+  --animate-cup-in: pop 600ms var(--ease-silk) calc(var(--stagger, 0) * 120ms) both;
+  /* Line drawings that draw themselves (brew kit): each path sets pathLength="1" and `--stagger`, so
+     its strokes follow one another 110ms apart. Under reduced motion they simply show, fully drawn. */
+  --animate-draw: draw 900ms var(--ease-silk) calc(var(--stagger, 0) * 110ms) both;
+
   @keyframes brew-ray {
     0%, 100% { opacity: 0.5; transform: translateX(0) skewX(-14deg); }
     50% { opacity: 1; transform: translateX(-56px) skewX(-14deg); }
@@ -471,5 +494,16 @@
   @keyframes page-in { from { transform: scale(1.08); } to { transform: none; } }
   @keyframes preload-failsafe { to { opacity: 0; visibility: hidden; } }
   @keyframes caret-blink { 50% { border-color: transparent; } }
+  @keyframes step-in {
+    from { opacity: 0; transform: translateX(calc(var(--step-dir, 1) * 40px)); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes liquid-wave { to { transform: translateX(-100%); } }
+  @keyframes draw {
+    from { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    to { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  }
+  @keyframes option-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { 0% { transform: scale(0.4); opacity: 0; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
   @keyframes brew-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 }

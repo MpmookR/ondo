@@ -16,4 +16,10 @@ export const goals: GoalInfo[] = [
   { id: 'cutting-down', eyebrow: 'Any time', label: 'Cutting down', railLabel: 'cutting down', blurb: 'Same ritual, less caffeine.' },
 ];
 
-export const goalById = (id: Goal): GoalInfo => goals.find((g) => g.id === id) ?? goals[0];
+export const goalById = (id: Goal | null): GoalInfo | undefined => goals.find((g) => g.id === id);
+
+/** The rail's title: the goal when there is one, otherwise a neutral one. */
+export const railTitle = (id: Goal | null): string => {
+  const goal = goalById(id);
+  return goal ? `For ${goal.railLabel}` : 'Goes with your box';
+};

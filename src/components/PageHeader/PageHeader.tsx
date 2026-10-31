@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import type { Theme } from '@/lib/box';
+import { homeHref } from '@/lib/routes';
 import { Icon } from '../Icon';
 
 export interface PageHeaderProps {
-  /** Page title. Leave out to show the Ondo wordmark. */
+  /** Page title. Leave out to show the ONDO wordmark (links to the homepage). */
   title?: string;
   /** With the wordmark: the page name screen readers hear after "ondo". */
   pageName?: string;
@@ -21,17 +22,18 @@ export interface PageHeaderProps {
 }
 
 /**
- * The Ondo logo (the kettle carries the name). Shown at its own 3:4 shape, 48px tall.
- * Green on light pages, Vanilla on dark: CSS swaps them (logo-light / logo-dark), no theme branching.
+ * The Ondo name in type, the same as the homepage and onboarding headers: Fira Sans, heavy, upper
+ * case, brand green (the theme swaps the colour). Taps through to the homepage.
  */
-export function Wordmark() {
+export function Wordmark({ pageName }: { pageName?: string }) {
   return (
-    <span className="inline-flex items-center">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/ondo-logo-green.webp" width={36} height={48} alt="Ondo" className="logo-light h-48 w-auto" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/ondo-logo-vanilla.webp" width={36} height={48} alt="Ondo" className="logo-dark h-48 w-auto" />
-    </span>
+    <Link
+      href={homeHref}
+      className="flex min-h-44 items-center rounded-sm font-heading text-title font-heavy uppercase tracking-wide text-brand"
+    >
+      Ondo
+      <span className="sr-only">, home{pageName ? `. This page: ${pageName}` : ''}</span>
+    </Link>
   );
 }
 
@@ -60,8 +62,7 @@ export function PageHeader({ title, pageName = 'your box', backHref, onBack, the
             <h1 className="line-clamp-2 text-center font-heading text-title">{title}</h1>
           ) : (
             <h1>
-              <Wordmark />
-              <span className="sr-only">: {pageName}</span>
+              <Wordmark pageName={pageName} />
             </h1>
           )}
         </div>

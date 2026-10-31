@@ -4,7 +4,7 @@ export type IconName =
   | 'plus' | 'minus' | 'trash' | 'check' | 'add'
   | 'chevron-left' | 'chevron-down' | 'chevron-up' | 'arrow-right'
   | 'info' | 'truck' | 'sliders' | 'tag' | 'bag' | 'sun' | 'moon'
-  | 'bean' | 'leaf' | 'whisk' | 'kettle' | 'cookie' | 'jar';
+  | 'bean' | 'leaf' | 'whisk' | 'kettle' | 'cookie' | 'jar' | 'cup' | 'close';
 
 const paths: Record<IconName, ReactNode> = {
   plus: <path d="M12 5v14M5 12h14" />,
@@ -74,6 +74,13 @@ const paths: Record<IconName, ReactNode> = {
       <path d="M12 11v9M10 12c0 4 1 7 2 8M14 12c0 4-1 7-2 8" />
     </>
   ),
+  cup: (
+    <>
+      <path d="M5 9h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9z" />
+      <path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H16.5M9 3.5c-.8 1 .8 2 0 3M13 3.5c-.8 1 .8 2 0 3" />
+    </>
+  ),
+  close: <path d="M6 6l12 12M18 6L6 18" />,
   kettle: (
     <>
       <path d="M6 20h12l-1-9a5 5 0 0 0-10 0l-1 9z" />

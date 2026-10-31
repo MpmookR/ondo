@@ -4,7 +4,7 @@ import { useRef, type KeyboardEvent } from 'react';
  * Roving-tabindex radio group: arrow keys move selection, only the checked option is tabbable.
  * https://www.w3.org/WAI/ARIA/apg/patterns/radio/
  */
-export function useRadioGroup<T extends string | number>(options: readonly T[], value: T, onChange: (v: T) => void) {
+export function useRadioGroup<T extends string | number>(options: readonly T[], value: T | null, onChange: (v: T) => void) {
   const refs = useRef<(HTMLElement | null)[]>([]);
 
   const move = (from: number, delta: number) => {
@@ -19,7 +19,8 @@ export function useRadioGroup<T extends string | number>(options: readonly T[], 
     },
     role: 'radio' as const,
     'aria-checked': option === value,
-    tabIndex: option === value ? 0 : -1,
+    // Nothing chosen yet: the first option takes the tab stop, as the pattern asks.
+    tabIndex: option === value || (value === null && index === 0) ? 0 : -1,
     onClick: () => onChange(option),
     onKeyDown: (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {

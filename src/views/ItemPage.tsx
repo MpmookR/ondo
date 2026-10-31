@@ -49,9 +49,9 @@ export function ItemPage({ itemId }: { itemId: string }) {
   const pairings = useMemo(
     () =>
       isDrink
-        ? recommendForItem(item, state.customer, catalogue, { goalLabel: goal.railLabel })
+        ? recommendForItem(item, state.customer, catalogue, { goalLabel: goal?.railLabel })
         : suggestions.filter((s) => s.item.id !== item.id),
-    [isDrink, item, state.customer, suggestions, goal.railLabel],
+    [isDrink, item, state.customer, suggestions, goal?.railLabel],
   );
 
   const goBack = () => (window.history.length > 1 ? router.back() : router.push(boxHref));

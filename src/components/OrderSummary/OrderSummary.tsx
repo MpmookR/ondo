@@ -79,10 +79,17 @@ export interface ItemCardProps {
   onQtyChange: (qty: number) => void;
   /** Shown when the item no longer fits the customer's preferences. */
   warning?: string | null;
+  /** Set when the starter box picked it: why it's there ("For calm focus"). */
+  pickedReason?: string;
+  /** An add-on pre-added because the customer asked for one in onboarding: first box only. */
+  firstBoxOnly?: boolean;
 }
 
+/** What the customer asked for, in their words, for a pre-added add-on's label. */
+const askedFor: Partial<Record<Category, string>> = { bites: 'a snack', sweeteners: 'a sweetener' };
+
 /** One line in the box: pack, name, two-line description, up to three badges, price and stepper. */
-export function ItemCard({ item, qty, onQtyChange, warning }: ItemCardProps) {
+export function ItemCard({ item, qty, onQtyChange, warning, pickedReason, firstBoxOnly }: ItemCardProps) {
   const isDrink = isDrinkCategory(item.category);
   return (
     <article
@@ -105,6 +112,17 @@ export function ItemCard({ item, qty, onQtyChange, warning }: ItemCardProps) {
           </div>
         </div>
       </div>
+
+      {pickedReason && (
+        <p className="flex flex-wrap items-center gap-x-8 gap-y-4 px-8 font-sans text-caption">
+          <span className="flex items-center gap-4 font-semibold text-primary">
+            <Icon name="check" size={16} />
+            {firstBoxOnly ? `Added because you asked for ${askedFor[item.category] ?? 'it'}` : 'Picked for you'}
+          </span>
+          <span className="text-text-muted">{pickedReason}</span>
+          {firstBoxOnly && <Chip tone="outline">First box only</Chip>}
+        </p>
+      )}
 
       {warning && (
         <p className="flex items-start gap-4 px-8 font-sans text-body-sm text-danger">
@@ -157,6 +175,8 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
       qty={line.qty}
       onQtyChange={(qty) => onQtyChange(item.id, qty)}
       warning={warningFor?.(item)}
+      pickedReason={line.pickedReason}
+      firstBoxOnly={line.firstBoxOnly}
     />
   );
   const subgroup = ({ category, entries: list }: { category: Category; entries: Entry[] }) => (

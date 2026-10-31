@@ -32,6 +32,7 @@ React state (box, goal, plan)  →  homepage (/) and "Your box" (/box)
 | Route | Screen | Built from |
 | --- | --- | --- |
 | `/` | Homepage | `Preloader` (first visit per session), `HomeHero` (`BrewScene`, `TypedHeadline`, `ButtonLink`), `HowItWorks`, `BestSellers` (both loaded separately) |
+| `/onboarding` | Build your first box: eight questions, then the starter box | `WindowLight`, `OnboardingProgress`, `QuestionHeading`, `ChoiceCard`, `CupTally`, `CaffeinePicker`, `ChipGroup`, `Button` |
 | `/box` | Your box (order summary) | `PageHeader`, `PreferencesCard`, `DeliveryCard`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
 | `/shop?tab=for-you\|coffee\|tea\|matcha\|gear\|bites\|sweeteners` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `ViewBoxBar` |
 | `/checkout` | Checkout (demo, nothing is charged) | `PageHeader`, `Steps`, `OrderReview`, `DatePicker`, `WalletButtons`, `TextField`, `Checkbox`, `Divider` |
@@ -46,10 +47,10 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
 /src
   /app                    # Routes only: layout, /, /box, /shop, /checkout, /item/[id], globals.css
   /views                  # The three screens, composed from components (not part of the system)
-    HomePage.tsx  YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx  CheckoutPage.tsx
+    HomePage.tsx  OnboardingPage.tsx  YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx  CheckoutPage.tsx
   /components             # The design system: one folder per component, each with stories
     Icon/ Button/ Chip/ CategoryBadge/ CaffeineMeter/ BrewGuide/ Stepper/ Price/ ProductImage/
-    PageHeader/ HomeHero/ HowItWorks/ BestSellers/ Preloader/ InfoCards/ OrderSummary/ SuggestionCard/ SuggestionRail/
+    PageHeader/ HomeHero/ Onboarding/ HowItWorks/ BestSellers/ Preloader/ InfoCards/ OrderSummary/ SuggestionCard/ SuggestionRail/
     BoxTotal/ CategoryTabs/ CollapsibleSection/ ShopCard/ ViewBoxBar/ ItemDetail/
     BoxProvider/          # State shared by every page
     shared/useRadioGroup.ts  shared/useInView.ts  shared/useParallax.ts  shared/Reveal.tsx
@@ -60,9 +61,11 @@ layout), so moving between pages loses nothing. The theme is remembered per brow
     format.ts  routes.ts
     dates.ts              # Local YYYY-MM-DD dates, calendar grid, earliest delivery (tomorrow)
     delivery.ts           # Cups in the box and the suggested delivery frequency
+    starterBox.ts         # What onboarding puts in the first box (see prd.md, Starter box)
     payment.ts            # Card formatting, brand, Luhn and expiry checks (demo checkout)
   /data
     catalogue.ts  customer.ts  goals.ts  plans.ts  labels.ts  bestSellers.ts
+    onboarding.ts         # Questions, reason lines, skip defaults, kit and taste mappings
   /styles
     tokens.css
   /stories                # Foundations pages, intro, shared fixtures
@@ -112,16 +115,23 @@ interface BrewGuide {
   whisk?: string;                  // matcha, e.g. 'M-shape, 20 s'
 }
 
-interface Customer {               // the core onboarding answers
-  goal: Goal;
+interface Customer {               // the onboarding answers
+  goal: Goal | null;               // null: skipped (no goal score, neutral rail title)
   drinkers: Count;                 // how many people drink it
   cupsPerDay: Count;               // per person
   drinks: ('coffee' | 'tea' | 'matcha')[];   // empty = not sure yet
   brewKit: BrewKit[];              // what they brew with; empty = nothing yet
   maxCaffeine: 1 | 2 | 3 | 4 | 5;
   avoids: string[];
+  taste?: 'fruity' | 'chocolatey' | 'mellow';  // optional screen
+  extras?: ('bites' | 'sweeteners')[];  // the only answer that can pre-add an add-on
 }
-interface BoxLine { itemId: string; qty: number; }
+interface BoxLine {
+  itemId: string;
+  qty: number;
+  pickedReason?: string;           // set by the starter box ("For calm focus")
+  firstBoxOnly?: boolean;          // add-on pre-added from `extras`
+}
 ```
 
 ## Recommendation logic (`lib/recommend.ts`)
@@ -140,6 +150,19 @@ recommend(customer, box, catalogue, limit = 6): Suggestion[]
 5. **Stability:** the rail is worked out from `railLines`, a copy of the box taken when a page opens
    or a preference changes, so items added from the rail stay where they are and show a stepper.
 6. **Item page:** `recommendForItem(item, …)` runs the same function with that drink as the context.
+
+## Starter box (`lib/starterBox.ts`)
+
+```ts
+starterBox(customer, catalogue): { lines: BoxLine[]; leftOut: { category, reason }[] }
+```
+
+Drinks pass the rail's hard filters (taster packs excluded), score +3 goal, +1 brews with their kit,
++1 taste, and the top one per drink type is picked (ties to the lower price, at most three). Packs
+per drink make the box last about 30 days, between 1 and 3. Then one add-on per category in
+`extras`, only if it pairs with a picked drink and costs £6 or less, marked `firstBoxOnly`.
+Onboarding dispatches `startFirstBox` with the answers and these lines. Rules in
+[prd.md](prd.md#starter-box).
 
 ## Delivery suggestion (`lib/delivery.ts`)
 
