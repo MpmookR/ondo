@@ -114,7 +114,7 @@ function StepRow({ step, index }: { step: Step; index: number }) {
         </p>
         {/* After the last step, the next move: it arrives with that step's words. */}
         {index === steps.length - 1 && (
-          <span className="mt-12 self-start group-data-ready:opacity-0 group-data-seen:animate-soft-up" style={beat(6)}>
+          <span className="mt-12 self-center group-data-ready:opacity-0 lg:self-start group-data-seen:animate-soft-up" style={beat(6)}>
             <ButtonLink href={onboardingHref} size="lg" icon="arrow-right" iconPosition="end">
               Start with step one
             </ButtonLink>
@@ -148,13 +148,14 @@ function Ticker() {
 /** "How it works": an editorial zig-zag of three steps, product photography in arches, then a ticker. */
 export function HowItWorks() {
   return (
-    <section aria-labelledby="how-it-works-title" className="py-96 lg:py-128">
+    <section aria-labelledby="how-it-works-title" className="py-16 lg:py-128">
       <div className="mx-auto max-w-content px-margin">
         <Reveal className="flex flex-col items-center gap-16 text-center">
           <p className="font-sans text-eyebrow uppercase text-text-muted group-data-ready:opacity-0 group-data-seen:animate-soft-up">
             How it works
           </p>
-          <h2 id="how-it-works-title" className="font-heading text-display text-brand">
+          {/* Phones: the hero size, so each line fits on one row. From 1024px: the full display size. */}
+          <h2 id="how-it-works-title" className="font-heading text-hero text-brand lg:text-display">
             <span className="block">
               <WordReveal text="From your first sip" />
             </span>
