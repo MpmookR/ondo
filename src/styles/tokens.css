@@ -207,6 +207,11 @@
   --illo-drop-light: var(--raw-illo-drop-light);
   --illo-drop-dark: var(--raw-illo-drop-dark);
   --illo-steam: var(--raw-vanilla-50);
+  /* How it works: each step's arch is a solid brand colour block (never Flame, which is for the call
+     to action). Pack shots sit straight on it. */
+  --illo-arch-sky: var(--raw-columbia);
+  --illo-arch-leaf: var(--raw-green);
+  --illo-arch-earth: var(--raw-bistre);
 
   /* Category colours for this theme (layer 3 picks them up). Defined per theme, not per
      category, so a category always takes the colours of its nearest data-theme. */
@@ -251,6 +256,10 @@
   --illo-shade: transparent;
   --illo-mote: var(--raw-oat-200);
   --illo-steam: var(--raw-oat-200);
+  /* On the night page the blocks lift a step, so they still read as blocks. */
+  --illo-arch-sky: var(--raw-blue-700);
+  --illo-arch-leaf: var(--raw-night-600);
+  --illo-arch-earth: var(--raw-bistre);
   --illo-table-shadow: var(--raw-illo-table-shadow-night);
 
   --cat-coffee: var(--raw-coffee-light); --cat-coffee-subtle: var(--raw-night-700);  --cat-coffee-on: var(--raw-night-900);
@@ -312,6 +321,9 @@
   --color-illo-table-edge-top: var(--illo-table-edge-top);
   --color-illo-table-edge-bottom: var(--illo-table-edge-bottom);
   --color-illo-table-shadow: var(--illo-table-shadow);
+  --color-illo-arch-sky: var(--illo-arch-sky);
+  --color-illo-arch-leaf: var(--illo-arch-leaf);
+  --color-illo-arch-earth: var(--illo-arch-earth);
   --color-illo-coffee: var(--illo-coffee-top);
   --color-illo-crema: var(--illo-crema);
 
@@ -381,6 +393,9 @@
   --shadow-card: 0 1px 2px rgb(var(--theme-shadow-tint) / 0.04), 0 4px 12px rgb(var(--theme-shadow-tint) / 0.06);
   --shadow-raised: 0 1px 2px rgb(var(--theme-shadow-tint) / 0.08), 0 8px 24px rgb(var(--theme-shadow-tint) / 0.12);
   --shadow-bar: 0 -4px 16px rgb(var(--theme-shadow-tint) / 0.1);
+  /* Pack shots standing on a colour block (How it works): one soft shadow falling below, following
+     the pack's own outline. One value only: Tailwind wraps it in a single drop-shadow(). */
+  --drop-shadow-pack: 0 18px 14px rgb(var(--theme-shadow-tint) / 0.4);
 
   --container-frame: 402px;
   --container-column: 560px;

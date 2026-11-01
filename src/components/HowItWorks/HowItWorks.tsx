@@ -23,6 +23,8 @@ interface Step {
   body: string;
   detail: string;
   category: Category;
+  /** The arch's colour block: Columbia Blue, Cal Poly Green, Bistre in turn (`illo-arch-*`). */
+  fill: string;
   /** The photos inside the arch, centred a little below the middle (under the curve), clear of the edges as they drift. */
   art: ReactNode;
 }
@@ -33,6 +35,7 @@ const steps: Step[] = [
     body: 'Coffee, tea or matcha, how many cups a day and what you brew with.',
     detail: 'Two minutes · Skip any question',
     category: 'coffee',
+    fill: 'bg-illo-arch-sky',
     art: (
       <div className="flex h-full items-center justify-center -space-x-40 px-24 pt-64">
         <ProductImage category="coffee" image={pack('c-yirgacheffe')} sizes="20vw" className="aspect-3/4 w-2/5" />
@@ -46,6 +49,7 @@ const steps: Step[] = [
     body: 'Drinks that suit your mornings and stay under your caffeine limit, each with a reason it made the cut.',
     detail: 'Picked for you · Never over your limit',
     category: 'tea',
+    fill: 'bg-illo-arch-leaf',
     art: (
       <div className="flex h-full items-center justify-center -space-x-32 px-24 pt-64">
         <ProductImage category="tea" image={pack('t-sencha')} sizes="26vw" className="aspect-3/4 w-3/5" />
@@ -58,6 +62,7 @@ const steps: Step[] = [
     body: 'It arrives every 15, 30 or 45 days, or just once. Save up to 10% on a subscription and change it any time.',
     detail: 'Every 15, 30 or 45 days · Pause any time',
     category: 'matcha',
+    fill: 'bg-illo-arch-earth',
     art: (
       <div className="flex h-full items-center justify-center px-40 pt-64">
         <ProductImage category="gear" image={pack('g-pour-over')} sizes="30vw" className="aspect-3/4 w-4/5" />
@@ -66,14 +71,18 @@ const steps: Step[] = [
   },
 ];
 
-/** The arch: opens upwards on scroll-in; inside, the photo settles from a slight zoom and drifts on scroll. */
-function Arch({ category, children }: { category: Category; children: ReactNode }) {
+/**
+ * The arch: a solid brand-colour block that opens upwards on scroll-in; inside, the photo settles
+ * from a slight zoom and drifts on scroll.
+ */
+function Arch({ category, fill, children }: { category: Category; fill: string; children: ReactNode }) {
   const drift = useParallax<HTMLDivElement>(-0.1);
   return (
     <div data-category={category} className="aspect-4/5 w-full group-data-ready:opacity-0 group-data-seen:animate-arch-open">
-      <div className="relative size-full overflow-hidden rounded-t-pill bg-accent-subtle">
+      <div className={`relative size-full overflow-hidden rounded-t-pill ${fill}`}>
         <div ref={drift} className="parallax absolute -inset-y-48 inset-x-0">
-          <div className="h-full group-data-seen:animate-settle">{children}</div>
+          {/* The packs cast a soft shadow onto the arch, as if standing on a shelf. */}
+          <div className="h-full drop-shadow-pack group-data-seen:animate-settle">{children}</div>
         </div>
       </div>
     </div>
@@ -90,7 +99,7 @@ function StepRow({ step, index }: { step: Step; index: number }) {
       className="grid items-center gap-32 lg:grid-cols-12 lg:gap-gutter"
     >
       <div className={`lg:col-span-5 lg:row-start-1 ${flipped ? 'lg:col-start-8' : 'lg:col-start-1'}`}>
-        <Arch category={step.category}>{step.art}</Arch>
+        <Arch category={step.category} fill={step.fill}>{step.art}</Arch>
       </div>
 
       <div className={`flex flex-col gap-20 lg:col-span-6 lg:row-start-1 ${flipped ? 'lg:col-start-1' : 'lg:col-start-7'}`}>
@@ -148,7 +157,7 @@ function Ticker() {
 /** "How it works": an editorial zig-zag of three steps, product photography in arches, then a ticker. */
 export function HowItWorks() {
   return (
-    <section aria-labelledby="how-it-works-title" className="py-16 lg:py-128">
+    <section aria-labelledby="how-it-works-title" className="py-96 lg:py-128">
       <div className="mx-auto max-w-content px-margin">
         <Reveal className="flex flex-col items-center gap-16 text-center">
           <p className="font-sans text-eyebrow uppercase text-text-muted group-data-ready:opacity-0 group-data-seen:animate-soft-up">
