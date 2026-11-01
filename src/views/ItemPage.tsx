@@ -17,6 +17,7 @@ import {
   Chip,
   DetailAccordion,
   OrderBar,
+  SiteFooter,
   PageHeader,
   ProductImage,
   SuggestionRail,
@@ -66,7 +67,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
 
       <main
         data-category={item.category}
-        className="mx-auto w-full max-w-content bg-bg-surface pb-144 lg:grid lg:grid-cols-2 lg:items-start lg:gap-24 lg:bg-transparent lg:px-24 lg:pt-8"
+        className="mx-auto w-full max-w-content bg-bg-surface pb-48 lg:grid lg:grid-cols-2 lg:items-start lg:gap-24 lg:bg-transparent lg:px-24 lg:pt-8"
       >
         <ProductImage
           category={item.category}
@@ -124,6 +125,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
         </div>
       </main>
 
+      <SiteFooter clearFixedBar />
       <OrderBar item={item} qty={qty} onQtyChange={(n) => setQty(item.id, n)} blockedReason={unavailableReason(item, limits)} />
     </>
   );

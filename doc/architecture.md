@@ -31,12 +31,12 @@ React state (box, answers, plan; starts with an empty box and no answers)  →  
 
 | Route | Screen | Built from |
 | --- | --- | --- |
-| `/` | Homepage | `Preloader` (first visit per session), `HomeHero` (`BrewScene`, `TypedHeadline`, `ButtonLink`), `HowItWorks`, `BestSellers` (both loaded separately) |
+| `/` | Homepage | `Preloader` (first visit per session), `HomeHero` (`BrewScene`, `TypedHeadline`, `ButtonLink`), `HowItWorks`, `BestSellers` (both loaded separately), `SiteFooter` |
 | `/onboarding` | Build your first box: eight questions, then the starter box | `WindowLight`, `OnboardingProgress`, `QuestionHeading`, `ChoiceCard`, `CupTally`, `CaffeinePicker`, `ChipGroup`, `Button` |
 | `/box` | Your box (order summary) | `PageHeader`, `PreferencesCard`, `DeliveryCard`, `OrderSummary`, `SuggestionRail`, `BoxTotal` |
-| `/shop?tab=for-you\|coffee\|tea\|matcha\|gear\|bites\|sweeteners` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `ViewBoxBar` |
+| `/shop?tab=for-you\|coffee\|tea\|matcha\|gear\|bites\|sweeteners` | Shop | `PageHeader`, `CategoryTabs`, `ShopCard`, `CollapsibleSection`, `SiteFooter`, `ViewBoxBar` |
 | `/checkout` | Checkout (demo, nothing is charged) | `PageHeader`, `Steps`, `OrderReview`, `DatePicker`, `WalletButtons`, `TextField`, `Checkbox`, `Divider` |
-| `/item/[id]` | Product page (pre-rendered for every item) | `PageHeader`, `ProductImage`, `BrewHighlights`, `DetailAccordion`, `BrewGuide`, `SuggestionRail`, `OrderBar` |
+| `/item/[id]` | Product page (pre-rendered for every item) | `PageHeader`, `ProductImage`, `BrewHighlights`, `DetailAccordion`, `BrewGuide`, `SuggestionRail`, `SiteFooter`, `OrderBar` |
 
 **Back on an item page** returns to the last list page the customer was on (home, a shop tab or
 Your box; each marks itself with `useReturnHere`), however many products they hopped through via
@@ -56,7 +56,7 @@ a missing, blocked or old-shaped save just starts fresh. The theme is remembered
     HomePage.tsx  OnboardingPage.tsx  YourBoxPage.tsx  ShopPage.tsx  ItemPage.tsx  CheckoutPage.tsx
   /components             # The design system: one folder per component, each with stories
     Icon/ Button/ Chip/ CategoryBadge/ CaffeineMeter/ BrewGuide/ Stepper/ Price/ ProductImage/
-    PageHeader/ HomeHero/ Onboarding/ HowItWorks/ BestSellers/ Preloader/ InfoCards/ OrderSummary/ SuggestionCard/ SuggestionRail/
+    PageHeader/ HomeHero/ Onboarding/ SiteFooter/ HowItWorks/ BestSellers/ Preloader/ InfoCards/ OrderSummary/ SuggestionCard/ SuggestionRail/
     BoxTotal/ CategoryTabs/ CollapsibleSection/ ShopCard/ ViewBoxBar/ ItemDetail/
     BoxProvider/          # State shared by every page
     shared/useRadioGroup.ts  shared/useInView.ts  shared/useParallax.ts  shared/Reveal.tsx

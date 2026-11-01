@@ -9,6 +9,13 @@ export interface TypedHeadlineProps {
   lead?: string;
   /** What screen readers hear instead of every phrase in turn. Defaults to the lead and phrases joined. */
   label?: string;
+  /** Fixed words on the typing line, before the typed part, e.g. "Your next cup is ". */
+  prefix?: string;
+  /** False: type through once and settle on the last phrase, instead of going round again. */
+  loop?: boolean;
+  /** False: hold the first phrase and wait (e.g. until it scrolls into view). */
+  play?: boolean;
+  as?: 'h1' | 'h2' | 'p';
   className?: string;
 }
 
@@ -28,7 +35,7 @@ type Phase = 'hold' | 'deleting' | 'typing';
  * It starts fully typed (no empty flash, and it reads fine without JavaScript), and stays still
  * on the last phrase when the visitor prefers reduced motion.
  */
-export function TypedHeadline({ phrases, lead, label, className = '' }: TypedHeadlineProps) {
+export function TypedHeadline({ phrases, lead, label, prefix, loop = true, play = true, as: Tag = 'h1', className = '' }: TypedHeadlineProps) {
   const [index, setIndex] = useState(0);
   const [length, setLength] = useState(phrases[0]?.length ?? 0);
   const [phase, setPhase] = useState<Phase>('hold');
@@ -43,9 +50,11 @@ export function TypedHeadline({ phrases, lead, label, className = '' }: TypedHea
   }, []);
 
   useEffect(() => {
-    if (still || phrases.length < 2) return;
+    if (still || !play || phrases.length < 2) return;
     const phrase = phrases[index];
     const isLast = index === phrases.length - 1;
+    // Once through: settle on the last phrase.
+    if (!loop && isLast && phase === 'hold') return;
     let delay: number;
     let step: () => void;
 
@@ -73,23 +82,24 @@ export function TypedHeadline({ phrases, lead, label, className = '' }: TypedHea
 
     const timer = window.setTimeout(step, delay);
     return () => window.clearTimeout(timer);
-  }, [still, phrases, index, length, phase]);
+  }, [still, play, loop, phrases, index, length, phase]);
 
   const last = phrases[phrases.length - 1] ?? '';
   const shown = still ? last : (phrases[index] ?? '').slice(0, length);
 
   return (
-    <h1 className={className}>
-      <span className="sr-only">{label ?? [lead, ...phrases].filter(Boolean).join(' ')}</span>
+    <Tag className={className}>
+      <span className="sr-only">{label ?? [lead, prefix, ...phrases].filter(Boolean).join(' ')}</span>
       {lead && (
         <span aria-hidden="true" className="block whitespace-nowrap">
           {lead}
         </span>
       )}
-      <span aria-hidden="true" className="block whitespace-nowrap">
+      <span aria-hidden="true" className={`block ${prefix ? '' : 'whitespace-nowrap'}`}>
+        {prefix}
         {/* A no-break space keeps the line's height while it's empty. */}
-        <span className="border-r-4 border-spark pr-4 animate-caret motion-reduce:animate-none">{shown || ' '}</span>
+        <span className="whitespace-nowrap border-r-4 border-spark pr-4 animate-caret motion-reduce:animate-none">{shown || ' '}</span>
       </span>
-    </h1>
+    </Tag>
   );
 }

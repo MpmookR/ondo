@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { HomeHero } from '@/components/HomeHero';
+import { SiteFooter } from '@/components/SiteFooter';
 import { useBox, useReturnHere } from '@/components/BoxProvider';
 import { homeHref } from '@/lib/routes';
 import { Preloader, type PreloadPhase } from '@/components/Preloader';
@@ -34,6 +35,7 @@ export function HomePage() {
         <HowItWorks />
         <BestSellers items={bestSellers} />
       </main>
+      <SiteFooter />
     </>
   );
 }

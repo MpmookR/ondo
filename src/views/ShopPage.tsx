@@ -18,7 +18,7 @@ import {
 import { browsingLimits, qtyOf } from '@/lib/box';
 import { recommend } from '@/lib/recommend';
 import { boxHref, onboardingHref, shopHref } from '@/lib/routes';
-import { BuildBoxPrompt, CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, ViewBoxBar, useBox, useFreshRail, useReturnHere } from '@/components';
+import { BuildBoxPrompt, CaffeineFilter, CategoryTabs, CollapsibleSection, PageHeader, ShopCard, SiteFooter, ViewBoxBar, useBox, useFreshRail, useReturnHere } from '@/components';
 
 /** The homepage's best sellers, shown on For you until the customer has told us anything. */
 const bestSellers = bestSellerIds.map(itemById).filter((item): item is Item => Boolean(item));
@@ -159,11 +159,12 @@ export function ShopPage() {
         id={PANEL_ID}
         role="tabpanel"
         aria-labelledby={`tab-${tab.id}`}
-        className="mx-auto flex w-full max-w-content flex-col gap-16 px-16 pb-144 pt-16 lg:gap-24 lg:px-24 lg:pt-24"
+        className="mx-auto flex w-full max-w-content flex-col gap-16 px-16 pb-64 pt-16 lg:gap-24 lg:px-24 lg:pt-24"
       >
         {tab.id === 'for-you' ? renderForYou() : renderCategory(tab.id)}
       </main>
 
+      <SiteFooter clearFixedBar />
       <ViewBoxBar totals={totals} />
     </>
   );

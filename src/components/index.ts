@@ -13,6 +13,7 @@ export * from './PageHeader';
 export * from './HomeHero';
 export * from './HowItWorks';
 export * from './Onboarding';
+export * from './SiteFooter';
 export * from './BestSellers';
 export * from './Preloader';
 export * from './InfoCards';
