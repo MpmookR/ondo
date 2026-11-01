@@ -108,7 +108,8 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
       return { ...state, customer: action.customer, lines, railLines: lines, answered: true };
     }
     case 'restore':
-      return action.state;
+      // A reload is a fresh page open: the rail is worked out from the box as it is now.
+      return { ...action.state, railLines: action.state.lines };
     case 'setDeliveryDate':
       return { ...state, deliveryDate: action.date };
   }

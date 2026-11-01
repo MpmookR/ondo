@@ -7,7 +7,8 @@ import { railTitle } from '@/data/goals';
 import { planById } from '@/data/plans';
 import { suggestDelivery } from '@/lib/delivery';
 import { browsingLimits } from '@/lib/box';
-import { unavailableReason } from '@/lib/recommend';
+import { bestSellerSuggestions, unavailableReason } from '@/lib/recommend';
+import { bestSellerIds } from '@/data/bestSellers';
 import {
   BoxTotal,
   BuildBoxPrompt,
@@ -33,6 +34,9 @@ export function YourBoxPage() {
   const router = useRouter();
   const { state, dispatch, totals, suggestions, setQty, theme, setTheme } = useBox();
   const plan = state.plan ? planById(state.plan) : null;
+  // A brand-new visitor: nothing in the box (when the page opened) and no answers, so nothing to go
+  // with yet. The rail shows the best sellers; it stays put while they add from it, like any rail.
+  const coldStart = !state.answered && state.railLines.length === 0;
   // Counts taps on checkout with no delivery chosen; each one opens and points at the Delivery card.
   const [deliveryAttention, setDeliveryAttention] = useState(0);
   const checkout = () => (plan ? router.push('/checkout') : setDeliveryAttention((n) => n + 1));
@@ -74,8 +78,8 @@ export function YourBoxPage() {
 
         <div className="mx-auto mt-16 flex max-w-column flex-col gap-16 lg:sticky lg:top-24 lg:col-span-5 lg:mx-0 lg:mt-0 lg:max-w-none">
           <SuggestionRail
-            title={railTitle(state.customer.goal)}
-            suggestions={suggestions}
+            title={coldStart ? 'Best sellers' : railTitle(state.customer.goal)}
+            suggestions={coldStart ? bestSellerSuggestions(bestSellerIds, browsingLimits(state), catalogue) : suggestions}
             lines={state.lines}
             onQtyChange={setQty}
           />

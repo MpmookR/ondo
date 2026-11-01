@@ -190,6 +190,14 @@ export function recommendForAddOn(
   return [...partners, ...topUp];
 }
 
+/** The best sellers as rail cards, in order, minus anything the customer's limits rule out. */
+export function bestSellerSuggestions(ids: string[], customer: Customer, catalogue: Item[]): Suggestion[] {
+  return ids
+    .map((id) => catalogue.find((i) => i.id === id))
+    .filter((i): i is Item => Boolean(i) && passesFilters(i!, customer, []))
+    .map((item) => ({ item, score: 0, reason: 'Best seller' }));
+}
+
 /** Why an item can't be added on the shop grid (null if it can). */
 export function unavailableReason(item: Item, customer: Customer): string | null {
   if (!item.inStock) return 'Back soon';

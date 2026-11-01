@@ -172,8 +172,10 @@ flowchart LR
    in the box isn't added twice. The Shop "For you" tab has
    nothing to rank by yet, so it shows a centred "Tell us a little about you" card ("Tell us how you
    like your cup, and we'll find your perfect match") with the same button, then the best sellers.
-3. **Rail before preferences.** Pairings with what's in the box and easy-to-try tasters, no goal
-   score and no goal title ("Goes with your box"). With no drink in the box, no bites or
+3. **Rail before preferences.** With an empty box there's nothing to go with yet, so the rail is
+   the **best sellers** (titled "Best sellers"; it stays put while they add from it). Once
+   something is in the box: pairings with it and easy-to-try tasters, no goal score and no goal
+   title ("Goes with your box"). With no drink in the box, no bites or
    sweeteners (nothing to go with). The safe defaults still apply as hard filters (caffeine limit
    3), but they only filter **suggestions**: the shop tabs, item pages and Your box show and allow
    everything until the customer sets a limit or an avoid themselves.

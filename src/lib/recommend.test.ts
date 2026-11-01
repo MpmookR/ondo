@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { catalogue } from '../data/catalogue';
 import { defaultBox, defaultCustomer } from '../data/customer';
-import { recommend, recommendForAddOn, recommendForItem, unavailableReason } from './recommend';
+import { bestSellerSuggestions, recommend, recommendForAddOn, recommendForItem, unavailableReason } from './recommend';
 import { boxReducer, totals, type BoxState } from './box';
 
 const ids = (goal = defaultCustomer.goal) =>
@@ -153,4 +153,12 @@ test('add-on page: gear shows the drinks it brews; bites the drinks they pair wi
     ['c-half-half', 'Pairs with this'],
     ['c-moka', 'Best seller'],
   ]);
+});
+
+test('best sellers for a new visitor: in order, labelled, minus anything their limits rule out', () => {
+  const ids = ['c-moka', 't-sencha', 'm-everyday', 'c-night-shift'];
+  const open = { ...defaultCustomer, maxCaffeine: 5 as const, avoids: [] };
+  assert.deepEqual(bestSellerSuggestions(ids, open, catalogue).map((s) => [s.item.id, s.reason]), ids.map((id) => [id, 'Best seller']));
+  // With a caffeine limit of 4, the two strongest coffees drop out.
+  assert.deepEqual(bestSellerSuggestions(ids, { ...open, maxCaffeine: 4 }, catalogue).map((s) => s.item.id), ['t-sencha', 'm-everyday']);
 });
