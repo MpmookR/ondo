@@ -55,8 +55,9 @@ export function CheckoutPage() {
     else setPaid(true);
   };
 
+  // Checkout is only reached from Your box, so Back returns there (with the box and delivery as they were).
   const header = (
-    <PageHeader backHref="/" theme={theme} onThemeChange={setTheme}>
+    <PageHeader backHref={boxHref} theme={theme} onThemeChange={setTheme}>
       {totals.discount > 0 && <SavingsLine saving={formatPrice(totals.discount)} learnMoreHref={null} />}
       <Steps steps={CHECKOUT_STEPS} current={STEP_PAYMENT} />
     </PageHeader>
