@@ -4,6 +4,7 @@ import { useId, useState, type ReactNode } from 'react';
 import type { Customer, Item } from '@/types';
 import { avoidLabel, isDrinkCategory, isFoodCategory } from '@/data/labels';
 import { formatPrice } from '@/lib/format';
+import { afterSaving, repeatRule } from '@/lib/box';
 import { Icon } from '../Icon';
 import { Stepper } from '../Stepper';
 
@@ -110,10 +111,15 @@ export interface OrderBarProps {
   onQtyChange: (qty: number) => void;
   /** Why it can't be added. Ignored once it's in the box. */
   blockedReason?: string | null;
+  /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
+  discountRate?: number;
 }
 
 /** Pinned to the bottom: "Add to box · price", or quantity + stepper once it's in the box. */
-export function OrderBar({ item, qty, onQtyChange, blockedReason }: OrderBarProps) {
+export function OrderBar({ item, qty, onQtyChange, blockedReason, discountRate: rate = 0 }: OrderBarProps) {
+  // Only what repeats gets the subscription saving; gear, tasters and add-ons start at full price.
+  const discountRate = repeatRule(item) === 'always' ? rate : 0;
+  const price = afterSaving(item.price, discountRate);
   return (
     <div className="pb-safe fixed inset-x-0 bottom-0 z-30 bg-bg-surface px-16 pt-12 shadow-bar">
       <div aria-live="polite" className="mx-auto flex min-h-52 max-w-frame items-center justify-between gap-16">
@@ -128,14 +134,21 @@ export function OrderBar({ item, qty, onQtyChange, blockedReason }: OrderBarProp
               onClick={() => onQtyChange(1)}
               className="flex min-h-52 w-full items-center justify-center rounded-pill bg-action font-sans text-label font-bold uppercase tracking-wide text-action-text transition-opacity duration-120 ease-brew hover:opacity-90"
             >
-              Add to box · {formatPrice(item.price)}
+              Add to box ·{' '}
+              {discountRate > 0 && (
+                <s className="mr-4 font-medium opacity-80">
+                  <span className="sr-only">was </span>
+                  {formatPrice(item.price)}
+                </s>
+              )}
+              {formatPrice(price)}
             </button>
           )
         ) : (
           <>
             <p className="flex min-w-0 flex-col gap-2">
               <span className="font-sans text-label font-bold">{qty} in your box</span>
-              <span className="font-sans text-caption tabular-nums text-text-muted">{formatPrice(item.price * qty)}</span>
+              <span className="font-sans text-caption tabular-nums text-text-muted">{formatPrice(price * qty)}</span>
             </p>
             <Stepper value={qty} onChange={onQtyChange} itemName={item.name} size="bar" />
           </>

@@ -113,7 +113,8 @@ const pairs = (a: Item, b: Item) => Boolean(a.pairsWith?.includes(b.id) || b.pai
  * Step 6: one add-on per category the customer said yes to, and only then. It must pass the hard
  * filters and be easy to try (£6 or less). A pairing with a drink in the box wins; when nothing in
  * the category pairs, they still get the one they asked for: the cheapest that fits. Nothing in the
- * category passes the filters: nothing is added.
+ * category passes the filters: nothing is added. Like every add-on, it's first box only until the
+ * customer turns on "Keep in every delivery" (see `repeatRule` in box.ts).
  */
 function pickAddOns(extras: Extra[], drinks: Item[], customer: Customer, catalogue: Item[]): BoxLine[] {
   const lines: BoxLine[] = [];
@@ -125,7 +126,7 @@ function pickAddOns(extras: Extra[], drinks: Item[], customer: Customer, catalog
     const item = paired?.item ?? fits[0];
     if (!item) continue;
     const pickedReason = paired?.drink ? `Goes with your ${paired.drink.name}` : 'Easy to try';
-    lines.push({ itemId: item.id, qty: 1, firstBoxOnly: true, pickedReason });
+    lines.push({ itemId: item.id, qty: 1, pickedReason });
   }
   return lines;
 }

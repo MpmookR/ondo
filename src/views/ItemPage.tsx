@@ -39,7 +39,7 @@ const caffeineCopy: Record<number, string> = {
 export function ItemPage({ itemId }: { itemId: string }) {
   useFreshRail();
   const router = useRouter();
-  const { state, setQty, theme, setTheme, returnTo } = useBox();
+  const { state, setQty, theme, setTheme, returnTo, discountRate } = useBox();
   const item = itemById(itemId)!;
   const isDrink = isDrinkCategory(item.category);
   const qty = qtyOf(state.lines, item.id);
@@ -119,6 +119,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
                 suggestions={pairings}
                 lines={state.lines}
                 onQtyChange={setQty}
+                discountRate={discountRate}
               />
             </div>
           )}
@@ -126,7 +127,7 @@ export function ItemPage({ itemId }: { itemId: string }) {
       </main>
 
       <SiteFooter clearFixedBar />
-      <OrderBar item={item} qty={qty} onQtyChange={(n) => setQty(item.id, n)} blockedReason={unavailableReason(item, limits)} />
+      <OrderBar item={item} qty={qty} onQtyChange={(n) => setQty(item.id, n)} blockedReason={unavailableReason(item, limits)} discountRate={discountRate} />
     </>
   );
 }

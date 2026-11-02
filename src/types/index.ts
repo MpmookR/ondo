@@ -74,8 +74,11 @@ export interface BoxLine {
   qty: number;
   /** Set on lines the starter box picked: why it's there ("For calm focus"). */
   pickedReason?: string;
-  /** An add-on pre-added from `extras`: sent in the first box only, unless the customer keeps it. */
-  firstBoxOnly?: boolean;
+  /**
+   * Bites and sweeteners only: send it in every delivery of a subscription. Unset means first box
+   * only, the default for every add-on, however it got there. See `repeatRule` in lib/box.
+   */
+  everyDelivery?: boolean;
 }
 
 export interface Plan {

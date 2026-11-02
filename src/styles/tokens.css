@@ -293,6 +293,8 @@
   --color-action: var(--theme-action);
   --color-action-text: var(--theme-action-text);
   --color-wallet-apple: var(--theme-wallet-apple);
+  /* Behind a dialog: the theme's shadow tint, so it darkens the page in either theme. */
+  --color-scrim: rgb(var(--theme-shadow-tint) / 0.45);
   --color-brand: var(--theme-brand);
   --color-on-brand: var(--theme-on-brand);
   --color-spark: var(--theme-spark);

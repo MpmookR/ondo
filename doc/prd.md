@@ -111,8 +111,7 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
 - **Onboarding** (`/onboarding`) and the **starter box** are built: "Build your first box" on the
   Homepage opens it (see [Onboarding](#onboarding-build-your-first-box-next) and
   [Starter box](#starter-box)), and the "Want help building your box?" prompt for customers who
-  start in the shop, and Delivery with nothing chosen. Still to come: opening a single question from
-  "Edit preferences", the "Keep in every delivery" toggle on first-box-only add-ons and the "left
+  start in the shop, and Delivery with nothing chosen. Still to come: the "left
   out" line. A new visitor starts with an empty box, no answers and no delivery choice.
 
 ## User flow
@@ -148,7 +147,8 @@ flowchart LR
   DL -->|"Yes"| CO["Checkout: Sign up, Delivery, Payment"]
   CO --> CF["Order confirmed"]
   BOX -->|"Add more"| S
-  BOX -->|"Edit preferences"| Q1
+  BOX -->|"Edit preferences"| EP["Edit answers in place on Your box"]
+  EP --> BOX
 ```
 
 ### Path A: Build your first box (guided)
@@ -194,8 +194,8 @@ flowchart LR
   shows an inline message ("Choose how often you'd like your box, or a one-off, to go to
   checkout"); the message goes as soon as they pick. The button is never disabled without a
   reason. Reaching `/checkout` without a choice shows "Choose your delivery first" with a link back.
-- **Edit preferences** reopens onboarding at the question tapped and returns to Your box; the rail
-  rebuilds from the current box (see [Editing answers later](#editing-answers-later)).
+- **Edit preferences** opens every answer in place on Your box, with "Done"; no onboarding again.
+  The rail rebuilds from the current box (see [Editing answers later](#editing-answers-later)).
 - **Add more** goes back to the Shop with the box kept.
 - **Empty box** (every item removed): the rail is replaced by "Start with a drink" linking to the
   Shop, and Checkout is hidden.
@@ -288,9 +288,11 @@ roast suggestions, explore for how far the rail strays from what they drink now)
 
 ### Editing answers later
 
-"Edit preferences" on Your box opens the screen for the answer tapped. "Done" goes back to Your
-box instead of walking through the remaining screens. The rail rebuilds from the current box;
-the starter box is never rebuilt, so edits don't swap items out from under the customer.
+"Edit preferences" on Your box swaps the summary for the answers themselves (goal, people, cups,
+drinks, brew kit, caffeine limit, avoids), all in place, with "Done" to close. No onboarding again.
+The rail rebuilds from the current box as soon as an answer changes; the starter box is never
+rebuilt, so edits don't swap items out from under the customer. Items already in the box that no
+longer fit (over the new limit, or containing a new avoid) are flagged, not removed.
 
 ### How the answers feed the rules
 
@@ -326,7 +328,7 @@ interface Customer {
 interface BoxLine {
   // …existing fields
   pickedReason?: string;  // why the starter box picked it ("For calm focus")
-  firstBoxOnly?: boolean; // true for add-ons pre-added from `extras`
+  everyDelivery?: boolean; // bites and sweeteners: kept in every delivery (off = first box only)
 }
 ```
 
@@ -377,11 +379,11 @@ tab with the customer's filters applied.
    pairs, the customer still asked for one, so pick the cheapest that passes, with the reason "Easy
    to try". Only if nothing in the category passes the filters is nothing added.
 3. Add **one**, quantity 1.
-4. Mark it **first box only** (`firstBoxOnly`): it is not part of later deliveries unless the
-   customer turns on "Keep in every delivery" on that line.
-5. Show it in the add-ons group with its reason, never folded into a drink line: "Added because
-   you asked for a snack · Goes with your Kyoto Ceremonial Matcha", a "First box only" label, the
-   toggle and one-tap "Remove". The total includes it like any other line.
+4. It's **first box only**, like every add-on: not part of later deliveries unless the customer
+   turns on "Keep in every delivery" on that line (see [Keep in every delivery](#keep-in-every-delivery)).
+5. Show it in the add-ons group with its reason, never folded into a drink line: "Picked for you ·
+   Goes with your Kyoto Ceremonial Matcha", the "Keep in every delivery" switch (with a
+   subscription) and one-tap "Remove". The total includes it like any other line.
 
 **Never in the starter box:** gear (pricier, and they may already own it), more than one item per
 add-on category, or any add-on without a yes in `extras`.
@@ -441,6 +443,13 @@ One Delivery card: **how often**, then **the first delivery date**.
 | Every 30 days | 5% |
 | Every 45 days | 5% |
 | One-off | None (full price) |
+
+**The saving is for what's in the subscription**: drinks, and the bites and sweeteners kept in every
+delivery. Gear, tasters and first-box-only add-ons are bought once, at full price, so the first box's
+saving is worked out on the repeating lines only. Once a subscription is chosen, each repeating price
+shows the saving where the choice is made (box lines, rail cards, shop cards, the item page's order
+bar): the price after it, with the full price struck through. One-off lines show their full price,
+and turning on "Keep in every delivery" brings the saving to that line.
 
 **Suggestion.** Worked out from the box and the preferences:
 
@@ -524,6 +533,35 @@ Everything that isn't a drink is an add-on, grouped in the box and the shop by c
 - Only gear can "brew" a drink. Bites and sweeteners only pair.
 - Bites and sweeteners are food, so their "Contains" box always lists the allergens we track (dairy,
   nuts, gluten, soya, sesame), or says there are none. Avoids work on them like on drinks.
+
+### Keep in every delivery
+
+With a subscription, what comes again after the first box:
+
+| Line | Every delivery? |
+| --- | --- |
+| Drinks (full packs) | Always: they are the subscription |
+| Tasters and gear | Never: tasters are for trying, and nobody needs a moka pot every 15 days |
+| Bites and sweeteners | The customer's choice: **first box only** until they turn it on |
+
+- **First box only is the default for every bite and sweetener,** however it got into the box
+  (pre-added from onboarding, the rail or the shop). Nothing extra repeats unless they keep it,
+  which answers "does this repeat every time?" where the worry starts.
+- On Your box, each bite and sweetener line shows a **"Keep in every delivery"** switch, with
+  "First box only" or "Comes every 15 days" under it. Only with a subscription: a one-off, or no
+  delivery chosen yet, has nothing to repeat, so the switch is hidden (the choice is kept if they
+  switch back). Gear and tasters say "First box only" next to their price.
+- **Turning it on asks first**: "Add to your subscription?", with the item, how often and the price,
+  and "You can add, remove or cancel anything in your subscription at any time." Cancel or Add to
+  subscription; Escape or a tap outside cancels. Turning it off doesn't ask.
+- **The price stays honest.** When the first box and later deliveries differ, both show: "£52.20
+  first box, then £23.40 every 15 days" on Your box, "first box only" next to those lines at
+  checkout with the price of later deliveries under the total, and the later price on the order
+  confirmation.
+- The quantity carries over (2 packs kept means 2 every delivery). Removing the line removes the
+  choice. A kept line that stops fitting the preferences is flagged like any other, and stays kept.
+- **Measure:** share of bites and sweeteners kept, and the value of later deliveries compared with
+  the first box (AOV beyond the first box, only from what customers chose to keep).
 
 ## Wording rules
 

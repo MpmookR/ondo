@@ -30,7 +30,7 @@ export function ShopPage() {
   useFreshRail();
   const router = useRouter();
   const params = useSearchParams();
-  const { state, totals, setQty, theme, setTheme } = useBox();
+  const { state, totals, discountRate, setQty, theme, setTheme } = useBox();
   const { customer } = state;
   const limits = browsingLimits(state);
   const goal = goalById(customer.goal);
@@ -43,7 +43,7 @@ export function ShopPage() {
   const setTab = (id: ShopTabId) => router.replace(shopHref(id), { scroll: false });
 
   const card = (item: Item, extra: { reason?: string; unavailable?: string } = {}) => (
-    <ShopCard key={item.id} item={item} qty={qtyOf(state.lines, item.id)} onQtyChange={(q) => setQty(item.id, q)} {...extra} />
+    <ShopCard key={item.id} item={item} qty={qtyOf(state.lines, item.id)} onQtyChange={(q) => setQty(item.id, q)} discountRate={discountRate} {...extra} />
   );
 
   // Nothing to go on yet: ask for a little about them, and show what other people buy meanwhile.

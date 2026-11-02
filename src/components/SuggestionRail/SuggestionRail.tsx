@@ -8,6 +8,8 @@ export interface SuggestionRailProps {
   lines: BoxLine[];
   onQtyChange: (itemId: string, qty: number) => void;
   className?: string;
+  /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
+  discountRate?: number;
 }
 
 /**
@@ -15,7 +17,7 @@ export interface SuggestionRailProps {
  * short enough to keep the box total in view.
  * Hidden when nothing qualifies: an empty box is worse than no box.
  */
-export function SuggestionRail({ title, suggestions, lines, onQtyChange, className = '' }: SuggestionRailProps) {
+export function SuggestionRail({ title, suggestions, lines, onQtyChange, className = '', discountRate }: SuggestionRailProps) {
   if (suggestions.length === 0) return null;
   return (
     <section
@@ -33,6 +35,7 @@ export function SuggestionRail({ title, suggestions, lines, onQtyChange, classNa
             suggestion={s}
             qty={qtyOf(lines, s.item.id)}
             onQtyChange={(qty) => onQtyChange(s.item.id, qty)}
+            discountRate={discountRate}
           />
         ))}
       </div>

@@ -80,6 +80,7 @@ its nearest `data-theme`, even a light section inside a dark page.
 | `bg-bg-subtle` | Vanilla | night-700 (Cal Poly Green) |
 | `text-text-primary` / `text-text-muted` | Bistre / bistre-600 `#7A5444` | Vanilla / oat-200 `#D8CCA5` |
 | `border-border` / `border-border-strong` | vanilla-300 `#F3E0A8` / bistre-400 `#9C7E62` | night-600 / green-500 |
+| `bg-scrim` | the shadow tint (bistre) at 45% | black at 45% |
 | `bg-action` + `text-action-text` | Flame + bistre-950 | Flame + night-900 |
 | `bg-brand`, `border-brand` + `text-on-brand` | Cal Poly Green + Vanilla | green-300 `#A8CFA4` + night-900 |
 | `border-spark`, `bg-spark` | Flame | Flame |
@@ -244,7 +245,9 @@ at 402px, then `md:` / `lg:` add columns.
 | `CaffeineMeter` | 5 beans filled to the level + text. `compact` keeps the words for screen readers only. |
 | `BrewGuide` | Ratio, water, time in mono; tea adds steeps, matcha adds the whisk. |
 | `Stepper` | 0 → outlined "Add to box"; 1 → bin + plus; 2+ → minus + plus. 24px icons, 44px hit areas. Sizes `default`, `compact`, `bar`. |
-| `Price` | Display face, tabular figures; optional was-price and "each". |
+| `Switch` | An on/off choice that applies straight away ("Keep in every delivery"). `role="switch"`, named by visible text (`labelledBy`); `bg-primary` when on, `bg-border-strong` off; 44px tap target around a 36 × 20 track. |
+| `ConfirmDialog` | Asks once before a choice that costs money later. Native modal `dialog`: focus stays inside, Escape or a tap outside cancels, focus returns to the control. Card on `bg-scrim`; Cancel (secondary) and the confirm action (primary). |
+| `Price` | Display face, tabular figures; optional was-price and "each". With `discountRate` (a subscription is chosen, and the item repeats) it shows the price after the saving with the full price struck through. One-off items (gear, tasters, add-ons not kept) get no `discountRate`. |
 | `ProductImage` | Pack shot. Every product uses its photo (`item.image`: transparent 3:4 art from `public/brand/shop`, web copies at 304 and 684px in `public/brand/shop/web`), sitting straight on its card with no backing; pass `sizes` for its display width. An item without one falls back to a drawn pack or its category icon. |
 
 ### Patterns
@@ -271,9 +274,9 @@ at 402px, then `md:` / `lg:` add columns.
 | `SiteFooter` | Homepage, Shop, item pages | The brand sign-off: a greeting for the visitor's time of day ("Good morning." / "Good afternoon." / "Good evening.", from their device clock, set in the browser) over "Your next cup is picked / packed / on its way.", typed once with `TypedHeadline` when it scrolls into view and settling on the last (still under reduced motion), then links (Shop, Your box, Build your first box), the ONDO wordmark set across the full width (SVG text, its viewBox cropped to the letters so it scales evenly), and the portfolio note with a link to the design system. `bg-brand` / `text-on-brand`, so the theme swaps them. Words fade up on scroll-in. `clearFixedBar` leaves room for the shop's and item page's bottom bar. Not on Your box, onboarding or checkout. |
 | `BuildBoxPrompt` | Your box, Shop (For you) | Shown until the customer has answered anything: a title, one line, and an outlined "Help me build my box" to onboarding (the page's Flame button stays checkout). An offer, never a gate. `align="start"` replaces `PreferencesCard` on Your box ("Want help building your box?"); `align="centered"` heads the shop's For you tab ("Tell us a little about you"), above the best sellers. Title and line are props. |
 | `DeliveryCard` | Your box | Collapsed to "Every 30 days · Tue 3 Nov" (opens on a link to `#delivery`). Open: a suggestion with its reason, how often (segmented pill radiogroup with the saving under each option and "skip, swap or pause" below), then the first delivery date and the next delivery. The suggestion never changes the choice by itself. Nothing is chosen at first ("Choose how often"); `attention` goes up when checkout is tapped too soon, which opens the card, scrolls to it, focuses the options and shows a `danger` message (with a danger border) until a choice is made. |
-| `OrderSummary` (`OrderGroup`, `ItemCard`, `ItemThumbnail`) | Your box | Drinks and Add-ons, each collapsible and sub-grouped by category; collapsed groups show thumbnails. A line that no longer fits the preferences shows why, and stays. |
+| `OrderSummary` (`OrderGroup`, `ItemCard`, `ItemThumbnail`) | Your box | Drinks and Add-ons, each collapsible and sub-grouped by category; collapsed groups show thumbnails. A line that no longer fits the preferences shows why, and stays. A line the starter box picked says "Picked for you" and why. With a subscription, bites and sweeteners show "Keep in every delivery" (`Switch`, confirmed with `ConfirmDialog` when turned on); gear and tasters say "First box only". |
 | `SuggestionRail`, `SuggestionCard` | Your box, item page | 148px cards with the reason line. Scrolls sideways at every width, so the desktop sidebar stays short enough to keep the total in view. Hidden when empty. |
-| `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. |
+| `BoxTotal` | Your box | Fixed to the bottom on mobile, a card in the sticky sidebar from 1024px. `aria-live`. When later deliveries cost less than the first box: "£52.20 first box, then £23.40 every 15 days". |
 | `CategoryTabs` | Shop | 44px tabs, active = bold + 3px underline, scroll sideways on mobile, centred on desktop. |
 | `CaffeineFilter` | Shop (drink tabs) | A row of `ToggleChip`s: All · Low · Medium · High, each with its count. Single choice; tapping the selected band returns to All; empty bands are disabled. |
 | `ShopCard` | Shop | 2 columns on mobile, 3 at 768px, 4 at 1024px. States: available, in box (Flame ring), with reason, unavailable (pack shot faded, muted description, reason, no stepper; text stays at AA). |

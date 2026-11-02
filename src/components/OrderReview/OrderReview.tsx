@@ -3,7 +3,7 @@
 import { useEffect, useId, useState } from 'react';
 import type { BoxLine, Item, Plan } from '@/types';
 import { isDrinkCategory } from '@/data/labels';
-import type { Totals } from '@/lib/box';
+import { repeatingLines, totals as computeTotals, type Totals } from '@/lib/box';
 import { formatDay, type ISODate } from '@/lib/dates';
 import { formatPrice, pluralise } from '@/lib/format';
 import { Icon } from '../Icon';
@@ -22,7 +22,7 @@ export interface OrderReviewProps {
   openOnDesktop?: boolean;
 }
 
-type Entry = { qty: number; item: Item };
+type Entry = { qty: number; item: Item; repeats: boolean };
 
 /** "Your first box": the order at a glance, expandable to every line and how the total is made. */
 export function OrderReview({ lines, catalogue, totals, plan, deliveryDate, defaultOpen = false, openOnDesktop = false }: OrderReviewProps) {
@@ -36,12 +36,16 @@ export function OrderReview({ lines, catalogue, totals, plan, deliveryDate, defa
   const panelId = useId();
   const codeId = useId();
 
+  const subscription = plan.discount > 0;
+  const repeating = repeatingLines(lines, catalogue);
+  // Every later delivery: the drinks and the add-ons they kept, with the same saving.
+  const next = computeTotals(repeating, catalogue, plan.discount);
+  const split = subscription && next.total !== totals.total;
   const entries = lines
-    .map((l) => ({ qty: l.qty, item: catalogue.find((i) => i.id === l.itemId) }))
+    .map((l) => ({ qty: l.qty, item: catalogue.find((i) => i.id === l.itemId), repeats: repeating.includes(l) }))
     .filter((e): e is Entry => Boolean(e.item));
   const drinks = entries.filter((e) => isDrinkCategory(e.item.category));
   const addOns = entries.filter((e) => !isDrinkCategory(e.item.category));
-  const subscription = plan.discount > 0;
   const summary = [
     pluralise(totals.drinkCount, 'drink'),
     totals.addOnCount > 0 ? pluralise(totals.addOnCount, 'add-on') : null,
@@ -56,10 +60,11 @@ export function OrderReview({ lines, catalogue, totals, plan, deliveryDate, defa
       <div className="flex flex-col gap-4 border-t border-border pt-8">
         <h3 className="font-sans text-footnote font-semibold uppercase tracking-wide text-text-muted">{title}</h3>
         <ul className="flex flex-col gap-4">
-          {list.map(({ qty, item }) => (
+          {list.map(({ qty, item, repeats }) => (
             <li key={item.id} className={`${row} font-sans text-body-sm`}>
               <span>
                 {qty} × {item.name}
+                {subscription && !repeats && <span className="text-text-muted"> · first box only</span>}
               </span>
               <span className="tabular-nums">{formatPrice(item.price * qty)}</span>
             </li>
@@ -134,7 +139,9 @@ export function OrderReview({ lines, catalogue, totals, plan, deliveryDate, defa
           </div>
           <p className="font-sans text-footnote text-text-muted">
             {subscription
-              ? `Includes your ${Math.round(plan.discount * 100)}% subscription saving and free delivery. Then the same box every ${plan.label} until you change it.`
+              ? split
+                ? `Includes your ${Math.round(plan.discount * 100)}% subscription saving and free delivery. Then ${formatPrice(next.total)} every ${plan.label} for the drinks and anything you keep, until you change it.`
+                : `Includes your ${Math.round(plan.discount * 100)}% subscription saving and free delivery. Then the same box every ${plan.label} until you change it.`
               : 'Includes free delivery. One-off order, no subscription.'}
           </p>
         </div>

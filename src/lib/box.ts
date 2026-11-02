@@ -1,4 +1,4 @@
-import type { BoxLine, Customer, Goal, Item, PlanId } from '../types';
+import type { BoxLine, Category, Customer, Goal, Item, PlanId } from '../types';
 import type { ISODate } from './dates';
 import { isDrinkCategory } from '../data/labels';
 
@@ -31,6 +31,8 @@ export interface BoxState {
 export type BoxAction =
   | { type: 'setQty'; itemId: string; qty: number }
   | { type: 'setPlan'; plan: PlanId }
+  /** "Keep in every delivery" on a bite or sweetener (asked to confirm before it's turned on). */
+  | { type: 'setEveryDelivery'; itemId: string; on: boolean }
   | { type: 'setGoal'; goal: Goal }
   | { type: 'setMaxCaffeine'; maxCaffeine: Customer['maxCaffeine'] }
   | { type: 'toggleAvoid'; avoid: string }
@@ -97,6 +99,11 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
       return { ...state, lines: withQty(state.lines, action.itemId, action.qty) };
     case 'setPlan':
       return { ...state, plan: action.plan };
+    case 'setEveryDelivery':
+      return {
+        ...state,
+        lines: state.lines.map((l) => (l.itemId === action.itemId ? { ...l, everyDelivery: action.on || undefined } : l)),
+      };
     case 'setGoal':
       return { ...state, customer: { ...state.customer, goal: action.goal }, railLines: state.lines };
     case 'setMaxCaffeine':
@@ -125,6 +132,31 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
   }
 }
 
+/**
+ * What repeats in a subscription. Drinks are the subscription, so they always repeat. Gear and
+ * tasters are bought once. Bites and sweeteners are the customer's choice, first box only until
+ * they say otherwise: nothing extra repeats unless they keep it.
+ */
+export type RepeatRule = 'always' | 'once' | 'choice';
+
+const CHOICE: Category[] = ['bites', 'sweeteners'];
+
+export function repeatRule(item: Item): RepeatRule {
+  if (CHOICE.includes(item.category)) return 'choice';
+  if (item.category === 'gear' || item.isSample) return 'once';
+  return 'always';
+}
+
+/** The lines that come again in every delivery after the first. */
+export function repeatingLines(lines: BoxLine[], catalogue: Item[]): BoxLine[] {
+  return lines.filter((line) => {
+    const item = catalogue.find((i) => i.id === line.itemId);
+    if (!item) return false;
+    const rule = repeatRule(item);
+    return rule === 'always' || (rule === 'choice' && line.everyDelivery === true);
+  });
+}
+
 export interface Totals {
   drinkCount: number;
   /** Gear, bites and sweeteners. */
@@ -137,18 +169,28 @@ export interface Totals {
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
+/** A price after the subscription saving, to the penny (only for lines that repeat; see `totals`). */
+export const afterSaving = (price: number, discountRate: number) => round2(price * (1 - discountRate));
+
+/**
+ * The subscription saving is for what's in the subscription: drinks, and the bites and sweeteners
+ * kept in every delivery. Gear, tasters and first-box-only add-ons are bought once, at full price.
+ */
 export function totals(lines: BoxLine[], catalogue: Item[], discountRate: number): Totals {
   let drinkCount = 0;
   let addOnCount = 0;
   let subtotal = 0;
+  let saved = 0;
+  const repeating = repeatingLines(lines, catalogue);
   for (const line of lines) {
     const item = catalogue.find((i) => i.id === line.itemId);
     if (!item) continue;
     if (isDrinkCategory(item.category)) drinkCount += line.qty;
     else addOnCount += line.qty;
     subtotal += item.price * line.qty;
+    if (repeating.includes(line)) saved += item.price * line.qty;
   }
   subtotal = round2(subtotal);
-  const discount = round2(subtotal * discountRate);
+  const discount = round2(saved * discountRate);
   return { drinkCount, addOnCount, count: drinkCount + addOnCount, subtotal, discount, total: round2(subtotal - discount) };
 }

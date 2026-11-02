@@ -7,6 +7,11 @@ export interface BoxTotalProps {
   /** "every 15 days", "once"… */
   cadence: string;
   discountRate: number;
+  /**
+   * What every later delivery costs (the drinks and the add-ons they keep), with a subscription.
+   * When it differs from the first box, both prices show: the total never hides what comes next.
+   */
+  repeatTotal?: number | null;
   onCheckout?: () => void;
 }
 
@@ -14,8 +19,11 @@ export interface BoxTotalProps {
  * The price is always in view. Mobile: pinned to the bottom of the screen.
  * Desktop: a sticky card in the sidebar.
  */
-export function BoxTotal({ totals, cadence, discountRate, onCheckout }: BoxTotalProps) {
+export function BoxTotal({ totals, cadence, discountRate, repeatTotal, onCheckout }: BoxTotalProps) {
   const { drinkCount, addOnCount, subtotal, total } = totals;
+  const subscription = cadence !== '' && cadence !== 'once';
+  // The first box differs from the ones after it when something in it comes only once.
+  const split = subscription && repeatTotal != null && repeatTotal !== total;
   const addOnText = addOnCount === 0 ? 'no add-ons' : pluralise(addOnCount, 'add-on');
   const note =
     discountRate > 0
@@ -42,8 +50,13 @@ export function BoxTotal({ totals, cadence, discountRate, onCheckout }: BoxTotal
             <p className="font-sans text-title tabular-nums">
               <span className="sr-only">total </span>
               {formatPrice(total)}
-              <span className="font-medium text-caption text-text-muted"> {cadence === 'once' ? '' : cadence}</span>
+              <span className="font-medium text-caption text-text-muted"> {split ? 'first box' : subscription ? cadence : ''}</span>
             </p>
+            {split && (
+              <p className="font-sans text-caption text-text-muted tabular-nums">
+                {repeatTotal > 0 ? `then ${formatPrice(repeatTotal)} ${cadence}` : 'Nothing repeats yet'}
+              </p>
+            )}
           </div>
         </div>
         <p className="text-center font-sans text-footnote text-text-muted">{note}</p>

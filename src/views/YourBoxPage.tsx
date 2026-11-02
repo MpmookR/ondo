@@ -32,7 +32,7 @@ export function YourBoxPage() {
   useFreshRail();
   useReturnHere(boxHref);
   const router = useRouter();
-  const { state, dispatch, totals, suggestions, setQty, theme, setTheme } = useBox();
+  const { state, dispatch, totals, repeatTotals, discountRate, suggestions, setQty, theme, setTheme } = useBox();
   const plan = state.plan ? planById(state.plan) : null;
   // A brand-new visitor: nothing in the box (when the page opened) and no answers, so nothing to go
   // with yet. The rail shows the best sellers; it stays put while they add from it, like any rail.
@@ -73,6 +73,9 @@ export function YourBoxPage() {
             totals={totals}
             onQtyChange={setQty}
             warningFor={(item) => unavailableReason(item, browsingLimits(state))}
+            cadence={repeatTotals ? plan?.cadence : undefined}
+            onEveryDeliveryChange={(itemId, on) => dispatch({ type: 'setEveryDelivery', itemId, on })}
+            discountRate={discountRate}
           />
         </div>
 
@@ -82,8 +85,15 @@ export function YourBoxPage() {
             suggestions={coldStart ? bestSellerSuggestions(bestSellerIds, browsingLimits(state), catalogue) : suggestions}
             lines={state.lines}
             onQtyChange={setQty}
+            discountRate={discountRate}
           />
-          <BoxTotal totals={totals} cadence={plan?.cadence ?? ''} discountRate={plan?.discount ?? 0} onCheckout={checkout} />
+          <BoxTotal
+            totals={totals}
+            cadence={plan?.cadence ?? ''}
+            discountRate={plan?.discount ?? 0}
+            repeatTotal={repeatTotals?.total}
+            onCheckout={checkout}
+          />
         </div>
       </main>
     </>

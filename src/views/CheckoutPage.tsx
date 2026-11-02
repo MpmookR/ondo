@@ -27,7 +27,7 @@ import { boxHref } from '@/lib/routes';
 
 /** Last step: review the first box, confirm the delivery date, pay. Demo only: nothing is charged. */
 export function CheckoutPage() {
-  const { state, dispatch, totals, theme, setTheme } = useBox();
+  const { state, dispatch, totals, repeatTotals, theme, setTheme } = useBox();
   const plan = planById(state.plan ?? 'once');
   const subscription = plan.discount > 0;
 
@@ -107,7 +107,10 @@ export function CheckoutPage() {
             <p className="font-sans text-body">
               Your first Ondo box arrives on{' '}
               <strong>{state.deliveryDate ? formatDay(state.deliveryDate) : 'your chosen day'}</strong>.
-              {subscription && ` Then every ${plan.label}; skip, swap or pause any time.`}
+              {subscription &&
+                (repeatTotals && repeatTotals.count > 0
+                  ? ` Then ${formatPrice(repeatTotals.total)} every ${plan.label}; skip, swap or pause any time.`
+                  : ` Then every ${plan.label}; skip, swap or pause any time.`)}
             </p>
             <p className="rounded-sm bg-bg-subtle px-12 py-8 font-sans text-body-sm text-text-muted">
               This is a demo: no payment was taken.

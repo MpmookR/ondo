@@ -6,7 +6,7 @@ import { catalogue } from '@/data/catalogue';
 import { SKIPPED } from '@/data/onboarding';
 import { goalById } from '@/data/goals';
 import { planById } from '@/data/plans';
-import { boxReducer, isBoxState, totals as computeTotals, type BoxAction, type BoxState, type Theme, type Totals } from '@/lib/box';
+import { boxReducer, isBoxState, repeatingLines, totals as computeTotals, type BoxAction, type BoxState, type Theme, type Totals } from '@/lib/box';
 import { addDays, todayISO } from '@/lib/dates';
 import { recommend } from '@/lib/recommend';
 
@@ -30,7 +30,15 @@ export const DEFAULT_LEAD_DAYS = 7;
 interface BoxContextValue {
   state: BoxState;
   dispatch: Dispatch<BoxAction>;
+  /** The first box. */
   totals: Totals;
+  /**
+   * Every delivery after the first: the drinks, plus the add-ons they chose to keep. Null without
+   * a subscription (a one-off, or no delivery chosen yet).
+   */
+  repeatTotals: Totals | null;
+  /** The chosen subscription's saving (0.1 = 10%); 0 for a one-off or no choice yet. */
+  discountRate: number;
   /** The rail's suggestions: the same result powers Your box and the shop's "For you" tab. */
   suggestions: Suggestion[];
   setQty: (itemId: string, qty: number) => void;
@@ -94,11 +102,15 @@ export function BoxProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, [theme]);
 
-  const value = useMemo<BoxContextValue>(
-    () => ({
+  const value = useMemo<BoxContextValue>(() => {
+    const plan = state.plan ? planById(state.plan) : null;
+    const subscription = plan !== null && plan.days !== undefined;
+    return {
       state,
       dispatch,
-      totals: computeTotals(state.lines, catalogue, state.plan ? planById(state.plan).discount : 0),
+      totals: computeTotals(state.lines, catalogue, plan?.discount ?? 0),
+      discountRate: plan?.discount ?? 0,
+      repeatTotals: subscription ? computeTotals(repeatingLines(state.lines, catalogue), catalogue, plan.discount) : null,
       suggestions: recommend(state.customer, state.railLines, catalogue, {
         goalLabel: goalById(state.customer.goal)?.railLabel,
       }),
@@ -107,9 +119,8 @@ export function BoxProvider({ children }: { children: ReactNode }) {
       setTheme: setThemeState,
       returnTo,
       setReturnTo,
-    }),
-    [state, theme, returnTo],
-  );
+    };
+  }, [state, theme, returnTo]);
 
   return <BoxContext.Provider value={value}>{children}</BoxContext.Provider>;
 }

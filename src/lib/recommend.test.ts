@@ -94,7 +94,7 @@ test('reducer: onboarding answers update the customer and refresh the rail', () 
   assert.deepEqual(state.railLines, state.lines);
 });
 
-test('totals split drinks and gear', () => {
+test('totals split drinks and gear; the saving is only on what repeats (not the infuser)', () => {
   const lines = [
     { itemId: 't-sencha', qty: 2 },
     { itemId: 'g-infuser', qty: 1 },
@@ -104,8 +104,8 @@ test('totals split drinks and gear', () => {
     addOnCount: 1,
     count: 3,
     subtotal: 34,
-    discount: 3.4,
-    total: 30.6,
+    discount: 1.8,
+    total: 32.2,
   });
 });
 

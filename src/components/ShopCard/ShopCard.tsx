@@ -7,6 +7,7 @@ import { CategoryBadge } from '../CategoryBadge';
 import { Chip } from '../Chip';
 import { Icon } from '../Icon';
 import { Price } from '../Price';
+import { repeatRule } from '@/lib/box';
 import { ProductImage } from '../ProductImage';
 import { Stepper } from '../Stepper';
 
@@ -18,10 +19,12 @@ export interface ShopCardProps {
   reason?: string;
   /** Why it can't be added. The pack shot fades and the description turns muted; all text keeps AA contrast. No price or stepper. */
   unavailable?: string | null;
+  /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
+  discountRate?: number;
 }
 
 /** Shop grid card: 2 columns on mobile, 3 at 768px, 4 at 1024px. */
-export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCardProps) {
+export function ShopCard({ item, qty, onQtyChange, reason, unavailable, discountRate }: ShopCardProps) {
   const isDrink = isDrinkCategory(item.category);
   const blocked = Boolean(unavailable) && qty === 0;
 
@@ -75,7 +78,7 @@ export function ShopCard({ item, qty, onQtyChange, reason, unavailable }: ShopCa
           </p>
         ) : (
           <div className="mt-auto flex w-full flex-col items-center gap-8 pt-4">
-            <Price value={item.price} />
+            <Price value={item.price} discountRate={repeatRule(item) === 'always' ? discountRate : undefined} />
             <div className="relative z-10">
               <Stepper value={qty} onChange={onQtyChange} itemName={item.name} />
             </div>

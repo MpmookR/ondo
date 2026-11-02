@@ -137,7 +137,7 @@ interface BoxLine {
   itemId: string;
   qty: number;
   pickedReason?: string;           // set by the starter box ("For calm focus")
-  firstBoxOnly?: boolean;          // add-on pre-added from `extras`
+  everyDelivery?: boolean;         // bites and sweeteners: kept in every delivery (off = first box only)
 }
 ```
 
@@ -169,7 +169,10 @@ starterBox(customer, catalogue): { lines: BoxLine[]; leftOut: { category, reason
 Drinks pass the rail's hard filters (taster packs excluded), score +3 goal, +1 brews with their kit,
 +1 taste, and the top one per drink type is picked (ties to the lower price, at most three). Packs
 per drink make the box last about 15 days, between 1 and 3. Then one add-on per category in
-`extras`, only if it pairs with a picked drink and costs £6 or less, marked `firstBoxOnly`.
+`extras`, only if it pairs with a picked drink and costs £6 or less (first box only, like every
+add-on). What repeats in a subscription is `repeatRule` in `lib/box.ts`: drinks always, gear and
+tasters never, bites and sweeteners when the line has `everyDelivery`. `BoxProvider` exposes
+`totals` (the first box; its saving only on the lines that repeat) and `repeatTotals` (every later delivery, or null without a subscription).
 Onboarding dispatches `startFirstBox` with the answers and these lines. Rules in
 [prd.md](prd.md#starter-box).
 

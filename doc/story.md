@@ -281,6 +281,11 @@ lost. So:
   cost, accepted for a lower first price.
 - **Add-ons only when asked.** If they say yes to bites or a sweetener, one goes in, £6 or under,
   first box only, and easy to remove. Otherwise the box grows through the suggestions they choose.
+- **Keep it, if they want it.** With a subscription, every bite and sweetener has a "Keep in every
+  delivery" switch, off by default. Turning it on asks once ("Add to your subscription?", with the
+  price and a reminder they can change it any time), and the total shows both prices: the first box,
+  then what every delivery after costs. That's AOV beyond the first box, but only from what the
+  customer chose to keep.
 
 So AOV grows by *choice* (rails, opt-in add-ons), not by making the starting box bigger. That's
 also the answer to problem **E**: nothing extra repeats unless they keep it.
@@ -325,7 +330,5 @@ they come back, and answers lost if onboarding is reloaded mid-way.
 - **Test it with five people**, onboarding to checkout, watching the first price and the
   suggested add-ons.
 - **Close the two red gaps.**
-- **Edit one answer** from "Edit preferences" without redoing onboarding, and a "Keep in every
-  delivery" choice on first-box-only add-ons.
 - **Measure it** as in [prd.md](prd.md#success-metrics-for-a-real-launch-not-the-demo): AOV and
   items per order on paid orders, always next to conversion.

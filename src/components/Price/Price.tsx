@@ -1,4 +1,5 @@
 import { formatPrice } from '@/lib/format';
+import { afterSaving } from '@/lib/box';
 
 export interface PriceProps {
   value: number;
@@ -7,10 +8,17 @@ export interface PriceProps {
   size?: 'body' | 'small';
   /** Adds "each" after the price, for lines with a quantity. */
   each?: boolean;
+  /**
+   * The subscription saving (0.1 = 10%). Shows the price after it, with the full price struck
+   * through, so the saving is visible on every line, not only in the total.
+   */
+  discountRate?: number;
 }
 
 /** "£12.50 each". Prices are always in the display face with tabular figures. */
-export function Price({ value, was, size = 'body', each = false }: PriceProps) {
+export function Price({ value: full, was: given, size = 'body', each = false, discountRate = 0 }: PriceProps) {
+  const value = discountRate > 0 ? afterSaving(full, discountRate) : full;
+  const was = discountRate > 0 ? full : given;
   const discounted = was !== undefined && was > value;
   return (
     <span className="inline-flex items-baseline gap-4 whitespace-nowrap">

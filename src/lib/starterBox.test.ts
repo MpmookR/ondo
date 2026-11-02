@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { catalogue } from '../data/catalogue';
 import { SKIPPED } from '../data/onboarding';
-import type { Customer } from '../types';
+import type { BoxLine, Customer } from '../types';
+import { isDrinkCategory } from '../data/labels';
 import { boxReducer, isBoxState, type BoxState } from './box';
 import { MAX_PACKS, starterBox } from './starterBox';
 
@@ -32,22 +33,24 @@ test('each drink line carries its reason, most specific first', () => {
   assert.equal(lines.find((l) => l.itemId === 'c-decaf')?.pickedReason, 'Brews with your filter');
 });
 
-test('add-ons only with a yes in extras: one per category, easy to try, first box only', () => {
-  assert.ok(starterBox(customer, catalogue).lines.every((l) => !l.firstBoxOnly), 'no extras, no add-ons');
+const isAddOn = (l: BoxLine) => !isDrinkCategory(catalogue.find((i) => i.id === l.itemId)!.category);
+
+test('add-ons only with a yes in extras: one per category, easy to try, not kept in every delivery', () => {
+  assert.ok(!starterBox(customer, catalogue).lines.some(isAddOn), 'no extras, no add-ons');
   const { lines } = starterBox({ ...customer, extras: ['bites', 'sweeteners'] }, catalogue);
-  const addOns = lines.filter((l) => l.firstBoxOnly);
+  const addOns = lines.filter(isAddOn);
   // Rice crackers pair with the Everyday matcha. No sweetener £6 or under pairs, so they get the
   // cheapest that fits instead: they asked for one.
   assert.deepEqual(addOns, [
-    { itemId: 'b-rice-crackers', qty: 1, firstBoxOnly: true, pickedReason: 'Goes with your Everyday Latte Matcha' },
-    { itemId: 's-demerara', qty: 1, firstBoxOnly: true, pickedReason: 'Easy to try' },
+    { itemId: 'b-rice-crackers', qty: 1, pickedReason: 'Goes with your Everyday Latte Matcha' },
+    { itemId: 's-demerara', qty: 1, pickedReason: 'Easy to try' },
   ]);
 });
 
 test('a requested snack is added even when nothing pairs with the drinks', () => {
   // Honeybush pairs only with honey: the snack is the cheapest that fits instead.
   const { lines } = starterBox({ ...customer, goal: 'no-crash', drinks: ['tea'], extras: ['bites'] }, catalogue);
-  assert.deepEqual(lines.find((l) => l.firstBoxOnly), { itemId: 'b-dark-chocolate', qty: 1, firstBoxOnly: true, pickedReason: 'Easy to try' });
+  assert.deepEqual(lines.find(isAddOn), { itemId: 'b-dark-chocolate', qty: 1, pickedReason: 'Easy to try' });
 });
 
 test('add-ons respect avoids', () => {

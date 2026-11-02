@@ -6,6 +6,8 @@ export * from './CaffeineMeter';
 export * from './CaffeineFilter';
 export * from './BrewGuide';
 export * from './Stepper';
+export * from './Switch';
+export * from './ConfirmDialog';
 export * from './Price';
 export * from './ProductImage';
 export * from './DatePicker';

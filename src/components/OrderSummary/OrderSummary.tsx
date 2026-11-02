@@ -4,15 +4,17 @@ import Link from 'next/link';
 import { useId, useState, type ReactNode } from 'react';
 import type { BoxLine, Category, Item } from '@/types';
 import { addOnCategories, categoryLabel, drinkCategories, isDrinkCategory } from '@/data/labels';
-import type { Totals } from '@/lib/box';
+import { afterSaving, repeatRule, type Totals } from '@/lib/box';
 import { formatPrice, pluralise } from '@/lib/format';
 import { itemHref, shopHref } from '@/lib/routes';
 import { CaffeineMeter } from '../CaffeineMeter';
 import { Chip, Pill } from '../Chip';
+import { ConfirmDialog } from '../ConfirmDialog';
 import { Icon } from '../Icon';
 import { Price } from '../Price';
 import { ProductImage } from '../ProductImage';
 import { Stepper } from '../Stepper';
+import { Switch } from '../Switch';
 
 // ---------- OrderGroup ----------
 
@@ -81,16 +83,21 @@ export interface ItemCardProps {
   warning?: string | null;
   /** Set when the starter box picked it: why it's there ("For calm focus"). */
   pickedReason?: string;
-  /** An add-on pre-added because the customer asked for one in onboarding: first box only. */
-  firstBoxOnly?: boolean;
+  /**
+   * Bites and sweeteners in a subscription: "Keep in every delivery", off (first box only) until
+   * the customer turns it on. Leave unset to hide it (a one-off, or no delivery chosen yet).
+   */
+  everyDelivery?: { on: boolean; cadence: string; onChange: (on: boolean) => void };
+  /** Gear and tasters in a subscription: they come once, in the first box. */
+  sentOnce?: boolean;
+  /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
+  discountRate?: number;
 }
 
-/** What the customer asked for, in their words, for a pre-added add-on's label. */
-const askedFor: Partial<Record<Category, string>> = { bites: 'a snack', sweeteners: 'a sweetener' };
-
 /** One line in the box: pack, name, two-line description, up to three badges, price and stepper. */
-export function ItemCard({ item, qty, onQtyChange, warning, pickedReason, firstBoxOnly }: ItemCardProps) {
+export function ItemCard({ item, qty, onQtyChange, warning, pickedReason, everyDelivery, sentOnce, discountRate }: ItemCardProps) {
   const isDrink = isDrinkCategory(item.category);
+  const keepId = useId();
   return (
     <article
       data-category={item.category}
@@ -117,11 +124,29 @@ export function ItemCard({ item, qty, onQtyChange, warning, pickedReason, firstB
         <p className="flex flex-wrap items-center gap-x-8 gap-y-4 px-8 font-sans text-caption">
           <span className="flex items-center gap-4 font-semibold text-primary">
             <Icon name="check" size={16} />
-            {firstBoxOnly ? `Added because you asked for ${askedFor[item.category] ?? 'it'}` : 'Picked for you'}
+            Picked for you
           </span>
           <span className="text-text-muted">{pickedReason}</span>
-          {firstBoxOnly && <Chip tone="outline">First box only</Chip>}
         </p>
+      )}
+
+      {everyDelivery && (
+        <div className="relative z-10 flex items-center justify-between gap-12 rounded-sm bg-bg-page px-8">
+          <span className="flex flex-col py-4 font-sans">
+            <span id={`${keepId}-label`} className="text-label">
+              Switch to subscription
+            </span>
+            <span id={`${keepId}-state`} className="text-caption text-text-muted">
+              {everyDelivery.on ? `Comes ${everyDelivery.cadence}` : 'For discounted price'}
+            </span>
+          </span>
+          <Switch
+            checked={everyDelivery.on}
+            onChange={everyDelivery.onChange}
+            labelledBy={`${keepId}-label`}
+            describedBy={`${keepId}-state`}
+          />
+        </div>
       )}
 
       {warning && (
@@ -132,7 +157,10 @@ export function ItemCard({ item, qty, onQtyChange, warning, pickedReason, firstB
       )}
 
       <div className="flex items-center justify-between px-8">
-        <Price value={item.price} each />
+        <span className="flex items-baseline gap-8">
+          <Price value={item.price} each discountRate={discountRate} />
+          {sentOnce && <span className="font-sans text-caption text-text-muted">One Time Off</span>}
+        </span>
         <div className="relative z-10">
           <Stepper value={qty} onChange={onQtyChange} itemName={item.name} />
         </div>
@@ -149,12 +177,20 @@ export interface OrderSummaryProps {
   totals: Totals;
   onQtyChange: (itemId: string, qty: number) => void;
   warningFor?: (item: Item) => string | null;
+  /** "every 15 days" when a subscription is chosen; unset for a one-off or no choice yet. */
+  cadence?: string;
+  /** Turning "Keep in every delivery" on is confirmed first; turning it off isn't. */
+  onEveryDeliveryChange?: (itemId: string, on: boolean) => void;
+  /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
+  discountRate?: number;
 }
 
 type Entry = { line: BoxLine; item: Item };
 
 /** "Your box": Drinks and Add-ons, each collapsible and sub-grouped by category. */
-export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor }: OrderSummaryProps) {
+export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor, cadence, onEveryDeliveryChange, discountRate }: OrderSummaryProps) {
+  // The add-on waiting for "Add to subscription" in the dialog.
+  const [confirming, setConfirming] = useState<Entry | null>(null);
   const entries = lines
     .map((line) => ({ line, item: catalogue.find((i) => i.id === line.itemId) }))
     .filter((e): e is Entry => Boolean(e.item));
@@ -176,7 +212,18 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
       onQtyChange={(qty) => onQtyChange(item.id, qty)}
       warning={warningFor?.(item)}
       pickedReason={line.pickedReason}
-      firstBoxOnly={line.firstBoxOnly}
+      everyDelivery={
+        cadence && onEveryDeliveryChange && repeatRule(item) === 'choice'
+          ? {
+              on: line.everyDelivery === true,
+              cadence,
+              onChange: (on) => (on ? setConfirming({ line, item }) : onEveryDeliveryChange(item.id, false)),
+            }
+          : undefined
+      }
+      sentOnce={Boolean(cadence) && repeatRule(item) === 'once'}
+      // The saving is only on what repeats: one-off lines stay at full price.
+      discountRate={repeatRule(item) === 'always' || line.everyDelivery ? discountRate : undefined}
     />
   );
   const subgroup = ({ category, entries: list }: { category: Category; entries: Entry[] }) => (
@@ -244,6 +291,27 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
         <Icon name="bag" size={20} />
         Add or change items
       </Link>
+
+      <ConfirmDialog
+        open={confirming !== null}
+        title="Add to your subscription?"
+        confirmLabel="Add to subscription"
+        onCancel={() => setConfirming(null)}
+        onConfirm={() => {
+          if (confirming) onEveryDeliveryChange?.(confirming.item.id, true);
+          setConfirming(null);
+        }}
+      >
+        {confirming && (
+          <>
+            <p>
+              {confirming.line.qty > 1 ? `${confirming.line.qty} × ` : ''}
+              {confirming.item.name} will come in every delivery, {cadence}, at {formatPrice(afterSaving(confirming.item.price, discountRate ?? 0))} each.
+            </p>
+            <p className="text-body-sm text-text-muted">You can add, remove or cancel anything in your subscription at any time.</p>
+          </>
+        )}
+      </ConfirmDialog>
     </section>
   );
 }

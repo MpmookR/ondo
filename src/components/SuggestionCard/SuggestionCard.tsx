@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Suggestion } from '@/types';
 import { itemHref } from '@/lib/routes';
+import { repeatRule } from '@/lib/box';
 import { CategoryBadge } from '../CategoryBadge';
 import { Icon } from '../Icon';
 import { Price } from '../Price';
@@ -11,10 +12,12 @@ export interface SuggestionCardProps {
   suggestion: Suggestion;
   qty: number;
   onQtyChange: (qty: number) => void;
+  /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
+  discountRate?: number;
 }
 
 /** 148px rail card: pack with category badge, name, the reason it's here, price and quick add. */
-export function SuggestionCard({ suggestion, qty, onQtyChange }: SuggestionCardProps) {
+export function SuggestionCard({ suggestion, qty, onQtyChange, discountRate }: SuggestionCardProps) {
   const { item, reason } = suggestion;
   return (
     <article
@@ -37,7 +40,7 @@ export function SuggestionCard({ suggestion, qty, onQtyChange }: SuggestionCardP
         <p className="line-clamp-2 min-h-32 text-center font-sans text-footnote text-accent">{reason}</p>
 
         <div className="mt-auto flex min-h-24 items-center justify-between gap-4">
-          <Price value={item.price} size="small" />
+          <Price value={item.price} size="small" discountRate={repeatRule(item) === 'always' ? discountRate : undefined} />
           <div className="relative z-10">
             {qty === 0 ? (
               <button
