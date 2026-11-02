@@ -19,20 +19,21 @@ import {
 } from '@/components';
 import { useRadioGroup } from '@/components/shared/useRadioGroup';
 import { catalogue } from '@/data/catalogue';
-import { goals } from '@/data/goals';
-import { avoidOptions, brewKitOptions, counts, countLabel } from '@/data/labels';
+import { goalById, goals } from '@/data/goals';
+import { avoidLabel, avoidOptions, brewKitOptions, counts, countLabel, isDrinkCategory } from '@/data/labels';
 import {
   SKIPPED,
   caffeineExample,
   extraOptions,
   kitFor,
   onboardingSteps,
+  packingLines,
   tasteOptions,
   type StepId,
 } from '@/data/onboarding';
 import { starterBox } from '@/lib/starterBox';
-import { boxHref, shopHref } from '@/lib/routes';
-import type { BrewKit, Count, Customer, DrinkCategory, Extra, Goal, Taste } from '@/types';
+import { shopHref } from '@/lib/routes';
+import type { BrewKit, Count, Customer, DrinkCategory, Extra, Goal, Item, Taste } from '@/types';
 import type { IconName } from '@/components/Icon';
 
 /** What's been answered so far. `undefined` = not answered yet; skipped questions fall back to SKIPPED. */
@@ -116,7 +117,7 @@ function isAnswered(id: StepId, d: Draft): boolean {
  */
 export function OnboardingPage() {
   const router = useRouter();
-  const { dispatch, theme, setTheme } = useBox();
+  const { dispatch, theme, setTheme, startPacking } = useBox();
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [draft, setDraft] = useState<Draft>({});
@@ -152,8 +153,20 @@ export function OnboardingPage() {
     const answers = skipOptional ? { ...draft, taste: undefined, extras: undefined } : draft;
     const customer = toCustomer(answers);
     // Picks are added to anything they'd already put in the box; nothing of theirs changes.
-    dispatch({ type: 'startFirstBox', customer, lines: starterBox(customer, catalogue).lines });
-    router.push(boxHref);
+    const { lines } = starterBox(customer, catalogue);
+    dispatch({ type: 'startFirstBox', customer, lines });
+    // The box is ready now; "Preparing your box" plays, then opens onto Your box.
+    const items = lines.map((l) => catalogue.find((i) => i.id === l.itemId)).filter((i): i is Item => Boolean(i));
+    startPacking({
+      items,
+      lines: packingLines(customer, {
+        drinkCount: items.filter((i) => isDrinkCategory(i.category)).length,
+        addOnCount: items.filter((i) => !isDrinkCategory(i.category)).length,
+        answeredCaffeine: answers.maxCaffeine !== undefined,
+        avoidLabels: customer.avoids.map(avoidLabel),
+        goalLabel: goalById(customer.goal)?.railLabel,
+      }),
+    });
   };
 
   const browse = () => {

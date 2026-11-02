@@ -278,8 +278,16 @@ roast suggestions, explore for how far the rail strays from what they drink now)
 
 ### After the last screen
 
-1. "Build my box" shows a short "Picking your drinks…" state, only as long as the work takes
-   (never a fake delay).
+1. "Build my box" shows **"Preparing your box"** in the onboarding theme: an open kraft box, the
+   picked packs dropping in, and the answers that shaped it listed beside it ("Picked for a strong
+   start", "Leaving out dairy", "Sized to last about 15 days", "Adding something to try with your
+   cup"; only answers they gave, at most four), each an empty circle that is **checked off in turn,
+   1.5 seconds apart**. Then the lid folds shut, "Your box is ready", and Your box opens the way the
+   homepage does: the view zooms into the box while a circle grows from it (2 seconds). About 7–9
+   seconds with four answers, less with fewer. The box itself is ready at once: this is a deliberate
+   pause, so the first box feels made for them; watch it in testing, since a long wait can cost the
+   order. Under reduced motion it simply shows, for about 1.5 seconds, with no reveal. If nothing fits, the box stays open and empty: "Nothing
+   fits every answer yet", then Your box with "Start with a drink".
 2. Your box opens with the [starter box](#starter-box), the preferences card filled in and the rail.
 3. From Path B (the customer already had items), the starter box's picks are **added** to the box
    they built. Their own lines come first and are never removed or changed; a pick that's already

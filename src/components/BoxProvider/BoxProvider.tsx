@@ -9,6 +9,7 @@ import { planById } from '@/data/plans';
 import { boxReducer, isBoxState, repeatingLines, totals as computeTotals, type BoxAction, type BoxState, type Theme, type Totals } from '@/lib/box';
 import { addDays, todayISO } from '@/lib/dates';
 import { recommend } from '@/lib/recommend';
+import { PackingOverlay, type PackingData } from '../Onboarding/PackingBox';
 
 /**
  * A new customer: an empty box and no answers yet. Suggestions run on the safe defaults until they
@@ -50,6 +51,11 @@ interface BoxContextValue {
    */
   returnTo: string | null;
   setReturnTo: (path: string) => void;
+  /**
+   * Play "Preparing your box" and then open Your box. It lives here, above the pages, so it can keep
+   * playing while Your box loads underneath and then open onto it.
+   */
+  startPacking: (data: PackingData) => void;
 }
 
 const BoxContext = createContext<BoxContextValue | null>(null);
@@ -62,6 +68,7 @@ export function BoxProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(boxReducer, INITIAL_BOX);
   const [theme, setThemeState] = useState<Theme>('light');
   const [returnTo, setReturnTo] = useState<string | null>(null);
+  const [packing, setPacking] = useState<PackingData | null>(null);
 
   // Restore this tab's session (box, answers, delivery) so a reload or a typed address keeps it.
   // Otherwise start fresh, with the default delivery date set in the browser (relative to the real
@@ -119,10 +126,16 @@ export function BoxProvider({ children }: { children: ReactNode }) {
       setTheme: setThemeState,
       returnTo,
       setReturnTo,
+      startPacking: setPacking,
     };
   }, [state, theme, returnTo]);
 
-  return <BoxContext.Provider value={value}>{children}</BoxContext.Provider>;
+  return (
+    <BoxContext.Provider value={value}>
+      {children}
+      {packing && <PackingOverlay data={packing} onDone={() => setPacking(null)} />}
+    </BoxContext.Provider>
+  );
 }
 
 export function useBox(): BoxContextValue {

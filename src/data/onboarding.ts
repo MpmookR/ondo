@@ -95,3 +95,20 @@ export const extraOptions: { id: Extra; label: string; icon: IconName }[] = [
   { id: 'bites', label: 'Bites', icon: 'cookie' },
   { id: 'sweeteners', label: 'Sweetener', icon: 'jar' },
 ];
+
+/**
+ * What the "Preparing your box" screen ticks off: the answers that shaped the box, in their words,
+ * at most four. Only answers they gave; nothing about the defaults used for skipped ones.
+ */
+export function packingLines(customer: Customer, opts: { drinkCount: number; addOnCount: number; answeredCaffeine: boolean; avoidLabels: string[]; goalLabel?: string }): string[] {
+  const lines: string[] = [];
+  if (opts.goalLabel) lines.push(`Picked for ${opts.goalLabel}`);
+  if (opts.avoidLabels.length > 0) lines.push(`Leaving out ${listOf(opts.avoidLabels.map((a) => a.toLowerCase()))}`);
+  if (opts.answeredCaffeine) lines.push(`Nothing above ${customer.maxCaffeine} of 5 caffeine`);
+  if (opts.drinkCount > 0) lines.push('Sized to last about 15 days');
+  if (opts.addOnCount > 0) lines.push(opts.addOnCount === 1 ? 'Adding something to try with your cup' : 'Adding a couple of things to try');
+  return lines.slice(0, 4);
+}
+
+const listOf = (words: string[]) =>
+  words.length <= 1 ? (words[0] ?? '') : `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;

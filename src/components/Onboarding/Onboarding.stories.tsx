@@ -11,6 +11,8 @@ import { ChoiceCard } from './ChoiceCard';
 import { CaffeinePicker, type CaffeineLimit } from './CaffeinePicker';
 import { ChipGroup, CupTally, QuestionHeading } from './QuestionParts';
 import { KitDrawings } from './KitDrawings';
+import { PackingBox } from './PackingBox';
+import { catalogue } from '@/data/catalogue';
 import { brewKitOptions } from '@/data/labels';
 import type { BrewKit } from '@/types';
 
@@ -158,4 +160,14 @@ export const BrewKitDrawings: Story = {
       </>
     );
   },
+};
+
+/** After "Build my box": the picks drop into the box, the answers tick off, the lid folds shut. Replay with the reload button. */
+export const PreparingYourBox: Story = {
+  render: () => (
+    <PackingBox
+      items={['c-yirgacheffe', 'm-everyday', 'b-dark-chocolate'].map((id) => catalogue.find((i) => i.id === id)!)}
+      lines={['Picked for a strong start', 'Leaving out dairy', 'Sized to last about 15 days', 'Adding something to try with your cup']}
+    />
+  ),
 };

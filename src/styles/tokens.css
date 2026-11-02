@@ -98,6 +98,9 @@
   --raw-illo-leaf-light: #4e7f55;
   --raw-illo-drop-light: #c98a5e;
   --raw-illo-drop-dark: #3e2219;
+  --raw-illo-kraft: #c89a6a;        /* the shipping box */
+  --raw-illo-kraft-light: #dcb487;  /* its lid flap, catching the light */
+  --raw-illo-kraft-dark: #94683f;   /* inside the box */
 
   /* The caffeine picker's coffee pour (question 6): how long one glass takes to fill, and how far
      behind the one before it the next starts. */
@@ -206,6 +209,9 @@
   --illo-leaf: var(--raw-green);
   --illo-drop-light: var(--raw-illo-drop-light);
   --illo-drop-dark: var(--raw-illo-drop-dark);
+  --illo-kraft: var(--raw-illo-kraft);
+  --illo-kraft-light: var(--raw-illo-kraft-light);
+  --illo-kraft-dark: var(--raw-illo-kraft-dark);
   --illo-steam: var(--raw-vanilla-50);
   /* How it works: each step's arch is a solid brand colour block (never Flame, which is for the call
      to action). Pack shots sit straight on it. */
@@ -328,6 +334,9 @@
   --color-illo-arch-earth: var(--illo-arch-earth);
   --color-illo-coffee: var(--illo-coffee-top);
   --color-illo-crema: var(--illo-crema);
+  --color-illo-kraft: var(--illo-kraft);
+  --color-illo-kraft-light: var(--illo-kraft-light);
+  --color-illo-kraft-dark: var(--illo-kraft-dark);
 
   --text-*: initial;
   --text-display: var(--type-display-size);
@@ -466,6 +475,19 @@
   /* The coffee's surface in the caffeine picker, rippling sideways. */
   --animate-liquid-wave: liquid-wave 2.4s linear infinite;
   --animate-cup-in: pop 600ms var(--ease-silk) calc(var(--stagger, 0) * 120ms) both;
+  /* Packing the first box: packs drop in while each answer is checked off in turn (1.5s apart), the
+     lid folds shut, "Your box is ready", then Your box opens like the homepage (a circle from the
+     box, 2s). The timeline depends on how many answers there are, so each element's start is an
+     inline animation-delay set in code (a var() here would resolve once, at the root). */
+  --animate-pack-drop: pack-drop 700ms var(--ease-brew) both;
+  --animate-pack-line: option-in 420ms var(--ease-silk) both;
+  --animate-pack-check: pop 360ms var(--ease-brew) both;
+  --animate-pack-done: pack-done 360ms ease-out both;
+  --animate-pack-lid: pack-lid 480ms var(--ease-brew) both;
+  --animate-pack-flaps-out: pack-flaps-out 160ms linear both;
+  --animate-pack-ready: option-in 420ms var(--ease-silk) both;
+  --animate-pack-open: preload-open 2000ms var(--ease-brew) both;
+  --animate-pack-zoom: preload-zoom 2000ms var(--ease-brew) both;
   /* Line drawings that draw themselves (brew kit): each path sets pathLength="1" and `--stagger`, so
      its strokes follow one another 110ms apart. Under reduced motion they simply show, fully drawn. */
   --animate-draw: draw 900ms var(--ease-silk) calc(var(--stagger, 0) * 110ms) both;
@@ -520,6 +542,10 @@
     from { stroke-dasharray: 1; stroke-dashoffset: 1; }
     to { stroke-dasharray: 1; stroke-dashoffset: 0; }
   }
+  @keyframes pack-drop { 0% { opacity: 0; transform: translateY(-140px); } 60% { opacity: 1; transform: translateY(6px); } 80% { transform: translateY(-3px); } 100% { opacity: 1; transform: none; } }
+  @keyframes pack-lid { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes pack-flaps-out { to { opacity: 0; } }
+  @keyframes pack-done { from { color: var(--color-text-muted); } to { color: var(--color-text-primary); } }
   @keyframes option-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
   @keyframes pop { 0% { transform: scale(0.4); opacity: 0; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
   @keyframes brew-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }

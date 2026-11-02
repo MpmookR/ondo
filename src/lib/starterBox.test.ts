@@ -133,3 +133,12 @@ test('a placed order survives a reload; a session saved before orders existed ha
   assert.ok(isBoxState(older));
   assert.equal(boxReducer(box, { type: 'restore', state: older as BoxState }).ordered, false);
 });
+
+test('the preparing screen ticks off only answers they gave, at most four', async () => {
+  const { packingLines } = await import('../data/onboarding');
+  assert.deepEqual(
+    packingLines(customer, { drinkCount: 2, addOnCount: 1, answeredCaffeine: true, avoidLabels: ['Dairy', 'Nuts'], goalLabel: 'calm focus' }),
+    ['Picked for calm focus', 'Leaving out dairy and nuts', 'Nothing above 4 of 5 caffeine', 'Sized to last about 15 days'],
+  );
+  assert.deepEqual(packingLines(SKIPPED, { drinkCount: 1, addOnCount: 0, answeredCaffeine: false, avoidLabels: [] }), ['Sized to last about 15 days']);
+});
