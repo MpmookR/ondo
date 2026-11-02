@@ -21,6 +21,11 @@ export interface BoxState {
    * Until then `customer` holds the safe defaults, and Your box and the shop ask instead of showing them.
    */
   answered: boolean;
+  /**
+   * The first box has been paid for (a demo: nothing is charged). Saved with the session, so a
+   * reload of Checkout shows the same confirmation instead of the payment form again.
+   */
+  ordered: boolean;
 }
 
 export type BoxAction =
@@ -38,7 +43,9 @@ export type BoxAction =
   | { type: 'startFirstBox'; customer: Customer; lines: BoxLine[] }
   /** Restore a saved session (sessionStorage), so a reload keeps the box, answers and choices. */
   | { type: 'restore'; state: BoxState }
-  | { type: 'setDeliveryDate'; date: ISODate };
+  | { type: 'setDeliveryDate'; date: ISODate }
+  /** Pay tapped and the card passed: the order is placed. */
+  | { type: 'placeOrder' };
 
 export const MAX_QTY = 9;
 
@@ -108,10 +115,13 @@ export function boxReducer(state: BoxState, action: BoxAction): BoxState {
       return { ...state, customer: action.customer, lines, railLines: lines, answered: true };
     }
     case 'restore':
-      // A reload is a fresh page open: the rail is worked out from the box as it is now.
-      return { ...action.state, railLines: action.state.lines };
+      // A reload is a fresh page open: the rail is worked out from the box as it is now. A session
+      // saved before `ordered` existed has no order.
+      return { ...action.state, railLines: action.state.lines, ordered: action.state.ordered === true };
     case 'setDeliveryDate':
       return { ...state, deliveryDate: action.date };
+    case 'placeOrder':
+      return { ...state, ordered: true };
   }
 }
 

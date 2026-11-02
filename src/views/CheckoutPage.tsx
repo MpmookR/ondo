@@ -34,7 +34,8 @@ export function CheckoutPage() {
   const [card, setCard] = useState<CardInput>({ number: '', expiry: '', cvc: '' });
   const [errors, setErrors] = useState<CardErrors>({});
   const [sameBilling, setSameBilling] = useState(true);
-  const [paid, setPaid] = useState(false);
+  // Saved with the session, so a reload after paying shows the same confirmation.
+  const paid = state.ordered;
   const refs = {
     number: useRef<HTMLInputElement>(null),
     expiry: useRef<HTMLInputElement>(null),
@@ -52,7 +53,7 @@ export function CheckoutPage() {
     setErrors(found);
     const first = (['number', 'expiry', 'cvc'] as const).find((f) => found[f]);
     if (first) refs[first].current?.focus();
-    else setPaid(true);
+    else dispatch({ type: 'placeOrder' });
   };
 
   // Checkout is only reached from Your box, so Back returns there (with the box and delivery as they were).
@@ -164,7 +165,7 @@ export function CheckoutPage() {
             <p className="font-sans text-body-sm text-text-muted">Secure, encrypted payment</p>
           </div>
 
-          <WalletButtons onPay={() => setPaid(true)} purpose={subscription ? 'pay' : 'buy'} theme={theme} />
+          <WalletButtons onPay={() => dispatch({ type: 'placeOrder' })} purpose={subscription ? 'pay' : 'buy'} theme={theme} />
 
           <Divider>or pay with card</Divider>
 

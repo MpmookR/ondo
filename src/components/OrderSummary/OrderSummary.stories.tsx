@@ -39,6 +39,7 @@ const start: BoxState = {
   railLines: [],
   deliveryDate: null,
   answered: true,
+  ordered: false,
 };
 
 export const WholeBox: Story = {

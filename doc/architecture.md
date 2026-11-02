@@ -43,7 +43,8 @@ Your box; each marks itself with `useReturnHere`), however many products they ho
 "Goes well with this". Opened directly, it goes to the shop.
 
 The box, preferences, delivery plan and theme live in `BoxProvider` (React context in the root
-layout), so moving between pages loses nothing. The session (box, answers, delivery choice) is also
+layout), so moving between pages loses nothing. The session (box, answers, delivery choice, and
+whether the order was placed: `ordered`, set by `placeOrder`) is also
 saved to `sessionStorage` for the tab, so a reload or a typed address keeps it until the tab closes;
 a missing, blocked or old-shaped save just starts fresh. The theme is remembered per browser.
 
@@ -167,7 +168,7 @@ starterBox(customer, catalogue): { lines: BoxLine[]; leftOut: { category, reason
 
 Drinks pass the rail's hard filters (taster packs excluded), score +3 goal, +1 brews with their kit,
 +1 taste, and the top one per drink type is picked (ties to the lower price, at most three). Packs
-per drink make the box last about 30 days, between 1 and 3. Then one add-on per category in
+per drink make the box last about 15 days, between 1 and 3. Then one add-on per category in
 `extras`, only if it pairs with a picked drink and costs £6 or less, marked `firstBoxOnly`.
 Onboarding dispatches `startFirstBox` with the answers and these lines. Rules in
 [prd.md](prd.md#starter-box).

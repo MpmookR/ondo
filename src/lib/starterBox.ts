@@ -17,8 +17,8 @@ export const STARTER_POINTS = {
   tasteMatch: 1,
 } as const;
 
-/** Size the box to last about this long: the middle delivery option. */
-export const TARGET_DAYS = 30;
+/** Size the box to last about this long: the most frequent delivery, so the first price stays small. */
+export const TARGET_DAYS = 15;
 export const MIN_PACKS = 1;
 /** Keeps a large household's first box from getting very expensive. */
 export const MAX_PACKS = 3;

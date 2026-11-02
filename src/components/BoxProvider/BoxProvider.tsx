@@ -21,6 +21,7 @@ export const INITIAL_BOX: BoxState = {
   answered: false,
   railLines: [],
   deliveryDate: null,
+  ordered: false,
 };
 
 /** Default first delivery: a week from today. The rest of the delivery rules come later. */

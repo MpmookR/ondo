@@ -31,7 +31,7 @@ import {
   type StepId,
 } from '@/data/onboarding';
 import { starterBox } from '@/lib/starterBox';
-import { boxHref, homeHref, shopHref } from '@/lib/routes';
+import { boxHref, shopHref } from '@/lib/routes';
 import type { BrewKit, Count, Customer, DrinkCategory, Extra, Goal, Taste } from '@/types';
 import type { IconName } from '@/components/Icon';
 
@@ -340,13 +340,8 @@ export function OnboardingPage() {
       <WindowLight />
 
       <header className="relative mx-auto flex w-full max-w-content items-center justify-between gap-16 px-margin py-12">
-        <Link
-          href={homeHref}
-          aria-label="Ondo, home"
-          className="flex min-h-44 items-center rounded-sm font-heading text-title font-heavy uppercase tracking-wide text-brand"
-        >
-          Ondo
-        </Link>
+        {/* The wordmark stays, but it isn't a way out: mid-way, "I'd rather browse" is (and it keeps the answers). */}
+        <span className="flex min-h-44 items-center font-heading text-title font-heavy uppercase tracking-wide text-brand">Ondo</span>
         <div className="flex items-center gap-4">
           <button
             type="button"

@@ -151,7 +151,7 @@ flowchart LR
    [Onboarding](#onboarding-build-your-first-box-next)). "I'd rather browse" on any screen goes to
    the Shop with whatever was answered so far kept.
 2. **Starter box.** Onboarding fills the box with drinks, picked by the same filter and score as
-   the rail and sized to last about 30 days (see [Starter box](#starter-box)). They're labelled
+   the rail and sized to last about 15 days (see [Starter box](#starter-box)). They're labelled
    "Picked for you", and each can be removed or swapped in one tap.
 3. **Add-ons only when asked.** If the customer said yes to "Add something to try with your cup?",
    the starter box also gets one bite and/or one sweetener that goes with their drinks, for the
@@ -194,7 +194,9 @@ flowchart LR
 - **Empty box** (every item removed): the rail is replaced by "Start with a drink" linking to the
   Shop, and Checkout is hidden.
 - **Checkout:** Sign up · Delivery · Payment, then an order confirmation that repeats the first
-  delivery date and the terms.
+  delivery date and the terms. The order is saved with the session, so a reload shows the same
+  confirmation (never the payment form again), and Back goes to Your box. "My orders" comes later
+  with a profile.
 
 ### Flow metrics
 
@@ -218,9 +220,10 @@ screen: the Homepage is the intro.
   reason under the question.
 - Every question can be skipped. A skipped answer falls back to a safe default, never a guess
   that could break a hard filter.
-- A progress bar throughout, and back works on every screen.
+- A progress bar throughout, and Back on every screen after the first.
 - "I'd rather browse" sits in the top bar on every screen: it goes to the Shop and keeps whatever
-  was answered so far.
+  was answered so far. It's the only way out mid-way: the ONDO wordmark stays in the top bar but
+  isn't a link here, so a tap on the logo never drops the answers.
 - Nothing moves on by itself: an answered screen shows "Next", an unanswered one "Skip". Auto-advancing
   hides the choice before it can be checked and makes a mis-tap cost a "Back".
 - No budget question: the plan prices cover it, and asking up front feels like a sales question.
@@ -346,10 +349,11 @@ Ties go to the lower price (protects conversion).
 **Step 3: Pick** the top-scoring drink **per drink type** in `drinks`, at most three. Three is the
 most before the box stops feeling picked and starts feeling like a catalogue.
 
-**Step 4: Size** to last about **30 days**, the middle cadence, so the delivery suggestion usually
-agrees with the box:
+**Step 4: Size** to last about **15 days**, the most frequent delivery. A smaller first box keeps
+the first price easy to say yes to (conversion wins over a bigger first order), and every 15 days
+has the biggest saving. AOV per box is lower; what the customer spends a month is about the same.
 
-1. Cups needed: drinkers × cups a day × 30, split evenly across the picked drinks.
+1. Cups needed: drinkers × cups a day × 15, split evenly across the picked drinks.
 2. Packs per drink: cups needed ÷ the drink's `cups`, rounded to the nearest whole pack, at least 1
    and at most 3.
 3. The cap stops a large household getting a very expensive first box. Their delivery suggestion
@@ -392,8 +396,9 @@ coffee and matcha, brews with a filter, goal calm focus, caffeine limit 4, avoid
 - Coffee: no coffee matches calm focus, and three brew with a filter (+1 each); the tie goes to the
   lowest price, Swiss Water Decaf. Matcha: Everyday Latte Matcha and Kyoto Ceremonial both match
   the goal (+3); the tie goes to Everyday, the cheaper.
-- 60 cups needed, 30 per drink: Decaf (16 cups) × 2 and Everyday (25 cups) × 1 = 57 cups, 28 days,
-  so the suggestion is every 30 days.
+- 30 cups needed, 15 per drink: Decaf (16 cups) × 1 and Everyday (25 cups) × 1 = 41 cups, 20 days,
+  so the suggestion is every 15 days. A box can last longer than 15 days because a drink is never
+  less than one pack; the suggestion then picks the closest delivery, and nothing is chosen for them.
 - Four people at 4 cups each would need 480 cups; the cap holds it at 3 packs per drink and the
   suggestion becomes every 15 days.
 - With "Bites" and "Sweetener": Sesame Rice Crackers (pair with the Everyday matcha, £4) and

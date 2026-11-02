@@ -69,7 +69,7 @@ test('unavailable reasons', () => {
 });
 
 test('reducer: quantities, and the rail only refreshes on preference changes', () => {
-  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: defaultBox, deliveryDate: null, answered: true };
+  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: defaultBox, deliveryDate: null, answered: true, ordered: false };
   state = boxReducer(state, { type: 'setQty', itemId: 'g-infuser', qty: 1 });
   state = boxReducer(state, { type: 'setQty', itemId: 'm-ceremonial', qty: 2 });
   state = boxReducer(state, { type: 'setQty', itemId: 'c-yirgacheffe', qty: 0 });
@@ -86,7 +86,7 @@ test('reducer: quantities, and the rail only refreshes on preference changes', (
 });
 
 test('reducer: onboarding answers update the customer and refresh the rail', () => {
-  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: [], deliveryDate: null, answered: true };
+  let state: BoxState = { lines: defaultBox, plan: 'every-15', customer: defaultCustomer, railLines: [], deliveryDate: null, answered: true, ordered: false };
   state = boxReducer(state, { type: 'updateCustomer', patch: { drinkers: 3, brewKit: [] } });
   assert.equal(state.customer.drinkers, 3);
   assert.deepEqual(state.customer.brewKit, []);
