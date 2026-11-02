@@ -39,8 +39,9 @@ nothing is charged and the Apple Pay and Google Pay buttons are static.
 
 ### Before and after
 
-[doc/story.md](doc/story.md) walks through the original flow and the redesign, screen by screen:
-what each change was and which principle it serves.
+[doc/story.md](doc/story.md) tells it in two parts: the 2-day take-home (the original flow and the
+redesign, screen by screen, and which principle each change serves), then the three days after,
+building it as Ondo (onboarding, the starter box, and the unhappy paths).
 
 ## What's in it
 
@@ -76,7 +77,7 @@ npm run lint             # type-check
 | [doc/prd.md](doc/prd.md) | Product, goals, recommendation rules, wording rules |
 | [doc/architecture.md](doc/architecture.md) | Stack, structure, data model |
 | [doc/agent.md](doc/agent.md) | Rules for AI coding tools and the definition of done |
-| [doc/story.md](doc/story.md) | The redesign story: before and after, screen by screen |
+| [doc/story.md](doc/story.md) | The story: the 2-day take-home, then 3 more days building Ondo |
 
 ## Credits
 

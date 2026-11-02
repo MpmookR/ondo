@@ -38,6 +38,12 @@ The two pull against each other: every extra suggestion is a chance to add an it
 make the box feel pushy or expensive. So each part of the design either **grows the box** or
 **protects conversion**, and the second always wins a tie.
 
+**Choice, not size.** A bigger basket only counts if the order goes through: an abandoned £40 box
+is worth less than a paid £25 one, and a big first price is where orders get lost. So the starter
+box stays small (sized to about 15 days, at most 3 packs a drink, ties to the cheaper item), and
+the basket grows through things the customer chooses: the rails, and add-ons only when they ask.
+AOV is always read on paid orders, next to conversion, never on its own.
+
 | Grows the box (AOV, items per order) | Protects conversion (the guard rail) |
 | --- | --- |
 | Goal-based rail: up to 6 suggestions, each with a one-line reason | Total, saving and cadence always visible (sticky bar on mobile, sidebar on desktop) |
@@ -417,8 +423,8 @@ for example by breaking ties on caffeine closest to the customer's limit.
   a candidate to move or cut).
 - Skip rate per question, and how often "I'd rather browse" is used (and from which screen).
 - Share of first boxes kept without changes (the starter box matched what they wanted).
-- Swap rate and quantity changes per starter line: many reductions mean the 30-day sizing is too
-  generous.
+- Swap rate and quantity changes per starter line: many reductions mean the 15-day sizing is too
+  generous; many increases (or the "may run short" line shown often) mean it's too small.
 - Pre-added add-ons: share of customers saying yes to the extras question, removal rate before
   checkout (a high rate means the question isn't working as consent), and how many turn on "Keep in
   every delivery".
@@ -544,3 +550,6 @@ Measured on **new customers' first boxes**, in an A/B test against the box page 
   vs one-off mix.
 - **Diagnostic:** rail impressions, add rate from the rail by position and reason, removals of
   rail-added items before checkout (a sign of regret), adds by category.
+- **Decision:** AOV up and conversion flat: ship it. AOV up but conversion down past the
+  threshold: stop and simplify. Conversion up but AOV flat: the clarity works and the relevance
+  doesn't yet.
