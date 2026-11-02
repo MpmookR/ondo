@@ -109,9 +109,14 @@
   inherits: false;
   initial-value: 0%;
 }
+/* The carafe stands on the table about two thirds of the way down the screen (66%): the hole opens there,
+   and the zoom heads there too. */
 @utility preload-mask {
-  -webkit-mask-image: radial-gradient(circle at 50% 42%, transparent var(--preload-hole), black calc(var(--preload-hole) + 1%));
-  mask-image: radial-gradient(circle at 50% 42%, transparent var(--preload-hole), black calc(var(--preload-hole) + 1%));
+  -webkit-mask-image: radial-gradient(circle at 50% 66%, transparent var(--preload-hole), black calc(var(--preload-hole) + 1%));
+  mask-image: radial-gradient(circle at 50% 66%, transparent var(--preload-hole), black calc(var(--preload-hole) + 1%));
+}
+@utility preload-focus {
+  transform-origin: 50% 66%;
 }
 
 /* Scroll parallax: moves by --parallax (set from scroll by useParallax). Uses `translate`, so it

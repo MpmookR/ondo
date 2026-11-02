@@ -6,6 +6,7 @@ import { boxHref, homeHref, onboardingHref, shopHref } from '@/lib/routes';
 import { ButtonLink, IconButton } from '../Button';
 import { BrewScene } from './BrewScene';
 import { TypedHeadline } from './TypedHeadline';
+import { Tabletop } from './Tabletop';
 import { WindowLight } from './WindowLight';
 
 export interface HomeHeroProps {
@@ -21,47 +22,6 @@ const HEADLINE_LABEL = 'early birds, tea people, matcha mornings and slow sipper
 const navLink =
   'flex min-h-44 items-center rounded-pill px-12 font-sans text-label font-semibold ' +
   'transition-colors duration-120 ease-brew hover:bg-bg-subtle';
-
-/** Plank seams on the tabletop, running towards a vanishing point behind the table (0–1000 wide). */
-const seams = [60, 190, 320, 450, 580, 710, 840, 970];
-/** Fine grain between the seams. */
-const grain = [120, 255, 385, 515, 645, 775, 905];
-/** Where a line at the back (x) lands at the front edge, in perspective. */
-const front = (x: number) => 500 + (x - 500) * 1.35;
-
-/**
- * The wooden table the scene stands on, in 3D: a top surface seen in perspective (planks and grain
- * running away from you, lighter where the window light falls nearest), a lit front edge, and its
- * shadow on the floor. Decorative.
- */
-function Table({ className = '' }: { className?: string }) {
-  return (
-    <div aria-hidden="true" className={className}>
-      <div className="relative h-40 overflow-hidden bg-linear-to-b from-illo-table-back to-illo-table-front lg:h-64">
-        <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="absolute inset-0 size-full">
-          <g stroke="var(--illo-table-grain)" fill="none" vectorEffect="non-scaling-stroke">
-            {seams.map((x) => (
-              <line key={x} x1={x} y1="0" x2={front(x)} y2="100" strokeOpacity="0.28" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-            ))}
-            {grain.map((x) => (
-              <path
-                key={x}
-                d={`M${x} 0 C${x + 6} 35 ${front(x) - 8} 65 ${front(x)} 100`}
-                strokeOpacity="0.1"
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
-          </g>
-        </svg>
-      </div>
-      <div className="h-16 border-t-2 border-illo-table-bevel bg-linear-to-b from-illo-table-edge-top to-illo-table-edge-bottom lg:h-40" />
-      <div className="h-16 bg-bg-page lg:h-24">
-        <div className="h-full bg-linear-to-b from-illo-table-shadow to-transparent" />
-      </div>
-    </div>
-  );
-}
 
 /**
  * Homepage hero, "Sunday Drip": slow-brew scene, headline and the one main call to action.
@@ -114,7 +74,7 @@ export function HomeHero({ theme, onThemeChange }: HomeHeroProps) {
 
         <div className="lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:self-end">
           <BrewScene className="relative z-10 mx-auto -mb-32 max-w-scene lg:mb-0" />
-          <Table className="-mx-margin lg:hidden" />
+          <Tabletop className="-mx-margin lg:hidden" />
         </div>
 
         <div className="-mx-margin flex animate-brew-rise flex-col gap-16 bg-bg-page px-margin pb-48 pt-24 motion-reduce:animate-none lg:col-span-7 lg:row-start-2 lg:mx-0 lg:self-start lg:bg-transparent lg:px-0 lg:pb-48 lg:pt-8">
@@ -133,7 +93,7 @@ export function HomeHero({ theme, onThemeChange }: HomeHeroProps) {
         </div>
       </div>
 
-      <Table className="relative hidden lg:block" />
+      <Tabletop className="relative hidden lg:block" />
     </section>
   );
 }

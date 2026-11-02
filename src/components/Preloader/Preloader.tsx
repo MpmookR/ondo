@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { BrewScene } from '../HomeHero/BrewScene';
+import { Tabletop } from '../HomeHero/Tabletop';
+import { WindowLight } from '../HomeHero/WindowLight';
 
 export type PreloadPhase = 'loading' | 'opening' | 'done';
 
@@ -25,7 +27,9 @@ const SEEN_KEY = 'ondo:preloaded';
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
 /**
- * Homepage preloader: the pour-over drips into an empty carafe that fills as the counter climbs
+ * Homepage preloader, always in the dark theme: the hero's room in the evening, the window light
+ * falling across the wall and the same wooden table. The pour-over on it drips into an empty
+ * carafe that fills as the counter climbs
  * from 0 to 100%. When the page has loaded (window load + fonts) and the carafe is full, the view
  * zooms into the coffee while a circle opens from it to reveal the page.
  * Shows once per visit (sessionStorage). Under reduced motion the reveal is instant. A CSS
@@ -107,26 +111,36 @@ export function Preloader({ onPhaseChange }: PreloaderProps) {
   const opening = phase === 'opening';
 
   return (
+    // Always the dark theme: the evening room, with the window light falling across it.
     <div
       data-preloader
-      className={`fixed inset-0 z-50 grid place-items-center bg-linear-to-b from-illo-wall-top to-illo-wall-bottom px-margin ${
+      data-theme="dark"
+      className={`fixed inset-0 z-50 overflow-hidden bg-bg-page ${
         opening ? 'preload-mask pointer-events-none animate-preload-open' : 'animate-preload-failsafe'
       }`}
     >
-      <div className={`flex w-full max-w-frame flex-col items-center gap-16 ${opening ? 'animate-preload-zoom' : ''}`}>
-        <div className="w-3/4">
-          <BrewScene level={progress / 100} />
+      <div className={`preload-focus flex h-full flex-col ${opening ? 'animate-preload-zoom' : ''}`}>
+        {/* The wall with the window light, and the scene standing on the table (it overlaps the top). */}
+        <div className="relative flex flex-1 flex-col justify-end bg-linear-to-b from-illo-wall-top to-illo-wall-bottom">
+          <WindowLight />
+          <div className="relative z-10 mx-auto -mb-32 w-3/4 max-w-scene lg:-mb-48">
+            <BrewScene level={progress / 100} />
+          </div>
         </div>
-        <div
-          role="progressbar"
-          aria-label="Loading Ondo"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={progress}
-          className="flex flex-col items-center gap-4"
-        >
-          <span className="font-heading text-hero tabular-nums text-brand">{progress}%</span>
-          <span className="font-sans text-eyebrow uppercase text-text-muted">Brewing your mornings</span>
+        <Tabletop />
+        {/* The floor in front of the table: the counter. */}
+        <div className="flex flex-col items-center gap-4 px-margin pb-64 pt-24">
+          <div
+            role="progressbar"
+            aria-label="Loading Ondo"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+            className="flex flex-col items-center gap-4"
+          >
+            <span className="font-heading text-hero tabular-nums text-brand">{progress}%</span>
+            <span className="font-sans text-eyebrow uppercase text-text-muted">Brewing your mornings</span>
+          </div>
         </div>
       </div>
     </div>
