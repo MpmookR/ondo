@@ -88,6 +88,18 @@ const saving = (discount: number) => (discount > 0 ? `Save ${Math.round(discount
 const perDayText = (s: DeliverySuggestion, drinkers: Count) =>
   `${s.cupsPerDay} cup${s.cupsPerDay === 1 ? '' : 's'} a day${drinkers > 1 ? ' between you' : ''}`;
 
+/** One line of the delivery hint: a dot, the fact in bold, then the detail. */
+function HintLine({ lead, children }: { lead: string; children: ReactNode }) {
+  return (
+    <li className="flex items-baseline gap-8">
+      <span aria-hidden="true" className="size-6 shrink-0 -translate-y-2 rounded-pill bg-primary" />
+      <span>
+        <span className="font-bold">{lead}</span> {children}
+      </span>
+    </li>
+  );
+}
+
 export interface DeliveryCardProps {
   /** Null until the customer picks; nothing is chosen for them. */
   plan: PlanId | null;
@@ -184,21 +196,21 @@ export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestio
           <h3 id={freqId} className="font-sans text-caption uppercase tracking-wide text-text-muted">
             How often
           </h3>
-          {suggestion && suggested && (
-            <p className="rounded-sm bg-primary-subtle px-12 py-8 font-sans text-body-sm">
-              {suggestion.runsShort ? (
-                <>
-                  Your box makes about {suggestion.cupsInBox} cups: about {suggestion.daysLasting} days at{' '}
-                  {perDayText(suggestion, drinkers)}. Every 15 days is the most often we deliver, so you may want a little more in
-                  your box.
-                </>
-              ) : (
-                <>
-                  <span className="font-bold">We suggest every {suggested.label}.</span> Your box makes about {suggestion.cupsInBox}{' '}
-                  cups: about {suggestion.daysLasting} days at {perDayText(suggestion, drinkers)}.
-                </>
-              )}
-            </p>
+          {/* Built to scan: the point as a title, then short lines that each lead with the fact in bold.
+              Hidden for a one-off: there's no next delivery for it to be about. */}
+          {suggestion && suggested && plan !== 'once' && (
+            <div className="flex flex-col gap-4 rounded-sm bg-primary-subtle px-12 py-8 font-sans text-body-sm">
+              <p className="font-semibold text-primary">
+                {suggestion.runsShort ? 'Your box may run short' : `We suggest every ${suggested.label}`}
+              </p>
+              <ul className="flex flex-col gap-2">
+                <HintLine lead={`About ${suggestion.cupsInBox} cups`}>in your box</HintLine>
+                <HintLine lead={`Lasts about ${suggestion.daysLasting} day${suggestion.daysLasting === 1 ? '' : 's'}`}>
+                  at {perDayText(suggestion, drinkers)}
+                </HintLine>
+                {suggestion.runsShort && <HintLine lead="We deliver every 15 days">at most, so add a little more</HintLine>}
+              </ul>
+            </div>
           )}
           <PillGroup
             labelledBy={freqId}
