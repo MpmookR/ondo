@@ -158,7 +158,7 @@ function Ticker() {
 /** "How it works": an editorial zig-zag of three steps, product photography in arches, then a ticker. */
 export function HowItWorks() {
   return (
-    <section id="how-it-works" aria-labelledby="how-it-works-title" className="py-96 lg:py-128">
+    <section id="how-it-works" aria-labelledby="how-it-works-title" className="py-96">
       <div className="mx-auto max-w-content px-margin">
         <Reveal className="flex flex-col items-center gap-16 text-center">
           <p className="font-sans text-eyebrow uppercase text-text-muted group-data-ready:opacity-0 group-data-seen:animate-soft-up">
