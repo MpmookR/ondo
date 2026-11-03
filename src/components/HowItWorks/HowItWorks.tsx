@@ -121,9 +121,10 @@ function StepRow({ step, index }: { step: Step; index: number }) {
         <p className="font-sans text-label text-text-muted group-data-ready:opacity-0 group-data-seen:animate-soft-up" style={beat(5)}>
           {step.detail}
         </p>
-        {/* After the last step, the next move: it arrives with that step's words. */}
+        {/* After the last step, the next move: it arrives with that step's words. Like the hero's
+            "Build your first box": full width on phones, its own width from 640px. */}
         {index === steps.length - 1 && (
-          <span className="mt-12 self-center group-data-ready:opacity-0 lg:self-start group-data-seen:animate-soft-up" style={beat(6)}>
+          <span className="mt-12 flex flex-col self-stretch group-data-ready:opacity-0 sm:self-start group-data-seen:animate-soft-up" style={beat(6)}>
             <ButtonLink href={onboardingHref} size="lg" icon="arrow-right" iconPosition="end">
               Start with step one
             </ButtonLink>
@@ -157,7 +158,7 @@ function Ticker() {
 /** "How it works": an editorial zig-zag of three steps, product photography in arches, then a ticker. */
 export function HowItWorks() {
   return (
-    <section aria-labelledby="how-it-works-title" className="py-96 lg:py-128">
+    <section id="how-it-works" aria-labelledby="how-it-works-title" className="py-96 lg:py-128">
       <div className="mx-auto max-w-content px-margin">
         <Reveal className="flex flex-col items-center gap-16 text-center">
           <p className="font-sans text-eyebrow uppercase text-text-muted group-data-ready:opacity-0 group-data-seen:animate-soft-up">

@@ -54,7 +54,8 @@ export function Preloader({ onPhaseChange }: PreloaderProps) {
     } catch {
       // Storage blocked (private mode): just show it.
     }
-    if (seen) {
+    // Seen this visit, or arriving for a section ("How it works" from Your box): go straight there.
+    if (seen || window.location.hash) {
       setPhase('done');
       return;
     }

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import type { Theme } from '@/lib/box';
-import { homeHref } from '@/lib/routes';
+import { homeHref, howItWorksHref } from '@/lib/routes';
 import { Icon } from '../Icon';
 
 export interface PageHeaderProps {
@@ -84,8 +84,11 @@ export function PageHeader({ title, pageName = 'your box', backHref, onBack, the
   );
 }
 
-/** "You'll save 10% · How it works" line under the header. Leave out `learnMoreHref` to hide the link. */
-export function SavingsLine({ saving, learnMoreHref = '#delivery' }: { saving: string; learnMoreHref?: string | null }) {
+/**
+ * "You'll save 10% · How it works" line under the header. The link goes to the homepage's How it
+ * works section by default; pass `null` to hide it.
+ */
+export function SavingsLine({ saving, learnMoreHref = howItWorksHref }: { saving: string; learnMoreHref?: string | null }) {
   return (
     <p className="flex flex-wrap items-center justify-center gap-4 px-16 pb-16 font-sans text-label">
       <Icon name="tag" size={20} />
@@ -93,9 +96,9 @@ export function SavingsLine({ saving, learnMoreHref = '#delivery' }: { saving: s
         You&apos;ll save <span className="highlight px-4 py-2">{saving}</span> with a subscription
       </span>
       {learnMoreHref && (
-        <a href={learnMoreHref} className="font-medium text-text-muted underline underline-offset-4">
+        <Link href={learnMoreHref} className="font-medium text-text-muted underline underline-offset-4">
           How it works
-        </a>
+        </Link>
       )}
     </p>
   );

@@ -112,7 +112,7 @@ const semantic: { util: string; swatch: string; token: string; use: string }[] =
   { util: 'bg-primary-subtle', swatch: 'bg-primary-subtle', token: '--theme-primary-subtle', use: 'Info panels' },
   { util: 'text-on-primary', swatch: 'bg-on-primary', token: '--theme-on-primary', use: 'Text on primary' },
   { util: 'bg-spark', swatch: 'bg-spark', token: '--theme-spark', use: 'Highlights: in-box ring, typing caret, card icons' },
-  { util: 'bg-spark-subtle', swatch: 'bg-spark-subtle', token: '--theme-spark-subtle', use: 'Savings highlight' },
+  { util: 'bg-spark-subtle', swatch: 'bg-spark-subtle', token: '--theme-spark-subtle', use: 'Savings highlight, card icons' },
   { util: 'text-on-spark-subtle', swatch: 'bg-on-spark-subtle', token: '--theme-on-spark-subtle', use: 'Text on the savings highlight' },
   { util: 'text-danger', swatch: 'bg-danger', token: '--theme-danger', use: 'Warnings and errors only' },
   { util: 'bg-danger-subtle', swatch: 'bg-danger-subtle', token: '--theme-danger-subtle', use: 'Warning panels' },
@@ -124,13 +124,15 @@ const pairs: { fg: string; bg: string; label: string; min: number }[] = [
   { fg: '--theme-text-muted', bg: '--theme-bg-page', label: 'Muted text on page', min: 4.5 },
   { fg: '--theme-text-muted', bg: '--theme-bg-subtle', label: 'Muted text on subtle', min: 4.5 },
   { fg: '--theme-action-text', bg: '--theme-action', label: 'Action button', min: 4.5 },
-  { fg: '--theme-on-brand', bg: '--theme-brand', label: 'Brand button', min: 4.5 },
+  { fg: '--theme-on-brand', bg: '--theme-brand', label: 'On brand (selected ticks, switch)', min: 4.5 },
+  { fg: '--theme-text-primary', bg: '--theme-brand-subtle', label: 'Text on a selected card', min: 4.5 },
   { fg: '--theme-on-primary', bg: '--theme-primary', label: 'On primary', min: 4.5 },
   { fg: '--theme-on-spark-subtle', bg: '--theme-spark-subtle', label: 'Savings highlight', min: 4.5 },
   { fg: '--theme-danger', bg: '--theme-bg-page', label: 'Danger on page', min: 4.5 },
   { fg: '--theme-danger', bg: '--theme-danger-subtle', label: 'Danger on its panel', min: 4.5 },
   { fg: '--theme-border-strong', bg: '--theme-bg-page', label: 'Strong border (non-text)', min: 3 },
   { fg: '--theme-spark', bg: '--theme-bg-page', label: 'Spark ring (non-text)', min: 3 },
+  { fg: '--theme-action', bg: '--theme-bg-page', label: 'Action button on the page (non-text)', min: 3 },
 ];
 
 const categories = ['coffee', 'tea', 'matcha', 'gear', 'bites', 'sweeteners'] as const;

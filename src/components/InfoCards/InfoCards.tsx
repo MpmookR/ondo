@@ -148,7 +148,7 @@ export function DeliveryCard({ plan, onPlanChange, date, onDateChange, suggestio
     return () => clearTimeout(t);
   }, [attention]);
 
-  // "How it works" in the header links here: open the card so the link lands on something.
+  // Links to #delivery ("Choose delivery" from checkout) open the card so they land on something.
   useEffect(() => {
     const openOnHash = () => {
       if (window.location.hash === '#delivery') setOpen(true);
