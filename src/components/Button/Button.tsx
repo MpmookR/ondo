@@ -7,7 +7,7 @@ export type ButtonSize = 'md' | 'lg';
 
 export interface ButtonProps extends ComponentPropsWithRef<'button'> {
   /**
-   * `primary` (Flame): the one main call to action per screen. `accent`: the category colour, for
+   * `primary` (deep blue; Columbia in dark): the one main call to action per screen. `accent`: the category colour, for
    * adding a drink. `secondary` (outline) and `ghost` (text only): everything else.
    */
   variant?: ButtonVariant;

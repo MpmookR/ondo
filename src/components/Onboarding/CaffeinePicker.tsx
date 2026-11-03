@@ -61,7 +61,7 @@ export function CaffeinePicker({ value, onChange, examples, labelledBy }: Caffei
               <span
                 aria-hidden="true"
                 className={`relative block w-full max-w-56 overflow-hidden rounded-sm border-2 bg-bg-subtle transition-[border-color,transform] duration-200 ease-brew group-hover/bar:-translate-y-2 motion-reduce:group-hover/bar:translate-y-0 ${HEIGHTS[level]} ${
-                  value === level ? 'border-primary' : 'border-border-strong'
+                  value === level ? 'border-brand' : 'border-border-strong'
                 }`}
               >
                 <span

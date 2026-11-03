@@ -12,7 +12,7 @@ export interface SwitchProps {
 
 /**
  * An on/off choice that takes effect straight away ("Keep in every delivery"). Blue when on, the
- * same blue as every selected state. The tap target is 44px tall around a smaller track.
+ * same brand green as every selected state. The tap target is 44px tall around a smaller track.
  */
 export function Switch({ checked, onChange, labelledBy, describedBy, disabled }: SwitchProps) {
   return (
@@ -29,7 +29,7 @@ export function Switch({ checked, onChange, labelledBy, describedBy, disabled }:
       <span
         aria-hidden="true"
         className={`flex h-20 w-36 items-center rounded-pill p-2 transition-colors duration-120 ease-brew ${
-          checked ? 'bg-primary' : 'bg-border-strong'
+          checked ? 'bg-brand' : 'bg-border-strong'
         }`}
       >
         <span

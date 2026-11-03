@@ -94,7 +94,7 @@ export function PackingBox({ items, lines, boxRef }: PackingData & { boxRef?: Re
               <span className="relative grid size-24 shrink-0 place-items-center rounded-pill border-2 border-border-strong">
                 <span
                   style={at(t.check(i))}
-                  className="absolute -inset-2 grid place-items-center rounded-pill bg-primary text-on-primary animate-pack-check motion-reduce:animate-none"
+                  className="absolute -inset-2 grid place-items-center rounded-pill bg-brand text-on-brand animate-pack-check motion-reduce:animate-none"
                 >
                   <Icon name="check" size={16} />
                 </span>

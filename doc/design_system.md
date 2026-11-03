@@ -30,29 +30,35 @@ contrast-checked.
 | --- | --- | --- | --- |
 | **Vanilla** | `#FFEEBC` | The canvas: page tone, quiet fills, add-on tint, text on dark | `--raw-vanilla` → `bg-bg-subtle` (page and cards use lighter Vanilla) |
 | **Bistre** | `#5D372A` | Text and coffee | `--raw-bistre` → `text-text-primary`, coffee accent |
-| **Cal Poly Green** | `#26422A` | The brand: secondary buttons, tabs, toggles, matcha, the dark theme | `--raw-green` → `brand`, matcha accent |
-| **Columbia Blue** | `#D2E8FF` | Selection and info: selected cards, info panels, tea | `--raw-columbia` → `bg-primary-subtle`, tea tint |
-| **Flame** | `#EA672D` | The spark: the main call to action and small highlights | `--raw-flame` → `action`, `spark` |
+| **Cal Poly Green** | `#26422A` | The brand, and **selected**: chosen options and cards, tabs, toggles, ticks; matcha; the dark theme | `--raw-green` → `brand`, `brand-subtle`, matcha accent |
+| **Columbia Blue** | `#D2E8FF` | **The main call to action** (deep blue in light, Columbia in dark) and info panels; tea | `--raw-columbia` / `--raw-blue-700` → `action`, `primary`, tea tint |
+| **Flame** | `#EA672D` | The spark: small highlights (savings, the typing caret, card icons, progress) | `--raw-flame` → `spark` |
 
 ### Roles, in order of how much of the screen they cover
 
 1. **Vanilla + Bistre**: the structure. Warm cream surfaces, brown text. Most of every screen.
-2. **Green, Blue and the category tints**: the personality. Category blocks, selected states,
-   secondary buttons, info panels.
-3. **Flame**: the spark, roughly 5–10% of a screen. Only the main call to action on each page
-   (Go to checkout, Add to box · price, View your box), the savings highlight and the "in your
-   box" outline on cards. If it spreads, it stops working.
-4. **Danger red**: warnings only (contains something you avoid, above your caffeine limit).
+2. **Green and the category tints**: the personality. Category blocks, and every **selected**
+   state (green outline and tint, a green tick).
+3. **Blue**: the one main call to action on each page (Go to checkout, Add to box · price, View
+   your box, Next, Pay): deep blue with Vanilla text in light, Columbia with dark text in dark.
+   Columbia also tints info panels (the delivery hint). Blue never means selected.
+4. **Flame**: the spark, a few small touches: the savings highlight, the typing caret, the
+   progress bar, the round icons on Your preferences and Delivery, the "in your box" outline. If
+   it spreads, it stops working.
+5. **Danger red**: warnings only (contains something you avoid, above your caffeine limit).
    Flame is never used for warnings.
 
-### Flame buttons use dark text
+### Why the button is blue, not Flame
 
-White on Flame is only 3.2:1, so Flame buttons carry dark Bistre text (`#2B1810`, 5.2:1) in both
-themes. That keeps the bright Flame itself on the button instead of a muddier deep orange.
+Flame is a light, bright orange: dark text on it reads muddy (5.2:1, but soft), and light text
+fails (Vanilla 2.8:1). A deep blue carries Vanilla text crisply (5.8:1) and stands out on the
+cream page (6.2:1); in the dark theme Columbia with dark text (12.9:1) glows against the green.
+Flame stays as the spark, where it isn't behind text. Because blue now means "do this", selected
+states moved to the brand green.
 
 | Tone | Hex | Use |
 | --- | --- | --- |
-| Flame | `#EA672D` | Button fill, borders, highlights (3.0:1 on the page: non-text only) |
+| Flame | `#EA672D` | Borders and highlights (3.0:1 on the page: non-text only) |
 | Flame tint / deep | `#FDE3D2` / `#A33E15` | Savings highlight: deep Flame text on the tint (5.3:1) |
 | Dark-theme tint / light | `#3E2516` / `#F59A68` | The same highlight on the dark page (6.6:1) |
 
@@ -81,12 +87,13 @@ its nearest `data-theme`, even a light section inside a dark page.
 | `text-text-primary` / `text-text-muted` | Bistre / bistre-600 `#7A5444` | Vanilla / oat-200 `#D8CCA5` |
 | `border-border` / `border-border-strong` | vanilla-300 `#F3E0A8` / bistre-400 `#9C7E62` | night-600 / green-500 |
 | `bg-scrim` | the shadow tint (bistre) at 45% | black at 45% |
-| `bg-action` + `text-action-text` | Flame + bistre-950 | Flame + night-900 |
-| `bg-brand`, `border-brand` + `text-on-brand` | Cal Poly Green + Vanilla | green-300 `#A8CFA4` + night-900 |
+| `bg-action` + `text-action-text` | blue-700 `#2F5F8F` + Vanilla | Columbia Blue + night-900 |
+| `bg-brand`, `border-brand`, `text-brand` + `text-on-brand` | Cal Poly Green + Vanilla | green-300 `#A8CFA4` + night-900 |
+| `bg-brand-subtle` (selected cards and options) | green-100 `#DCEAD3` | night-700 |
 | `border-spark`, `bg-spark` | Flame | Flame |
 | `bg-spark-subtle` + `text-on-spark-subtle` | flame-50 + flame-700 | flame-950 + flame-300 |
 | `text-danger`, `border-danger`, `bg-danger-subtle` | `#B42318` on `#FEF3F2` | `#F97066` on night-800 |
-| `bg-primary`, `border-primary` + `text-on-primary` | blue-700 `#2F5F8F` + vanilla-50 | Columbia Blue + night-900 |
+| `bg-primary`, `border-primary` + `text-on-primary` (info) | blue-700 `#2F5F8F` + vanilla-50 | Columbia Blue + night-900 |
 | `bg-primary-subtle` | Columbia Blue | blue-950 `#1E3347` |
 | `text-accent`, `bg-accent` + `text-on-accent` | category colour | category light tone |
 
@@ -99,7 +106,9 @@ Dark theme is built on Cal Poly Green (night-900 `#13241A`, night-800 `#1A2F21`,
 | --- | --- |
 | Text (Bistre) on page / on cards / on Vanilla | 9.5 / 10.0 / 8.9 |
 | Muted text on page / on Vanilla | 6.1 / 5.7 |
-| Dark text on Flame (buttons, both themes) | 5.2 / 5.0 |
+| Vanilla on deep blue (action button) / the button on the page | 5.8 / 6.2 |
+| Dark: night-900 on Columbia (action button) | 12.9 |
+| Bistre on green-100 (selected cards) / dark: Vanilla on night-700 | 8.2 / 9.6 |
 | Flame as a border on the page | 3.0 (non-text, needs 3) |
 | Deep Flame on Flame tint (savings highlight) | 5.3 |
 | Strong border on the page | 3.5 (non-text) |
@@ -258,8 +267,8 @@ at 402px, then `md:` / `lg:` add columns.
 | `PackingBox` | Onboarding | "Preparing your box" after "Build my box", over the page in its theme: an open kraft box (`bg-illo-kraft`, `-light`, `-dark`) with a soft floor shadow and open flaps; the picked packs drop in (`animate-pack-drop`) while each answer is checked off in turn, 1.5s apart (an empty circle, then `animate-pack-check`; the text goes from muted to primary), the flaps fold shut (`animate-pack-lid`), "Your box is ready", then `PackingOverlay` opens onto Your box like the homepage preloader (`preload-mask` from the box, `animate-pack-open` / `-zoom`, 2s). It lives in `BoxProvider` (`startPacking`) so it survives the route change. Start times are inline `animation-delay`s from `packingTimeline`. One `role="status"` region; under reduced motion everything simply shows. |
 | `Preloader` | Homepage | Always the dark theme (`data-theme="dark"`): the hero's room in the evening, with `WindowLight` across the wall and the same `Tabletop`, the counter on the floor below. The brew scene with an empty carafe that fills (`BrewScene level`, 0–1) as a counter climbs 0–100%. Waits at 90% until the page and fonts have loaded (at most 6s), takes at least 4.2s (eased in and out, like a pour), holds full for a moment, then slowly (3s) zooms into the coffee while a circle opens to reveal the page. Once per browser session. A progress bar for screen readers ("Loading Ondo"); page scrolling is locked until it opens. |
 | `BestSellers` | Homepage | Products standing in arches (`rounded-t-pill`, a 2px outline in the drink's accent): 2 columns on mobile, 4 from 1024px. Name, size and price, caffeine as words, tasting notes. Hover slowly lifts the pack; the whole arch opens the product page. Scroll-in: headline lines slide up, arches appear, products rise in left to right, then their words. Items come from `data/bestSellers.ts`. |
-| `HowItWorks` | Homepage | Editorial: a headline whose words slide up, then three steps in a zig-zag (photo arch on one side, a big step number, a hairline, the title and copy on the other), each arch a solid brand-colour block (`bg-illo-arch-sky`, `-leaf`, `-earth`: Columbia Blue, Cal Poly Green and Bistre in turn; lifted a step on the dark theme; never Flame, which is kept for the call to action) with real pack shots that drift on scroll and cast a soft shadow onto the block (`drop-shadow-pack`, following each pack's outline). The headline is `text-hero` on phones (each line fits one row) and `text-display` from 1024px. The last step ends with "Start with step one" (Flame; never on screen with the hero's; centred on phones, aligned with the copy from 1024px), then a slow ticker of the promises (runs only while on screen, decorative). Loaded as its own chunk. Without JavaScript or with reduced motion, everything simply shows. |
-| `HomeHero`, `BrewScene`, `TypedHeadline`, `Tabletop` | Homepage | "Sunday Drip": a pour-over dripping into a carafe that slowly fills, steam, a swaying plant and moving window light, drawn in SVG (no video). Its own nav (the ONDO name in type, Shop, Your box, theme switch), a "A box for" eyebrow over a `text-hero` headline that types early birds, tea people, matcha mornings, slow sippers in turn (`TypedHeadline`; Flame caret, screen readers hear every phrase once, still on the last one under reduced motion). `TypedHeadline` also takes a `prefix` (fixed words before the typed part), `loop={false}` (type through once and settle) and `play` (wait, e.g. until in view), Flame "Build your first box" and an outlined "Browse the shop". Mobile: headline on top, then the scene on its table, then the words and buttons. From 1024px: a 12-column grid, headline and words in 7 columns meeting at the middle of the scene, the scene in the last 5 (`max-w-scene`, 460px), standing on a full-width 3D table (a perspective top with planks and grain, a lit front edge, a shadow on the floor; the scene overlaps the top so things stand on it). Decorative scene is `aria-hidden`. |
+| `HowItWorks` | Homepage | Editorial: a headline whose words slide up, then three steps in a zig-zag (photo arch on one side, a big step number, a hairline, the title and copy on the other), each arch a solid brand-colour block (`bg-illo-arch-sky`, `-leaf`, `-earth`: Columbia Blue, Cal Poly Green and Bistre in turn; lifted a step on the dark theme; never Flame or the action blue) with real pack shots that drift on scroll and cast a soft shadow onto the block (`drop-shadow-pack`, following each pack's outline). The headline is `text-hero` on phones (each line fits one row) and `text-display` from 1024px. The last step ends with "Start with step one" (the action button; never on screen with the hero's; centred on phones, aligned with the copy from 1024px), then a slow ticker of the promises (runs only while on screen, decorative). Loaded as its own chunk. Without JavaScript or with reduced motion, everything simply shows. |
+| `HomeHero`, `BrewScene`, `TypedHeadline`, `Tabletop` | Homepage | "Sunday Drip": a pour-over dripping into a carafe that slowly fills, steam, a swaying plant and moving window light, drawn in SVG (no video). Its own nav (the ONDO name in type, Shop, Your box, theme switch), a "A box for" eyebrow over a `text-hero` headline that types early birds, tea people, matcha mornings, slow sippers in turn (`TypedHeadline`; Flame caret, screen readers hear every phrase once, still on the last one under reduced motion). `TypedHeadline` also takes a `prefix` (fixed words before the typed part), `loop={false}` (type through once and settle) and `play` (wait, e.g. until in view), the action-blue "Build your first box" and an outlined "Browse the shop". Mobile: headline on top, then the scene on its table, then the words and buttons. From 1024px: a 12-column grid, headline and words in 7 columns meeting at the middle of the scene, the scene in the last 5 (`max-w-scene`, 460px), standing on a full-width 3D table (a perspective top with planks and grain, a lit front edge, a shadow on the floor; the scene overlaps the top so things stand on it). Decorative scene is `aria-hidden`. |
 | `WindowLight` | Homepage, onboarding | The hero's sunlight through a window (shade, glow and two drifting shafts), shared so onboarding feels like the same room. Decorative. |
 | `OnboardingProgress` | Onboarding | "Step 3 of 8" and "5 to go" (or "Last one, and it's optional"), a segmented bar (done in brand green, the current step stretched in spark) with `role="progressbar"`, and a cup whose coffee rises each step and steams on the last. |
 | `ChoiceCard` | Onboarding | One answer as a big tap target: `card` (eyebrow, a Fira `text-title` label, blurb, optional icon in a drink's accent; content top-aligned so a row lines up; a card with only an icon and a label is centred) or `tile` (a big number, for 1 · 2 · 3 · 4+). `radio` or `checkbox`. Selected = blue (`primary`) with a tick that pops in; cards lift on hover. The card stays neutral so blue only ever means selected. |
@@ -273,7 +282,7 @@ at 402px, then `md:` / `lg:` add columns.
 | `DatePicker` | Your box, checkout | Trigger (`field`: bordered date; `link`: "Change") + calendar popover, Monday-first. Earliest date is **tomorrow** (today and the past are disabled). Arrows, Home/End, Page Up/Down, Enter, Escape. Default: a week from today, set in the browser. |
 | `PreferencesCard` | Your box | The onboarding answers. Collapsed to the goal; open, a summary (label / value rows) with "Edit preferences", which swaps in the controls: goal, people and cups a day (pill radiogroups), drinks and brew kit (toggle chips), caffeine limit (1–5), avoids. A change re-ranks the rail. |
 | `SiteFooter` | Homepage, Shop, item pages | The brand sign-off: a greeting for the visitor's time of day ("Good morning." / "Good afternoon." / "Good evening.", from their device clock, set in the browser) over "Your next cup is picked / packed / on its way.", typed once with `TypedHeadline` when it scrolls into view and settling on the last (still under reduced motion), then links (Shop, Your box, Build your first box), the ONDO wordmark set across the full width (SVG text, its viewBox cropped to the letters so it scales evenly), and the portfolio note with a link to the design system. `bg-brand` / `text-on-brand`, so the theme swaps them. Words fade up on scroll-in. `clearFixedBar` leaves room for the shop's and item page's bottom bar. Not on Your box, onboarding or checkout. |
-| `BuildBoxPrompt` | Your box, Shop (For you) | Shown until the customer has answered anything: a title, one line, and an outlined "Help me build my box" to onboarding (the page's Flame button stays checkout). An offer, never a gate. `align="start"` replaces `PreferencesCard` on Your box ("Want help building your box?"); `align="centered"` heads the shop's For you tab ("Tell us a little about you"), above the best sellers. Title and line are props. |
+| `BuildBoxPrompt` | Your box, Shop (For you) | Shown until the customer has answered anything: a title, one line, and an outlined "Help me build my box" to onboarding (the page's main action button stays checkout). An offer, never a gate. `align="start"` replaces `PreferencesCard` on Your box ("Want help building your box?"); `align="centered"` heads the shop's For you tab ("Tell us a little about you"), above the best sellers. Title and line are props. |
 | `DeliveryCard` | Your box | Collapsed to "Every 30 days · Tue 3 Nov" (opens on a link to `#delivery`). Open: the suggestion, built to scan (a title in `text-primary`, "We suggest every 15 days" or "Your box may run short", then short dot lines that lead with the fact in bold: "**About 32 cups** in your box", "**Lasts about 8 days** at 4 cups a day", and when it runs short "**We deliver every 15 days** at most, so add a little more"; hidden once one-off is chosen), how often (segmented pill radiogroup with the saving under each option and "skip, swap or pause" below), then the first delivery date and the next delivery. The suggestion never changes the choice by itself. Nothing is chosen at first ("Choose how often"); `attention` goes up when checkout is tapped too soon, which opens the card, scrolls to it, focuses the options and shows a `danger` message (with a danger border) until a choice is made. |
 | `OrderSummary` (`OrderGroup`, `ItemCard`, `ItemThumbnail`) | Your box | Drinks and Add-ons, each collapsible and sub-grouped by category; collapsed groups show thumbnails. A line that no longer fits the preferences shows why, and stays. A line the starter box picked says "Picked for you" and why. With a subscription, bites and sweeteners show "Keep in every delivery" (`Switch`, confirmed with `ConfirmDialog` when turned on); gear and tasters say "First box only". |
 | `SuggestionRail`, `SuggestionCard` | Your box, item page | 148px cards with the reason line. Scrolls sideways at every width, so the desktop sidebar stays short enough to keep the total in view. Hidden when empty. |

@@ -79,7 +79,7 @@ export const SingleChoice: Story = {
   },
 };
 
-/** Pick any, with the drink's accent on the icon only (blue always means selected). */
+/** Pick any, with the drink's accent on the icon only (brand green always means selected). */
 export const MultiChoice: Story = {
   render: function Render() {
     const [drinks, setDrinks] = useState<DrinkCategory[]>(['coffee']);

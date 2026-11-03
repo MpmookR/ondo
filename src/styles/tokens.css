@@ -149,10 +149,11 @@
   --theme-text-inverse: var(--raw-vanilla);
   --theme-border: var(--raw-vanilla-300);
   --theme-border-strong: var(--raw-bistre-400);
-  --theme-action: var(--raw-flame);
-  --theme-action-text: var(--raw-bistre-950);
+  --theme-action: var(--raw-blue-700);
+  --theme-action-text: var(--raw-vanilla);
   --theme-brand: var(--raw-green);
   --theme-on-brand: var(--raw-vanilla);
+  --theme-brand-subtle: var(--raw-green-100);   /* selected cards and options */
   --theme-spark: var(--raw-flame);
   --theme-spark-subtle: var(--raw-flame-50);
   --theme-on-spark-subtle: var(--raw-flame-700);
@@ -237,10 +238,11 @@
   --theme-text-inverse: var(--raw-night-900);
   --theme-border: var(--raw-night-600);
   --theme-border-strong: var(--raw-green-500);
-  --theme-action: var(--raw-flame);
+  --theme-action: var(--raw-columbia);
   --theme-action-text: var(--raw-night-900);
   --theme-brand: var(--raw-green-300);
   --theme-on-brand: var(--raw-night-900);
+  --theme-brand-subtle: var(--raw-night-700);
   --theme-spark: var(--raw-flame);
   --theme-spark-subtle: var(--raw-flame-950);
   --theme-on-spark-subtle: var(--raw-flame-300);
@@ -302,6 +304,7 @@
   /* Behind a dialog: the theme's shadow tint, so it darkens the page in either theme. */
   --color-scrim: rgb(var(--theme-shadow-tint) / 0.45);
   --color-brand: var(--theme-brand);
+  --color-brand-subtle: var(--theme-brand-subtle);
   --color-on-brand: var(--theme-on-brand);
   --color-spark: var(--theme-spark);
   --color-spark-subtle: var(--theme-spark-subtle);

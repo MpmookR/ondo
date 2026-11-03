@@ -100,7 +100,7 @@ export function CheckoutPage() {
         {header}
         <main className="mx-auto flex max-w-column flex-col gap-16 px-16 py-48">
           <div className={`flex flex-col items-center gap-12 p-24 text-center ${cardClass}`} role="status">
-            <span className="grid size-48 place-items-center rounded-pill bg-primary text-on-primary">
+            <span className="grid size-48 place-items-center rounded-pill bg-brand text-on-brand">
               <Icon name="check" />
             </span>
             <h1 className="font-heading text-heading">You&apos;re all set</h1>
@@ -257,7 +257,7 @@ export function CheckoutPage() {
               'Plastic-free, recyclable packaging',
             ].map((text) => (
               <li key={text} className="flex items-start gap-8">
-                <Icon name="check" size={20} className="mt-2 text-primary" />
+                <Icon name="check" size={20} className="mt-2 text-brand" />
                 {text}
               </li>
             ))}

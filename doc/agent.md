@@ -29,9 +29,10 @@ look polished and read clearly. It is not production code.
 - Type: headlines in `font-heading` (Fira Sans); UI, body and prices in `font-sans`
   (Source Sans 3); brew data in `font-mono`.
 - Colour: playful and colour-blocked (Vanilla, Bistre, Cal Poly Green, Columbia Blue, Flame).
-  Flame (`action`, `spark`) only for the one main call to action per screen and small
-  highlights, always with dark text. Secondary buttons, tabs and toggles use `brand` (green).
-  Selected and info states use `primary` (blue). Warnings use `danger`, never Flame.
+  The one main call to action per screen uses `action` (deep blue with Vanilla text; Columbia
+  with dark text in dark). Selected states, tabs and toggles use `brand` (green, `brand-subtle`
+  for selected cards). Info panels use `primary` (blue). Flame (`spark`) is only for small
+  highlights. Warnings use `danger`, never Flame.
 - Mobile first: phone layout, then `md:` / `lg:`. Check 402px, 820px, 1440px; no sideways scroll.
   Bars fixed to the bottom use `pb-safe`; whole-card links use `stretched-link`.
 - Every interactive element: visible focus state, 44px tap target, accessible name.

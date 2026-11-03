@@ -20,7 +20,7 @@ const legendClass = 'mb-8 font-sans text-caption uppercase tracking-wide text-te
 
 function Badge({ icon }: { icon: IconName }) {
   return (
-    <span className="grid size-32 shrink-0 place-items-center rounded-pill bg-primary-subtle text-text-primary">
+    <span className="grid size-32 shrink-0 place-items-center rounded-pill bg-spark-subtle text-on-spark-subtle">
       <Icon name={icon} size={20} />
     </span>
   );
@@ -63,7 +63,7 @@ function PillGroup<T extends string | number>({
             aria-label={o.ariaLabel}
             className={`flex min-w-0 flex-1 flex-col items-center justify-center rounded-pill border-2 px-4 py-4 transition-colors duration-120 ease-brew ${
               o.sub ? 'min-h-48' : 'min-h-36'
-            } ${checked ? 'border-primary bg-bg-surface' : 'border-transparent hover:bg-bg-page'}`}
+            } ${checked ? 'border-brand bg-bg-surface' : 'border-transparent hover:bg-bg-page'}`}
           >
             <span className={`whitespace-nowrap font-sans text-label tabular-nums ${checked ? 'font-bold' : 'font-medium'}`}>{o.label}</span>
             {o.sub && <span className="whitespace-nowrap font-sans text-footnote text-text-muted">{o.sub}</span>}
@@ -373,7 +373,7 @@ export function PreferencesCard({ customer, onChange, defaultOpen = false, defau
                       key={g.id}
                       {...goalGroup.getOptionProps(g.id, i)}
                       className={`flex min-h-44 flex-col justify-center rounded-sm border px-12 py-8 transition-colors duration-120 ease-brew ${
-                        checked ? 'border-primary bg-primary-subtle' : 'border-border hover:border-border-strong'
+                        checked ? 'border-brand bg-brand-subtle' : 'border-border hover:border-border-strong'
                       }`}
                     >
                       <span className="font-mono text-footnote uppercase text-text-muted">{g.eyebrow}</span>

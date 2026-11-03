@@ -10,7 +10,7 @@ export interface ChoiceCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   /** One line under the label. */
   blurb?: string;
   icon?: IconName;
-  /** Gives the icon a drink's accent (coffee, tea, matcha). The card itself stays neutral, so blue only ever means selected. */
+  /** Gives the icon a drink's accent (coffee, tea, matcha). The card itself stays neutral, so brand green only ever means selected. */
   category?: Category;
   /** `card`: label and blurb, full width. `tile`: one big number or word, for 1 · 2 · 3 · 4+. */
   size?: 'card' | 'tile';
@@ -25,7 +25,7 @@ export interface ChoiceCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
 /**
  * One answer in onboarding: a big, friendly tap target. Cards with an eyebrow or a blurb sit at the
  * top, so their lines match across a row whatever the text length; a card with only an icon and a
- * label is centred. Selected answers turn blue (the system's
+ * label is centred. Selected answers turn brand green (the system's
  * selected state) and a tick pops in. Options rise in one after another when a question opens.
  */
 export function ChoiceCard({
@@ -58,7 +58,7 @@ export function ChoiceCard({
         tile ? 'aspect-square flex-col items-center justify-center p-8 text-center lg:aspect-auto lg:py-24' : `${simple ? 'items-center' : 'items-start'} px-16 py-16 lg:px-20 lg:py-20`
       } transition-[background-color,border-color,transform,box-shadow] duration-200 ease-brew hover:-translate-y-2 hover:shadow-card active:scale-98 motion-reduce:hover:translate-y-0 ${
         checked
-          ? 'border-primary bg-primary-subtle shadow-card'
+          ? 'border-brand bg-brand-subtle shadow-card'
           : 'border-border bg-bg-surface hover:border-border-strong'
       } ${className}`}
       {...rest}
@@ -85,7 +85,7 @@ export function ChoiceCard({
         <span
           aria-hidden="true"
           className={`flex shrink-0 items-center justify-center rounded-pill ${tile ? 'absolute right-4 top-4 size-20' : 'size-24'} ${
-            checked ? 'bg-primary text-on-primary animate-pop motion-reduce:animate-none' : 'border border-border-strong'
+            checked ? 'bg-brand text-on-brand animate-pop motion-reduce:animate-none' : 'border border-border-strong'
           }`}
         >
           {checked && <Icon name="check" size={16} />}

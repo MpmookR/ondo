@@ -122,7 +122,7 @@ export function ItemCard({ item, qty, onQtyChange, warning, pickedReason, everyD
 
       {pickedReason && (
         <p className="flex flex-wrap items-center gap-x-8 gap-y-4 px-8 font-sans text-caption">
-          <span className="flex items-center gap-4 font-semibold text-primary">
+          <span className="flex items-center gap-4 font-semibold text-brand">
             <Icon name="check" size={16} />
             Picked for you
           </span>
