@@ -31,7 +31,7 @@ export interface BoxState {
 export type BoxAction =
   | { type: 'setQty'; itemId: string; qty: number }
   | { type: 'setPlan'; plan: PlanId }
-  /** "Keep in every delivery" on a bite or sweetener (asked to confirm before it's turned on). */
+  /** "Subscribe & save" on a bite or sweetener: off = one-off, just this box. */
   | { type: 'setEveryDelivery'; itemId: string; on: boolean }
   | { type: 'setGoal'; goal: Goal }
   | { type: 'setMaxCaffeine'; maxCaffeine: Customer['maxCaffeine'] }

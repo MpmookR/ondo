@@ -28,7 +28,7 @@ export const LineOverLimit: Story = {
   args: { item: item('c-night-shift'), warning: 'Above your caffeine limit' },
 };
 
-/** A bite in a subscription: first box only until "Keep in every delivery" is turned on. */
+/** A bite in a subscription: one-off (just this box) until "Subscribe & save" is turned on. */
 export const KeepInEveryDelivery: Story = {
   render: function Render(args) {
     const [on, setOn] = useState(false);
@@ -37,7 +37,8 @@ export const KeepInEveryDelivery: Story = {
         {...args}
         item={item('b-dark-chocolate')}
         pickedReason="Goes with your Moka Morning Blend"
-        everyDelivery={{ on, cadence: 'every 15 days', onChange: setOn }}
+        everyDelivery={{ on, cadence: 'every 15 days', onChange: setOn, savingRate: 0.1 }}
+        discountRate={on ? 0.1 : undefined}
       />
     );
   },

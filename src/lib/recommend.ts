@@ -130,12 +130,21 @@ export function recommend(
   customer: Customer,
   box: BoxLine[],
   catalogue: Item[],
-  options: { limit?: number; goalLabel?: string } = {},
+  options: {
+    limit?: number;
+    goalLabel?: string;
+    /**
+     * A quick-add rail (Your box): no gear. It costs too much to add with one tap next to the
+     * total; it stays in the shop's For you tab and on item pages, where there's room to decide.
+     */
+    quickAdd?: boolean;
+  } = {},
 ): Suggestion[] {
-  const { limit = DEFAULT_LIMIT, goalLabel = 'your goal' } = options;
+  const { limit = DEFAULT_LIMIT, goalLabel = 'your goal', quickAdd = false } = options;
   const ctx = buildContext(box, catalogue);
 
   return catalogue
+    .filter((item) => !(quickAdd && item.category === 'gear'))
     .filter((item) => passesFilters(item, customer, box))
     .filter((item) => !needsADrink(item, customer, ctx))
     .map((item) => score(item, customer, ctx))

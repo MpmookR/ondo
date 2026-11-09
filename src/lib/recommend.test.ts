@@ -41,6 +41,13 @@ test('add-ons: bites follow the avoids, and only gear can "brew" a drink', () =>
   assert.ok(!rail.some((s) => s.item.category !== 'gear' && s.reason.startsWith('Brews')));
 });
 
+test('quick-add rail (Your box): no gear, the rest fills the gap', () => {
+  const rail = recommend(defaultCustomer, defaultBox, catalogue, { goalLabel: 'calm focus', quickAdd: true });
+  assert.ok(rail.length > 0);
+  assert.ok(!rail.some((s) => s.item.category === 'gear'), 'no gear on a quick-add rail');
+  assert.ok(ids().includes('g-whisk-set'), 'gear still suggested elsewhere');
+});
+
 test('ties break on lower price', () => {
   const rail = recommend(defaultCustomer, defaultBox, catalogue);
   for (let i = 1; i < rail.length; i++) {

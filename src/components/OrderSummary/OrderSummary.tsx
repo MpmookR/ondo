@@ -4,12 +4,11 @@ import Link from 'next/link';
 import { useId, useState, type ReactNode } from 'react';
 import type { BoxLine, Category, Item } from '@/types';
 import { addOnCategories, categoryLabel, drinkCategories, isDrinkCategory } from '@/data/labels';
-import { afterSaving, repeatRule, type Totals } from '@/lib/box';
+import { repeatRule, type Totals } from '@/lib/box';
 import { formatPrice, pluralise } from '@/lib/format';
 import { itemHref, shopHref } from '@/lib/routes';
 import { CaffeineMeter } from '../CaffeineMeter';
 import { Chip, Pill } from '../Chip';
-import { ConfirmDialog } from '../ConfirmDialog';
 import { Icon } from '../Icon';
 import { Price } from '../Price';
 import { ProductImage } from '../ProductImage';
@@ -84,10 +83,16 @@ export interface ItemCardProps {
   /** Set when the starter box picked it: why it's there ("For calm focus"). */
   pickedReason?: string;
   /**
-   * Bites and sweeteners in a subscription: "Keep in every delivery", off (first box only) until
-   * the customer turns it on. Leave unset to hide it (a one-off, or no delivery chosen yet).
+   * Bites and sweeteners in a subscription: a "Subscribe & save" switch, off (one-off, just this
+   * box) until the customer turns it on. Leave unset to hide it (a one-off, or no delivery chosen yet).
    */
-  everyDelivery?: { on: boolean; cadence: string; onChange: (on: boolean) => void };
+  everyDelivery?: {
+    on: boolean;
+    cadence: string;
+    onChange: (on: boolean) => void;
+    /** The subscription saving (0.05 = 5%), named on the switch: "Subscribe & save 5%". */
+    savingRate?: number;
+  };
   /** Gear and tasters in a subscription: they come once, in the first box. */
   sentOnce?: boolean;
   /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
@@ -131,21 +136,28 @@ export function ItemCard({ item, qty, onQtyChange, warning, pickedReason, everyD
       )}
 
       {everyDelivery && (
+        // Left: what this line is now (one-off or subscription). Right: the switch, under a label
+        // that never changes, so "on" always means subscribed.
         <div className="relative z-10 flex items-center justify-between gap-12 rounded-sm bg-bg-page px-8">
-          <span className="flex flex-col py-4 font-sans">
-            <span id={`${keepId}-label`} className="text-label">
-              Switch to subscription
-            </span>
-            <span id={`${keepId}-state`} className="text-caption text-text-muted">
-              {everyDelivery.on ? `Comes ${everyDelivery.cadence}` : 'For discounted price'}
+          <span id={`${keepId}-state`} className="flex flex-col py-4 font-sans">
+            <span className="text-label">{everyDelivery.on ? 'Subscription' : 'One-off'}</span>
+            <span className="text-caption text-text-muted">
+              {everyDelivery.on ? `Comes ${everyDelivery.cadence}` : 'Just this box'}
             </span>
           </span>
-          <Switch
-            checked={everyDelivery.on}
-            onChange={everyDelivery.onChange}
-            labelledBy={`${keepId}-label`}
-            describedBy={`${keepId}-state`}
-          />
+          <span className="flex flex-col items-end pt-4 font-sans">
+            <span id={`${keepId}-label`} className="text-caption font-semibold text-brand">
+              {everyDelivery.savingRate
+                ? `Subscribe & save ${Math.round(everyDelivery.savingRate * 100)}%`
+                : 'Subscribe'}
+            </span>
+            <Switch
+              checked={everyDelivery.on}
+              onChange={everyDelivery.onChange}
+              labelledBy={`${keepId}-label`}
+              describedBy={`${keepId}-state`}
+            />
+          </span>
         </div>
       )}
 
@@ -179,7 +191,7 @@ export interface OrderSummaryProps {
   warningFor?: (item: Item) => string | null;
   /** "every 15 days" when a subscription is chosen; unset for a one-off or no choice yet. */
   cadence?: string;
-  /** Turning "Keep in every delivery" on is confirmed first; turning it off isn't. */
+  /** "Subscribe & save" on a bite or sweetener, on or off. Applies straight away: the status and price change in place. */
   onEveryDeliveryChange?: (itemId: string, on: boolean) => void;
   /** The subscription saving (0.1 = 10%): shows the price after it, with the full price struck. */
   discountRate?: number;
@@ -189,8 +201,6 @@ type Entry = { line: BoxLine; item: Item };
 
 /** "Your box": Drinks and Add-ons, each collapsible and sub-grouped by category. */
 export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor, cadence, onEveryDeliveryChange, discountRate }: OrderSummaryProps) {
-  // The add-on waiting for "Add to subscription" in the dialog.
-  const [confirming, setConfirming] = useState<Entry | null>(null);
   const entries = lines
     .map((line) => ({ line, item: catalogue.find((i) => i.id === line.itemId) }))
     .filter((e): e is Entry => Boolean(e.item));
@@ -217,7 +227,8 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
           ? {
               on: line.everyDelivery === true,
               cadence,
-              onChange: (on) => (on ? setConfirming({ line, item }) : onEveryDeliveryChange(item.id, false)),
+              onChange: (on) => onEveryDeliveryChange(item.id, on),
+              savingRate: discountRate,
             }
           : undefined
       }
@@ -291,27 +302,6 @@ export function OrderSummary({ lines, catalogue, totals, onQtyChange, warningFor
         <Icon name="bag" size={20} />
         Add or change items
       </Link>
-
-      <ConfirmDialog
-        open={confirming !== null}
-        title="Add to your subscription?"
-        confirmLabel="Add to subscription"
-        onCancel={() => setConfirming(null)}
-        onConfirm={() => {
-          if (confirming) onEveryDeliveryChange?.(confirming.item.id, true);
-          setConfirming(null);
-        }}
-      >
-        {confirming && (
-          <>
-            <p>
-              {confirming.line.qty > 1 ? `${confirming.line.qty} × ` : ''}
-              {confirming.item.name} will come in every delivery, {cadence}, at {formatPrice(afterSaving(confirming.item.price, discountRate ?? 0))} each.
-            </p>
-            <p className="text-body-sm text-text-muted">You can add, remove or cancel anything in your subscription at any time.</p>
-          </>
-        )}
-      </ConfirmDialog>
     </section>
   );
 }

@@ -40,7 +40,7 @@ interface BoxContextValue {
   repeatTotals: Totals | null;
   /** The chosen subscription's saving (0.1 = 10%); 0 for a one-off or no choice yet. */
   discountRate: number;
-  /** The rail's suggestions: the same result powers Your box and the shop's "For you" tab. */
+  /** Your box's rail: quick adds only, so no gear (the shop's "For you" tab works out its own). */
   suggestions: Suggestion[];
   setQty: (itemId: string, qty: number) => void;
   theme: Theme;
@@ -120,6 +120,7 @@ export function BoxProvider({ children }: { children: ReactNode }) {
       repeatTotals: subscription ? computeTotals(repeatingLines(state.lines, catalogue), catalogue, plan.discount) : null,
       suggestions: recommend(state.customer, state.railLines, catalogue, {
         goalLabel: goalById(state.customer.goal)?.railLabel,
+        quickAdd: true,
       }),
       setQty: (itemId, qty) => dispatch({ type: 'setQty', itemId, qty }),
       theme,

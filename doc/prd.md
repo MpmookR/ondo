@@ -80,7 +80,8 @@ lesson in coffee; they want a sensible box and a reason for each suggestion.
    preferences"), one **Delivery** card (how often, with a suggestion worked out from the box, then
    the first delivery date), the box grouped into drinks and add-ons (gear, bites, sweeteners), each
    sub-grouped by category, a "For {goal}" rail of up to 6
-   suggestions with a one-line reason each, and the box total always in view.
+   suggestions with a one-line reason each (drinks, bites and sweeteners: no gear, which costs too
+   much for a one-tap add next to the total), and the box total always in view.
 4. **Shop** (`/shop`): tabs For you · Coffee · Tea · Matcha · Gear · Bites · Sweeteners. "For you" runs
    the same rules as
    the rail. Coffee, Tea and Matcha have a one-tap caffeine filter (All · Low 0–2 · Medium 3 ·
@@ -497,6 +498,8 @@ tea/coffee specialist would own them; the code only reads them.
 - Remove gear they already own (onboarding: "What do you brew with?").
 - With no drink in the box, remove bites and sweeteners (there's nothing for them to go with),
   unless the customer asked for them in onboarding.
+- On Your box's rail, remove gear: it's a quick add next to the total, and gear costs too much to
+  add with one tap. Gear is still suggested in the shop's For you tab and on item pages.
 
 **Step 2: Score**
 
@@ -555,13 +558,13 @@ With a subscription, what comes again after the first box:
 - **First box only is the default for every bite and sweetener,** however it got into the box
   (pre-added from onboarding, the rail or the shop). Nothing extra repeats unless they keep it,
   which answers "does this repeat every time?" where the worry starts.
-- On Your box, each bite and sweetener line shows a **"Keep in every delivery"** switch, with
-  "First box only" or "Comes every 15 days" under it. Only with a subscription: a one-off, or no
+- On Your box, each bite and sweetener line shows its status on the left ("One-off · Just this
+  box" or "Subscription · Comes every 15 days") and a **"Subscribe & save 10%"** switch on the
+  right. The switch's label never changes, so on always means subscribed. Only with a subscription: a one-off, or no
   delivery chosen yet, has nothing to repeat, so the switch is hidden (the choice is kept if they
   switch back). Gear and tasters say "First box only" next to their price.
-- **Turning it on asks first**: "Add to your subscription?", with the item, how often and the price,
-  and "You can add, remove or cancel anything in your subscription at any time." Cancel or Add to
-  subscription; Escape or a tap outside cancels. Turning it off doesn't ask.
+- **It applies straight away, either way.** No confirmation: the status and the price (struck
+  full price and the saving) change in place, which says what happened more clearly than a dialog.
 - **The price stays honest.** When the first box and later deliveries differ, both show: "£52.20
   first box, then £23.40 every 15 days" on Your box, "first box only" next to those lines at
   checkout with the price of later deliveries under the total, and the later price on the order
